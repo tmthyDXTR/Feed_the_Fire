@@ -41,7 +41,7 @@ public class CreateObjectOnClickPoint : MonoBehaviour
         if (click == true)
         {
             click = false;
-            Debug.Log("Spawn");
+            Debug.Log("Spawn Object");
             GameObject obj = Instantiate(gameObjectToPlace, new Vector3(hit.point.x, 
                 hit.point.y, hit.point.z), Quaternion.identity) as GameObject;
         }

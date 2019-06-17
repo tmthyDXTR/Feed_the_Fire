@@ -138,9 +138,22 @@ public class WorkerAI : MonoBehaviour
 
     void Update()
     {
+        if (this.gameObject.tag == "Unemployed")
+        {
+
+            m_NavMeshAgent.isStopped = true;
+            //m_NavMeshAgent.SetDestination(transform.position);
+            m_Animator.SetBool("IsWalking", false);
+            m_Animator.SetBool("IsLumbering", false);
+            Target.gameObject.tag = "WorkInactive";          
+                        
+        }
+        
 
         if (this.gameObject.tag == "Woodcutter")
         {
+            m_NavMeshAgent.isStopped = false;
+
             switch (state)
             {
                 case State.Idle:
@@ -156,6 +169,7 @@ public class WorkerAI : MonoBehaviour
                     break;
 
                 case State.MovingToJobNode:
+                    m_Animator.SetBool("IsWalking", true);
                     if (m_NavMeshAgent.pathPending)
                     {
                         distanceToNode = Vector3.Distance(transform.position, GetClosestInactiveNodeVector());
@@ -254,6 +268,8 @@ public class WorkerAI : MonoBehaviour
 
         if (this.gameObject.tag == "Stonecutter")
         {
+            m_NavMeshAgent.isStopped = false;
+
             switch (state)
             {
                 case State.Idle:

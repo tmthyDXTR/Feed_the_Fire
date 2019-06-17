@@ -17,7 +17,7 @@ public class Window_ResourceBank : MonoBehaviour
     private void UpdateStoneResourceTextObject()
     {
         transform.Find("StoneStock").GetComponent<Text>().text =
-            "Stone: " + ResourceBank.GetWoodStock();
+            "Stone: " + ResourceBank.GetStoneStock();
     }
     
 
