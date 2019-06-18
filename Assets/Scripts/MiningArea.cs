@@ -24,15 +24,15 @@ public class MiningArea : MonoBehaviour
         Collider[] nodeColliders = Physics.OverlapSphere(transform.position, sphereRadius, sphereLayerMask);
         foreach (Collider node in nodeColliders)
         {
-            Debug.Log("Colidder MINING AREA: " + node.ToString());
+            Debug.Log("Colider MINING AREA: " + node.ToString());
             if (node.gameObject.tag == "WorkActive") 
             {
                 node.gameObject.tag = "WorkInactive";
             }
-            else
+           /* else
             {
                 node.gameObject.tag = "WorkActive";
-            }
+            }*/
             
         }
     }
