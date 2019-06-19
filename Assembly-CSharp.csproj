@@ -66,6 +66,9 @@
      <Compile Include="Assets\Scripts\Wiggle.cs" />
      <Compile Include="Assets\Scripts\Window_ResourceBank.cs" />
      <Compile Include="Assets\Scripts\WorkerAI.cs" />
+     <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\Vegitation.shader" />
+     <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\Grid.shader" />
+     <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\StandardSpecular_2Sided.shader" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/dxtr/unity projects/resource/resource/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>

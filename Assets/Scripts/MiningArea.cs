@@ -14,27 +14,29 @@ public class MiningArea : MonoBehaviour
     public Collider[] nodeColliders;
     #endregion
 
-   
+    private void SetNodesToMinable(string nodeLayer)
+    {
+
+        sphereLayerMask = LayerMask.GetMask(nodeLayer);
+        int nodeCounter = 0;
+        Collider[] nodeColliders = Physics.OverlapSphere(transform.position, sphereRadius, sphereLayerMask);
+        foreach (Collider node in nodeColliders)
+        {
+            if (node.gameObject.tag == "WorkActive")
+            {
+                node.gameObject.tag = "WorkInactive";
+                nodeCounter += 1;
+            }
+        }
+
+    }
 
     #region Monobehaviour API
 
     void Awake()
     {
-        sphereLayerMask = LayerMask.GetMask("TreeNodes");
-        Collider[] nodeColliders = Physics.OverlapSphere(transform.position, sphereRadius, sphereLayerMask);
-        foreach (Collider node in nodeColliders)
-        {
-            Debug.Log("Colider MINING AREA: " + node.ToString());
-            if (node.gameObject.tag == "WorkActive") 
-            {
-                node.gameObject.tag = "WorkInactive";
-            }
-           /* else
-            {
-                node.gameObject.tag = "WorkActive";
-            }*/
-            
-        }
+        SetNodesToMinable("TreeNodes");
+        SetNodesToMinable("StoneNodes");       
     }
 
     void Update()
@@ -43,44 +45,6 @@ public class MiningArea : MonoBehaviour
 
     }
     #endregion
-    /*
-    private void OnTriggerEnter(Collider other)
-    {
-        
-
-        if (other.gameObject.tag == "WorkActive")
-        {
-            setMinable();
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.tag == "WorkActive")
-        {
-            setMinable();
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "WorkInactive")
-        {
-            setNotMinable();
-        }
-    }
-
     
-
-    public void setMinable()
-    {
-        minable = true;
-    }
-
-    public void setNotMinable()
-    {
-        minable = false;
-    }
-    */
     
 }

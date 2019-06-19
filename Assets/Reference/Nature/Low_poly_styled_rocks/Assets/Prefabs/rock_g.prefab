@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5485818076046435838}
   m_Layer: 10
   m_Name: rock_g
-  m_TagString: WorkInactive
+  m_TagString: WorkActive
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295

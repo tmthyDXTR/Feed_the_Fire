@@ -142,7 +142,7 @@ public class WorkerAI : MonoBehaviour
         return inactiveNodeCounter;
     }
 
-    void Start()
+    void Awake()
     {
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
@@ -205,21 +205,32 @@ public class WorkerAI : MonoBehaviour
                 }
                 if (this.gameObject.tag == "Stonecutter")
                 {
-                    m_NavMeshAgent.isStopped = false;
                     sphereLayerMask = LayerMask.GetMask("StoneNodes");
-                    m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
-                    Target = GetTarget();
-                    Target.gameObject.tag = "WorkActive";
-                    m_Animator.SetBool("IsWalking", true);
-                    m_NavMeshAgent.stoppingDistance = 3;
+                    if (GetInactiveNodesCount() == 0)
+                    {
+                        m_NavMeshAgent.isStopped = true;
+                        m_Animator.SetBool("IsWalking", false);
+                        m_Animator.SetBool("IsLumbering", false);
+                        transform.LookAt(m_NavMeshAgent.destination);
+                    }
+                    else
+                    {
+                        m_NavMeshAgent.isStopped = false;
+                        sphereLayerMask = LayerMask.GetMask("StoneNodes");
+                        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
+                        Target = GetTarget();
+                        Target.gameObject.tag = "WorkActive";
+                        m_Animator.SetBool("IsWalking", true);
+                        m_NavMeshAgent.stoppingDistance = 3;
 
-                    state = State.MovingToJobNode;
+                        state = State.MovingToJobNode;
+                    }                    
                 }
                 break;
 
             case State.MovingToJobNode:
 
-                Debug.Log("State: MovingToJobNode");                            
+                Debug.Log("State: MovingToJobNode");
                 if (m_NavMeshAgent.pathPending)
                 {
                     distanceToNode = Vector3.Distance(transform.position, GetClosestInactiveNodeVector());
@@ -247,6 +258,19 @@ public class WorkerAI : MonoBehaviour
                     transform.LookAt(m_NavMeshAgent.destination);
                     if (workTime >= 12 / workSpeed)
                     {
+                        if (this.gameObject.tag == "Unemployed")
+                        {
+                            // Try and find an EnemyHealth script on the gameobject hit.
+                            TreeNode woodAmount = GetNodeCollider().GetComponent<TreeNode>();
+                            // If the EnemyHealth component exist...
+                            if (woodAmount != null)
+                            {
+                                // ... the enemy should take damage.
+                                woodAmount.TakeDamage((int)workTime);
+                                inventoryAmount += 1;
+                            }
+                            workTime -= (int)workTime;
+                        }
                         if (this.gameObject.tag == "Woodcutter")
                         {
                             // Try and find an EnemyHealth script on the gameobject hit.
@@ -388,12 +412,28 @@ public class WorkerAI : MonoBehaviour
                     if (this.gameObject.tag == "Stonecutter")
                     {
                         sphereLayerMask = LayerMask.GetMask("StoneNodes");
-                        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
-                        Target = GetTarget();
-                        Target.gameObject.tag = "WorkActive";
-                        m_Animator.SetBool("IsWalking", true);
+                        if (GetInactiveNodesCount() != 0)
+                        {
+                            Target = GetTarget();
+                            m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
+                            Target.gameObject.tag = "WorkActive";
+                            m_Animator.SetBool("IsWalking", true);
+                            m_NavMeshAgent.stoppingDistance = 3;
 
-                        state = State.MovingToJobNode;
+                            state = State.MovingToJobNode;
+                        }
+                        else
+                        {
+                            sphereLayerMask = LayerMask.GetMask("SafePlaceNodes");
+                            Target = GetTarget();
+                            m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
+                            m_Animator.SetBool("IsWalking", true);
+                            m_NavMeshAgent.stoppingDistance = 7;
+
+                            state = State.MovingToFire;
+                        }
+
+
                     }
                 }
                 break;
