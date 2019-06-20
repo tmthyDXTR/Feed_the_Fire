@@ -5,14 +5,12 @@ using UnityEngine;
 public class MiningArea : MonoBehaviour
 {
 
-    #region Attributes
 
-    private Collider other;
-    public bool minable = false;
-    [SerializeField] private int sphereRadius;
+
+    [SerializeField] private int sphereRadius = 15;
+    public Collider[] miningNodes;
     private LayerMask sphereLayerMask;
-    public Collider[] nodeColliders;
-    #endregion
+
 
     private void SetNodesToMinable(string nodeLayer)
     {
@@ -28,23 +26,20 @@ public class MiningArea : MonoBehaviour
                 nodeCounter += 1;
             }
         }
-
+        Debug.Log(nodeLayer + " set to Minable: " + nodeCounter);
     }
 
-    #region Monobehaviour API
 
     void Awake()
     {
         SetNodesToMinable("TreeNodes");
-        SetNodesToMinable("StoneNodes");       
+        SetNodesToMinable("StoneNodes");
     }
 
     void Update()
     {
 
-
     }
-    #endregion
-    
+   
     
 }

@@ -57,14 +57,17 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AddRemoveStonecutterButton.cs" />
      <Compile Include="Assets\Scripts\AddRemoveWoodcutterButton.cs" />
-     <Compile Include="Assets\Scripts\CreateObjectOnClickPoint.cs" />
+     <Compile Include="Assets\Scripts\BuildingManager.cs" />
+     <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\JobManager.cs" />
      <Compile Include="Assets\Scripts\MiningArea.cs" />
+     <Compile Include="Assets\Scripts\ObjectPlacement.cs" />
+     <Compile Include="Assets\Scripts\PlaceableObject.cs" />
      <Compile Include="Assets\Scripts\ResourceBank.cs" />
      <Compile Include="Assets\Scripts\StoneNode.cs" />
      <Compile Include="Assets\Scripts\TreeNode.cs" />
-     <Compile Include="Assets\Scripts\Wiggle.cs" />
      <Compile Include="Assets\Scripts\Window_ResourceBank.cs" />
+     <Compile Include="Assets\Scripts\Window_WorkerBank.cs" />
      <Compile Include="Assets\Scripts\WorkerAI.cs" />
      <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\Vegitation.shader" />
      <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\Grid.shader" />

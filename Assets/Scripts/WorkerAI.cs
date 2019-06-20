@@ -6,6 +6,9 @@ using UnityEngine.AI;
 
 public class WorkerAI : MonoBehaviour
 {
+
+    #region Variables
+
     public LayerMask groundLayer;
 
 
@@ -15,8 +18,10 @@ public class WorkerAI : MonoBehaviour
 
     public int workSpeed = 1;
     public int inventorySize = 1;
-    public int inventoryAmount;
-
+    public int inventoryAmount = 0;
+    public int inventoryWood = 0;
+    public int inventoryStone = 0;
+    public int animationSpeed = 2;
     private State state;
     private enum State
     {
@@ -47,7 +52,10 @@ public class WorkerAI : MonoBehaviour
     NavMeshAgent m_NavMeshAgent;
     Animator m_Animator;
 
+    #endregion
 
+
+    #region Target Search Methods
 
     // Target Search Method
     private Vector3 GetClosestInactiveNodeVector()
@@ -62,7 +70,7 @@ public class WorkerAI : MonoBehaviour
         foreach (Collider node in nodeColliders)
         {
             float distance = Vector3.Distance(node.ClosestPoint(nextNode), transform.position);
-            if (node.gameObject.CompareTag("WorkInactive"))
+            if (node.gameObject.CompareTag("WorkInactive") || node.gameObject.CompareTag("Building"))
             {
                 
                 if (distance < bestDistance)
@@ -91,7 +99,7 @@ public class WorkerAI : MonoBehaviour
             {
                 continue;
             }
-            if (node.gameObject.CompareTag("WorkInactive"))
+            if (node.gameObject.CompareTag("WorkInactive") || node.gameObject.CompareTag("Building"))
                 if (distance < bestDistance)
                 {
                     bestDistance = distance;
@@ -142,10 +150,15 @@ public class WorkerAI : MonoBehaviour
         return inactiveNodeCounter;
     }
 
+    #endregion
+
+
     void Awake()
     {
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
+        m_Animator.speed = animationSpeed;
+
         //Visualize Search Sphere
         searchSphere = transform.Find("SearchSphere");
         searchSphere.localScale += new Vector3(sphereRadius, sphereRadius, sphereRadius);
@@ -171,7 +184,7 @@ public class WorkerAI : MonoBehaviour
         {            
             case State.IdleAtFire:
                 Debug.Log("State: IdleAtFire");
-                if (this.gameObject.tag == "Unemployed")
+                if (this.gameObject.tag == "Unemployed" || this.gameObject.tag == "LightWarden")
                 {
                     Debug.Log("State: IdleAtFire");
                     m_NavMeshAgent.isStopped = true;
@@ -180,6 +193,9 @@ public class WorkerAI : MonoBehaviour
                     transform.LookAt(m_NavMeshAgent.destination);
                     
                 }
+
+
+
                 if (this.gameObject.tag == "Woodcutter")
                 {
                     sphereLayerMask = LayerMask.GetMask("TreeNodes");
@@ -258,6 +274,7 @@ public class WorkerAI : MonoBehaviour
                     transform.LookAt(m_NavMeshAgent.destination);
                     if (workTime >= 12 / workSpeed)
                     {
+                        //Temporary fix- should mine last jobs loot -->
                         if (this.gameObject.tag == "Unemployed")
                         {
                             // Try and find an EnemyHealth script on the gameobject hit.
@@ -281,6 +298,7 @@ public class WorkerAI : MonoBehaviour
                                 // ... the enemy should take damage.
                                 woodAmount.TakeDamage((int)workTime);
                                 inventoryAmount += 1;
+                                inventoryWood += 1;
                             }
                             workTime -= (int)workTime;
                         }
@@ -294,6 +312,7 @@ public class WorkerAI : MonoBehaviour
                                 // ... the enemy should take damage.
                                 stoneAmount.TakeDamage((int)workTime);
                                 inventoryAmount += 1;
+                                inventoryStone += 1;
                             }
                             workTime -= (int)workTime;
                         }
@@ -343,6 +362,7 @@ public class WorkerAI : MonoBehaviour
                     workTime += Time.deltaTime;
                     if (workTime >= 1)
                     {
+                        //Temporary fix- should mine last jobs loot -->
                         if (this.gameObject.tag == "Unemployed")
                         {
                             inventoryAmount -= (int)workTime;
@@ -354,6 +374,8 @@ public class WorkerAI : MonoBehaviour
                         if (this.gameObject.tag == "Woodcutter")
                         {
                             inventoryAmount -= (int)workTime;
+                            inventoryWood -= (int)workTime;
+
                             ResourceBank.AddWoodToStock((int)workTime);
 
                             workTime -= (int)workTime;
@@ -361,6 +383,8 @@ public class WorkerAI : MonoBehaviour
                         if (this.gameObject.tag == "Stonecutter")
                         {
                             inventoryAmount -= (int)workTime;
+                            inventoryStone -= (int)workTime;
+
                             ResourceBank.AddStoneToStock((int)workTime);
 
                             workTime -= (int)workTime;

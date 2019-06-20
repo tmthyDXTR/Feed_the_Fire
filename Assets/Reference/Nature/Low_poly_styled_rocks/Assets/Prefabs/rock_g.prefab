@@ -13,12 +13,13 @@ GameObject:
   - component: {fileID: 2378238}
   - component: {fileID: 6599904}
   - component: {fileID: 5485818076046435838}
+  - component: {fileID: 7933886097481681675}
   m_Layer: 10
   m_Name: rock_g
   m_TagString: WorkActive
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 4294967287
   m_IsActive: 1
 --- !u!4 &404742
 Transform:
@@ -106,3 +107,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stoneAmount: 24
   currentAmount: 0
+--- !u!208 &7933886097481681675
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101208}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.48200002, y: 0.54300004, z: 0.47200003}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.017, y: 0.34300002, z: -0.057000004}
+  m_TimeToStationary: 0.5

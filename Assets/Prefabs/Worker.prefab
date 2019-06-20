@@ -1307,7 +1307,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 225
-  m_StoppingDistance: 15
+  m_StoppingDistance: 7
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1336,6 +1336,8 @@ MonoBehaviour:
   workSpeed: 1
   inventorySize: 1
   inventoryAmount: 0
+  inventoryWood: 0
+  inventoryStone: 0
   sphereOrigin: {x: 0, y: 0, z: 0}
   sphereRadius: 40
   sphereLayerMask:

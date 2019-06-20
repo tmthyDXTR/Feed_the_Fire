@@ -10,6 +10,8 @@ TagManager:
   - Woodcutter
   - Stonecutter
   - Unemployed
+  - Building
+  - LightWarden
   layers:
   - Default
   - TransparentFX

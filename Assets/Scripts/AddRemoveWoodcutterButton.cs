@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class AddRemoveWoodcutterButton : MonoBehaviour, IPointerClickHandler
 {
     public JobManager jobManager;
+    public Window_WorkerBank window_WorkerBank;
     public UnityEvent leftClick;
     public UnityEvent middleClick;
     public UnityEvent rightClick;
@@ -20,6 +21,7 @@ public class AddRemoveWoodcutterButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Left click");
             leftClick.Invoke();
             jobManager.MoveWorkerToJob("Unemployed", "Woodcutter");
+            
         }
 
         else if (eventData.button == PointerEventData.InputButton.Middle)
@@ -32,6 +34,7 @@ public class AddRemoveWoodcutterButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Right click");
             rightClick.Invoke();
             jobManager.MoveWorkerToJob("Woodcutter", "Unemployed");
-        }
+
+        }        
     }
 }

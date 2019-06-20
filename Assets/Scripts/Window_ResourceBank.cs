@@ -7,6 +7,14 @@ using System;
 
 public class Window_ResourceBank : MonoBehaviour
 {
+ 
+
+
+    private void UpdateFireLifeTextObject()
+    {
+        transform.Find("FireLife").GetComponent<Text>().text =
+            "Fire Life: " + ResourceBank.GetFireLife();
+    }
 
     private void UpdateWoodResourceTextObject()
     {
@@ -23,6 +31,13 @@ public class Window_ResourceBank : MonoBehaviour
 
     private void Awake()
     {
+        UpdateFireLifeTextObject();
+
+        ResourceBank.OnFireLifeChanged += delegate (object sender, EventArgs e)
+        {
+            UpdateFireLifeTextObject();
+        };
+
         ResourceBank.OnWoodStockChanged += delegate (object sender, EventArgs e)
         {
             UpdateWoodResourceTextObject();
