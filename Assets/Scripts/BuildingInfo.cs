@@ -5,14 +5,15 @@ using System;
 
 public class BuildingInfo : MonoBehaviour
 {
-    public int maxHealth = 10;
+    public int maxHealth;
     public float currentHealth;
-    public int costWood = 5;
-    public int costStone = 10;
+    public int costWood;
+    public int costStone;
     public int reqWood;
     public int reqStone;
     public int currentWood;
     public int currentStone;
+    public string originalTag;
     public bool isConstruction;
     bool isDead;
     CapsuleCollider capsuleCollider;
@@ -20,12 +21,40 @@ public class BuildingInfo : MonoBehaviour
 
     void Awake()
     {
+        if (this.gameObject.CompareTag("ResidentialHouse"))
+        {
+            originalTag = this.gameObject.tag;
+            maxHealth = 20;
+            costWood = 10;
+            costStone = 10;
+        }
+        if (this.gameObject.CompareTag("Storage"))
+        {
+            originalTag = this.gameObject.tag;
+            maxHealth = 15;
+            costWood = 15;
+            costStone = 0;
+        }
+
+
+
+
+
+
+
+
         currentHealth = 0.01f;
         isConstruction = true;
         reqWood = costWood;
         reqStone = costStone;
     }
 
+    #region API Methods
+
+    public void ConstructionComplete()
+    {
+        this.gameObject.tag = originalTag;
+    }
 
     public void GainHealth()
     {
@@ -37,7 +66,7 @@ public class BuildingInfo : MonoBehaviour
         // Reduce the current health by the amount of damage sustained.
         if ((int)currentHealth < (int)maxHealth)
         {
-            currentHealth += (maxHealth / (costWood + costStone) * 1f);
+            currentHealth += (maxHealth / (costWood + costStone) * 1f);  //-- Construction Speed 
         }
         if ((int)currentHealth >= (int)maxHealth)
         {
@@ -47,14 +76,14 @@ public class BuildingInfo : MonoBehaviour
         // If the current health is less than or equal to zero...
         if (currentHealth <= 0)
         {
-            // ... the enemy is dead.
+            // ... the building is dead.
             Death();
         }
     }
 
     void Death()
     {
-        // The enemy is dead.
+        // The building is dead.
         isDead = true;
 
         Destroy(gameObject);
@@ -131,9 +160,11 @@ public class BuildingInfo : MonoBehaviour
         {
             reqStone -= 1;
         }
-    }   
+    }
 
-    // Update is called once per frame
+    #endregion
+
+   
     void Update()
     {
         

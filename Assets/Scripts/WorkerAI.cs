@@ -36,6 +36,7 @@ public class WorkerAI : MonoBehaviour
         TakingFromStorage,
         IdleAtFire,
         MovingToFire,
+        ConstructionWork,
     }
 
     private float distanceToNode;
@@ -53,13 +54,11 @@ public class WorkerAI : MonoBehaviour
     #endregion
 
 
-
     #region Target Search Methods
 
     // Target Search Method
-    private Vector3 GetClosestInactiveNodeVector()
+    private Vector3 GetClosestInactiveNodeVector(string nodeTag)
     {
-
         sphereOrigin = transform.position;
         Collider[] nodeColliders = Physics.OverlapSphere(sphereOrigin, sphereRadius, sphereLayerMask);
         //Debug.Log("Found Node Colliders: " + nodeColliders.Length);
@@ -69,24 +68,19 @@ public class WorkerAI : MonoBehaviour
         foreach (Collider node in nodeColliders)
         {
             float distance = Vector3.Distance(node.ClosestPoint(nextNode), transform.position);
-            if (node.gameObject.CompareTag("WorkInactive") || 
-                node.gameObject.CompareTag("Construction") ||
-                node.gameObject.CompareTag("Storage"))
-            {
-                
+            if (node.gameObject.CompareTag(nodeTag))
+            {                
                 if (distance < bestDistance)
                 {
                     bestDistance = distance;
                     nextNode = node.ClosestPoint(nextNode);                    
                 }
             }
-        }
-                
-        return nextNode;
-        
+        }                
+        return nextNode;        
     }
 
-    private Collider GetTarget()
+    private Collider GetTarget(string nodeTag)
     {
         sphereOrigin = transform.position;
         Collider[] nodeColliders = Physics.OverlapSphere(sphereOrigin, sphereRadius, sphereLayerMask);
@@ -100,9 +94,7 @@ public class WorkerAI : MonoBehaviour
             {
                 continue;
             }
-            if (node.gameObject.CompareTag("WorkInactive") ||
-                node.gameObject.CompareTag("Construction") ||
-                node.gameObject.CompareTag("Storage"))
+            if (node.gameObject.CompareTag(nodeTag))
                 if (distance < bestDistance)
                 {
                     bestDistance = distance;
@@ -113,7 +105,7 @@ public class WorkerAI : MonoBehaviour
         return Target;
     }
 
-    private Collider GetNodeCollider()
+    private Collider GetNodeCollider(string nodeTag)
     {
         sphereOrigin = transform.position;
         Collider[] nodeColliders = Physics.OverlapSphere(sphereOrigin, sphereRadius, sphereLayerMask);
@@ -125,11 +117,16 @@ public class WorkerAI : MonoBehaviour
         {
             float distance = Vector3.Distance(node.ClosestPoint(nextNode), transform.position);
 
-            if (distance < bestDistance)
+            if (node.gameObject.CompareTag(nodeTag))
             {
-                bestDistance = distance;
-                nextNodeCollider = node;
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    nextNodeCollider = node;
+                }
             }
+
+                
         }
         return nextNodeCollider;
     }
@@ -161,10 +158,11 @@ public class WorkerAI : MonoBehaviour
     {
         m_NavMeshAgent.isStopped = false;
         sphereLayerMask = LayerMask.GetMask("TreeNodes");
-        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
-        Target = GetTarget();
+        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector("WorkInactive"));
+        Target = GetTarget("WorkInactive");
         Target.gameObject.tag = "WorkActive";
         m_Animator.SetBool("IsWalking", true);
+        m_Animator.SetBool("IsLumbering", false);
         m_NavMeshAgent.stoppingDistance = 3;
     }
 
@@ -172,32 +170,34 @@ public class WorkerAI : MonoBehaviour
     {
         m_NavMeshAgent.isStopped = false;
         sphereLayerMask = LayerMask.GetMask("StoneNodes");
-        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
-        Target = GetTarget();
+        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector("WorkInactive"));
+        Target = GetTarget("WorkInactive");
         Target.gameObject.tag = "WorkActive";
-        m_Animator.SetBool("IsWalking", true);
+        m_Animator.SetBool("IsWalking", true); 
+        m_Animator.SetBool("IsLumbering", false);
         m_NavMeshAgent.stoppingDistance = 3;
     }
 
     void GoToNearestStorage()
     {
         m_NavMeshAgent.isStopped = false;
-        sphereLayerMask = LayerMask.GetMask("StorageNodes");
-        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
-        Target = GetTarget();
+        sphereLayerMask = LayerMask.GetMask("Buildings");
+        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector("Storage"));
+        Target = GetTarget("Storage");
         m_Animator.SetBool("IsLumbering", false);
         m_Animator.SetBool("IsWalking", true);
         m_NavMeshAgent.stoppingDistance = 3;
     }
 
     void GoToNearestFire()
-        {
-            sphereLayerMask = LayerMask.GetMask("SafePlaceNodes");
-            m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector());
-            Target = GetTarget();
-            m_Animator.SetBool("IsWalking", true);
-            m_Animator.SetBool("IsLumbering", false);
-        }
+    {
+        m_NavMeshAgent.isStopped = false;
+        sphereLayerMask = LayerMask.GetMask("SafePlaceNodes");
+        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector("WorkInactive"));
+        Target = GetTarget("WorkInactive");
+        m_Animator.SetBool("IsWalking", true);
+        m_Animator.SetBool("IsLumbering", false);
+    }
 
     #endregion
 
@@ -206,37 +206,38 @@ public class WorkerAI : MonoBehaviour
 
     void MineWood()
     {
+        m_Animator.SetBool("IsLumbering", true);
         m_Animator.speed = 1;
         workTime += Time.deltaTime;
         transform.LookAt(m_NavMeshAgent.destination);
         if (workTime >= 12 / workSpeed)
         {
-            // Try and find an Nodes Resource script on the gameobject hit.
-            TreeNode woodAmount = GetNodeCollider().GetComponent<TreeNode>();
+            // Try and find a Nodes Resource script on the gameobject hit.
+            TreeNode treeNode = Target.GetComponent<TreeNode>();
             // If the Node Resource script component exists...
-            if (woodAmount != null)
+            if (treeNode != null)
             {
                 // ... the Node should lose resources.
-                woodAmount.TakeDamage();
+                treeNode.TakeDamage();
                 inventoryAmount += 1;
                 inventoryWood += 1;
                 Debug.Log("Wood mined");
-
+                workTime -= (int)workTime;
             }
-            workTime -= (int)workTime;
+            
         }
-
     }
 
     void MineStone()
     {
+        m_Animator.SetBool("IsLumbering", true);
         m_Animator.speed = 1;
         workTime += Time.deltaTime;
         transform.LookAt(m_NavMeshAgent.destination);
         if (workTime >= 12 / workSpeed)
         {
             // Try and find an Nodes Resource script on the gameobject hit.
-            StoneNode stoneAmount = GetNodeCollider().GetComponent<StoneNode>();
+            StoneNode stoneAmount = Target.GetComponent<StoneNode>();
             // If the Node Resource component exists...
             if (stoneAmount != null)
             {
@@ -247,18 +248,19 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("Stone mined");
             }
             workTime -= (int)workTime;
-        }            
+        }        
     }
 
     void ConstructBuilding()
     {
+        m_Animator.SetBool("IsLumbering", true);
         m_Animator.speed = 1;
         workTime += Time.deltaTime;
         transform.LookAt(m_NavMeshAgent.destination);
         if (workTime >= 12 / workSpeed)
         {
             // Try and find an Buildings Info script on the gameobject to construct.
-            BuildingInfo currentHealth = GetNodeCollider().GetComponent<BuildingInfo>();
+            BuildingInfo currentHealth = Target.GetComponent<BuildingInfo>();
             // If the Building Info component exists...
             if (currentHealth != null)
             {
@@ -267,7 +269,8 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("Health gained");                
             }
             workTime -= (int)workTime;
-        }       
+        }
+        
     }
 
     #endregion
@@ -408,8 +411,7 @@ public class WorkerAI : MonoBehaviour
 
 
     void Update()
-    {
-        
+    {        
         switch (state)
         {
             #region State IdleAtFire
@@ -430,7 +432,7 @@ public class WorkerAI : MonoBehaviour
                     {
                         inventorySize = 1;
                         sphereLayerMask = LayerMask.GetMask("StorageNodes");
-                        if (GetInactiveNodesCount() != 0)
+                        if (GetNodeCollider("Storage") != null)
                         {
                             GoToNearestStorage();
                             state = State.MovingToStorage;
@@ -442,7 +444,7 @@ public class WorkerAI : MonoBehaviour
                 {
                     inventorySize = 5;
                     sphereLayerMask = LayerMask.GetMask("Buildings");
-                    GetNodeCollider();
+                    GetNodeCollider("Construction");
                     if (GetInactiveNodesCount() != 0)
                     {
                         GoToNearestStorage();
@@ -481,7 +483,7 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("State: MovingToJobNode");
                 if (m_NavMeshAgent.pathPending)
                 {
-                    distanceToNode = Vector3.Distance(transform.position, nextNode);
+                    distanceToNode = Vector3.Distance(transform.position, Target.transform.position);
                 }
                 else
                 {
@@ -490,19 +492,56 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("MovingToJobNode - Distance to Job Node: " + distanceToNode);
                 if (distanceToNode <= m_NavMeshAgent.stoppingDistance)
                 {
-                    Debug.Log("JobNode reached");
+                    Debug.Log("Job Node reached");
                     m_Animator.SetBool("IsWalking", false);
-                    if (this.gameObject.tag == "Builder")
+                    if (this.gameObject.tag == "Builder" && Target.tag == "Storage")
                     {
                         state = State.LoadToConstruction;
                     }
-
+                    if (this.gameObject.tag == "Builder" && Target.tag != "Storage")
+                    {
+                        state = State.ConstructionWork;
+                    }
                     else
-                    {                        
-                        m_Animator.SetBool("IsLumbering", true);
+                    {
                         state = State.WorkingOnJob;
                     }
                 }                
+                break;
+
+            #endregion
+
+            #region State ConstructionWork
+
+            case State.ConstructionWork:
+                Debug.Log("State: ConstructionWork");
+                if (this.gameObject.tag == "Builder")
+                {
+                    m_NavMeshAgent.isStopped = true;
+                    sphereLayerMask = LayerMask.GetMask("Buildings");
+                    Debug.Log("Constructing Building");
+                    ConstructBuilding();
+
+                    BuildingInfo building = Target.GetComponent<BuildingInfo>();
+                    Debug.Log("Building Info Script found");
+                    if (building.currentHealth == building.maxHealth)
+                    {
+                        building.ConstructionComplete();
+
+                        if (GetInactiveNodesCount() != 0)
+                        {
+                            Target = GetTarget("Storage");
+                            GoToNearestStorage();
+                            state = State.MovingToStorage;
+                        }
+                        else
+                        {
+                            GoToNearestFire();
+                            state = State.MovingToFire;
+                        }
+                    }
+                }
+
                 break;
 
             #endregion
@@ -513,6 +552,39 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("State: WorkingOnJob");
                 if (inventoryAmount < inventorySize)
                 {
+                    if (this.gameObject.tag == "Woodcutter")
+                    {
+                        m_NavMeshAgent.isStopped = true;
+                        Debug.Log("Mining Wood");
+                        MineWood();
+                    }
+
+                    if (this.gameObject.tag == "Stonecutter")
+                    {
+                        m_NavMeshAgent.isStopped = true;
+                        Debug.Log("Mining Stone");
+                        MineStone();
+                    }                 
+                    
+                }
+                
+                else
+                {
+                    Debug.Log("Job Done");
+                    m_Animator.speed = animationSpeed;
+
+                    if (this.gameObject.tag == "Woodcutter" || this.gameObject.tag == "Stonecutter")
+                    {
+                        if (Target != null)
+                        {
+                            Target.gameObject.tag = "WorkInactive";
+                        }
+                        GoToNearestStorage();
+                        state = State.MovingToStorage;
+                    }
+                }
+                /*                                                                                                      
+                    
                     m_Animator.speed = 1;
                     workTime += Time.deltaTime;
                     transform.LookAt(m_NavMeshAgent.destination);
@@ -531,58 +603,8 @@ public class WorkerAI : MonoBehaviour
                                 inventoryAmount += 1;
                             }
                             workTime -= (int)workTime;
-                        }
-                        if (this.gameObject.tag == "Woodcutter")
-                        {
-                            MineWood();
-                        }
-                        if (this.gameObject.tag == "Stonecutter")
-                        {
-                            MineStone();
-                        }
-                        if (this.gameObject.tag == "Builder")
-                        {
-                            sphereLayerMask = LayerMask.GetMask("Buildings");
-                            Debug.Log("Constructing Building");
-                            ConstructBuilding();
-                            BuildingInfo currentHealth = GetNodeCollider().GetComponent<BuildingInfo>();
-
-                            if (currentHealth.currentHealth == currentHealth.maxHealth)
-                            {
-                                //-- Temporary Hard Code for construction finishing Tag change --//
-                                Target.gameObject.tag = "StoneHouse";
-                                Debug.Log("Building construction finished");
-                                m_Animator.speed = animationSpeed;
-                                if (GetInactiveNodesCount() != 0)
-                                {
-                                    GoToNearestStorage();
-                                    state = State.MovingToStorage;
-                                }
-                                else
-                                {
-                                    GoToNearestFire();
-                                    state = State.MovingToFire;
-                                }
-                            }                            
-                        }    
-                    }
-                }
-                else
-                {
-                    Debug.Log("Job Done");
-                    m_Animator.speed = animationSpeed;
-
-                    if (this.gameObject.tag == "Woodcutter" || this.gameObject.tag == "Stonecutter")
-                    {
-                        if (Target != null)
-                        {
-                            Target.gameObject.tag = "WorkInactive";
-                        }
-                        GoToNearestStorage();
-                        state = State.MovingToStorage;
-                    }
-                    
-                }
+                        }  */                                                      
+                        
                 break;
 
             #endregion
@@ -591,9 +613,10 @@ public class WorkerAI : MonoBehaviour
 
             case State.MovingToStorage:
                 Debug.Log("State: MovingToStorage");
+                m_Animator.SetBool("IsWalking", true);
                 if (m_NavMeshAgent.pathPending)
                 {
-                    distanceToNode = Vector3.Distance(transform.position, GetClosestInactiveNodeVector());
+                    distanceToNode = Vector3.Distance(transform.position, Target.transform.position);
                 }
                 else
                 {
@@ -843,7 +866,7 @@ public class WorkerAI : MonoBehaviour
 
                 if (m_NavMeshAgent.pathPending)
                 {
-                    distanceToNode = Vector3.Distance(transform.position, GetClosestInactiveNodeVector());
+                    distanceToNode = Vector3.Distance(transform.position, Target.transform.position);
                 }
                 else
                 {

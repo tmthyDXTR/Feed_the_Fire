@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlaceableObject : MonoBehaviour
 {
-    [HideInInspector] public List<Collider> colliders = new List<Collider>();
+    public List<Collider> colliders = new List<Collider>();
 
     // Start is called before the first frame update
     void Start()
@@ -20,14 +20,14 @@ public class PlaceableObject : MonoBehaviour
 
     void OnTriggerEnter(Collider c)
     {
-        if (c.tag == "Building")
+        if (c.gameObject.layer == 15 || c.gameObject.layer == 14 || c.gameObject.layer == 13 || c.gameObject.layer == 10 || c.gameObject.layer == 9)
         {
             colliders.Add(c);
         }
     }
     void OnTriggerExit(Collider c)
     {
-        if (c.tag == "Building")
+        if (c.gameObject.layer == 15 || c.gameObject.layer == 14 || c.gameObject.layer == 13 || c.gameObject.layer == 10 || c.gameObject.layer == 9)
         {
             colliders.Remove(c);
         }

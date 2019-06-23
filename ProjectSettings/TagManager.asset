@@ -15,6 +15,7 @@ TagManager:
   - Construction
   - StoneHouse
   - Storage
+  - ResidentialHouse
   layers:
   - Default
   - TransparentFX

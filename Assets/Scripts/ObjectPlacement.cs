@@ -6,7 +6,7 @@ public class ObjectPlacement : MonoBehaviour
 {
     private PlaceableObject placeableObject;
     private Transform currentObject;
-    private float objectRotationSpeed = 60f;
+    private float objectRotationSpeed = 100f;
     public bool hasPlaced;
 
     // Use this for initialization
@@ -31,6 +31,7 @@ public class ObjectPlacement : MonoBehaviour
             {
                 if (IsLegalPosition())
                 {
+                    currentObject.tag = "Construction";
                     hasPlaced = true;
                 }                         
             }
@@ -66,10 +67,10 @@ public class ObjectPlacement : MonoBehaviour
             placeableObject.transform.Rotate(-Vector3.up * objectRotationSpeed * Time.deltaTime);
     }
 
-    public void SetItem(GameObject b)
+    public void SetItem(GameObject objectToBuild)
     {
         hasPlaced = false;
-        currentObject = ((GameObject)Instantiate(b)).transform;
+        currentObject = ((GameObject)Instantiate(objectToBuild)).transform;
         placeableObject = currentObject.GetComponent<PlaceableObject>();               
     }
 
