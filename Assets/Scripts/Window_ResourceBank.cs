@@ -13,7 +13,7 @@ public class Window_ResourceBank : MonoBehaviour
     private void UpdateFireLifeTextObject()
     {
         transform.Find("FireLife").GetComponent<Text>().text =
-            "Fire Life: " + ResourceBank.GetFireLife();
+            "Fire Life: " + ResourceBank.GetFireLife() + " / " + ResourceBank.GetFireLifeMax();
     }
 
     private void UpdateWoodResourceTextObject()
@@ -31,10 +31,15 @@ public class Window_ResourceBank : MonoBehaviour
 
     private void Awake()
     {
-        UpdateFireLifeTextObject();
 
-        ResourceBank.OnFireLifeChanged += delegate (object sender, EventArgs e)
-        {
+        //-- Test Stock Init for Job Debugging --//
+        UpdateWoodResourceTextObject();
+        UpdateStoneResourceTextObject();
+
+
+
+        ResourceBank.OnFireLifeChanged -= delegate (object sender, EventArgs e)
+        {            
             UpdateFireLifeTextObject();
         };
 
@@ -47,8 +52,15 @@ public class Window_ResourceBank : MonoBehaviour
         {
             UpdateStoneResourceTextObject();
         };
+
     }
 
-    
+        
+
+    void Update()
+    {
+        ResourceBank.FireBurner();
+        UpdateFireLifeTextObject();
+    }
 
 }

@@ -21,6 +21,12 @@ public class Window_WorkerBank : MonoBehaviour
             "LightWarden: " + jobManager.GetWorkerCount("LightWarden");
     }
 
+    private void UpdateBuilderTotalTextObject()
+    {
+        transform.Find("Builder").GetComponent<Text>().text =
+            "Builder: " + jobManager.GetWorkerCount("Builder");
+    }
+
     private void UpdateWoodcutterTotalTextObject()
     {
         transform.Find("Woodcutter").GetComponent<Text>().text =
@@ -43,6 +49,7 @@ public class Window_WorkerBank : MonoBehaviour
     {
         UpdateUnemployedTotalTextObject();
         UpdateLightWardenTotalTextObject();
+        UpdateBuilderTotalTextObject();
         UpdateWoodcutterTotalTextObject();
         UpdateStonecutterTotalTextObject();
     }

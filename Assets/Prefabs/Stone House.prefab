@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: 7158144900409146763}
   - component: {fileID: 7972790318114526239}
   - component: {fileID: 5211121902092549073}
-  m_Layer: 0
+  - component: {fileID: 783999703363528604}
+  m_Layer: 15
   m_Name: Stone House
-  m_TagString: Building
+  m_TagString: Construction
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -92,7 +93,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -139,3 +140,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colliders: []
+--- !u!114 &783999703363528604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4914625429622730706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5eaf35b1bf2a5246ab2f857449e3e63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  currentHealth: 0
+  req_Wood: 5
+  req_Stone: 10
+  isConstruction: 0

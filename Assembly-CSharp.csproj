@@ -55,8 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\AddRemoveBuilderButton.cs" />
+     <Compile Include="Assets\Scripts\AddRemoveLightWardenButton.cs" />
      <Compile Include="Assets\Scripts\AddRemoveStonecutterButton.cs" />
      <Compile Include="Assets\Scripts\AddRemoveWoodcutterButton.cs" />
+     <Compile Include="Assets\Scripts\BackgroundAudioController.cs" />
+     <Compile Include="Assets\Scripts\BuildingInfo.cs" />
      <Compile Include="Assets\Scripts\BuildingManager.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\JobManager.cs" />

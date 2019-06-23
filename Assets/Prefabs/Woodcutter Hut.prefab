@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2986324467546676563}
   m_Layer: 14
   m_Name: Woodcutter Hut
-  m_TagString: Building
+  m_TagString: Storage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7287260131487731739}
   m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.76, z: 0}
+  m_LocalPosition: {x: 0, y: 1.63, z: 0}
   m_LocalScale: {x: 208.81212, y: 208.81212, z: 208.81212}
   m_Children: []
   m_Father: {fileID: 0}
