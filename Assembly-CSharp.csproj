@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\BuildingInfo.cs" />
      <Compile Include="Assets\Scripts\BuildingManager.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\ChangeColour.cs" />
      <Compile Include="Assets\Scripts\JobManager.cs" />
      <Compile Include="Assets\Scripts\MiningArea.cs" />
      <Compile Include="Assets\Scripts\ObjectPlacement.cs" />

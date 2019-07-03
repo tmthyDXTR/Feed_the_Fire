@@ -14,7 +14,7 @@ public static class ResourceBank
     private static int stoneStock = 20;
     private static int woodStock = 20;
     private static float burnTime = 0.0f;
-    private static float burnSpeed = 10f; //-- Fire Life per Second Lost
+    private static float burnSpeed = 10f; //-- Fire Life per Second Lost *10
 
     //-- Fire --//
 

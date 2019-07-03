@@ -45,6 +45,7 @@ public class ObjectPlacement : MonoBehaviour
                     miningArea = currentObject.GetComponent<MiningArea>();
                     miningArea.SetNodesToMinable("TreeNodes");
                     miningArea.SetNodesToMinable("StoneNodes");
+                    miningArea.HideMinableNodes();
                     hasPlaced = true;
                 }
 

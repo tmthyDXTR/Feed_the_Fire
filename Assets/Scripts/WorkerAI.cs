@@ -431,7 +431,7 @@ public class WorkerAI : MonoBehaviour
                     if (this.gameObject.tag == "LightWarden" && ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax())
                     {
                         inventorySize = 1;
-                        sphereLayerMask = LayerMask.GetMask("StorageNodes");
+                        sphereLayerMask = LayerMask.GetMask("Buildings");
                         if (GetNodeCollider("Storage") != null)
                         {
                             GoToNearestStorage();

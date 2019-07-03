@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3416201885841057492}
   - component: {fileID: 3416201885841057495}
   - component: {fileID: 5473789857244285481}
+  - component: {fileID: 4320785138473593913}
   m_Layer: 0
   m_Name: MiningArea
   m_TagString: MiningArea
@@ -60,6 +61,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sphereRadius: 30
   miningNodes: []
+  originalMaterial: {fileID: 0}
+  newMaterial: {fileID: 2100000, guid: debe653ad3890354c9bd94e81535e439, type: 2}
 --- !u!114 &5473789857244285481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,3 +76,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colliders: []
+--- !u!54 &4320785138473593913
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3416201885841057494}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
