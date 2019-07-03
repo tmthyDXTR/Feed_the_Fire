@@ -6,6 +6,8 @@ public class ObjectPlacement : MonoBehaviour
 {
     private PlaceableObject placeableObject;
     private Transform currentObject;
+    private MiningArea miningArea;
+
     private float objectRotationSpeed = 100f;
     public bool hasPlaced;
 
@@ -29,11 +31,24 @@ public class ObjectPlacement : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (IsLegalPosition())
+                if (currentObject.tag != "MiningArea")
                 {
-                    currentObject.tag = "Construction";
+                    if (IsLegalPosition())
+                    {
+                        currentObject.tag = "Construction";
+                        hasPlaced = true;
+                    }
+                }
+
+                else
+                {                   
+                    miningArea = currentObject.GetComponent<MiningArea>();
+                    miningArea.SetNodesToMinable("TreeNodes");
+                    miningArea.SetNodesToMinable("StoneNodes");
                     hasPlaced = true;
-                }                         
+                }
+
+                             
             }
             if (Input.GetMouseButtonDown(1))
             {

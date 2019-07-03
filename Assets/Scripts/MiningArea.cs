@@ -12,7 +12,7 @@ public class MiningArea : MonoBehaviour
     private LayerMask sphereLayerMask;
 
 
-    private void SetNodesToMinable(string nodeLayer)
+    public void SetNodesToMinable(string nodeLayer)
     {
 
         sphereLayerMask = LayerMask.GetMask(nodeLayer);
@@ -26,14 +26,13 @@ public class MiningArea : MonoBehaviour
                 nodeCounter += 1;
             }
         }
-        Debug.Log(nodeLayer + " set to Minable: " + nodeCounter);
+        Debug.Log(nodeCounter + " " + nodeLayer + " set to Minable");
     }
 
 
     void Awake()
     {
-        SetNodesToMinable("TreeNodes");
-        SetNodesToMinable("StoneNodes");
+        
     }
 
     void Update()

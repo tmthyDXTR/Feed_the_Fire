@@ -16,6 +16,7 @@ TagManager:
   - StoneHouse
   - Storage
   - ResidentialHouse
+  - MiningArea
   layers:
   - Default
   - TransparentFX
