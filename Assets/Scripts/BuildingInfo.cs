@@ -21,6 +21,8 @@ public class BuildingInfo : MonoBehaviour
 
     void Awake()
     {
+
+        // Create According Building Stats
         if (this.gameObject.CompareTag("ResidentialHouse"))
         {
             originalTag = this.gameObject.tag;
@@ -35,12 +37,13 @@ public class BuildingInfo : MonoBehaviour
             costWood = 15;
             costStone = 0;
         }
-
-
-
-
-
-
+        if (this.gameObject.CompareTag("Tavern"))
+        {
+            originalTag = this.gameObject.tag;
+            maxHealth = 30;
+            costWood = 15;
+            costStone = 15;
+        }
 
 
         currentHealth = 0.01f;
@@ -49,7 +52,7 @@ public class BuildingInfo : MonoBehaviour
         reqStone = costStone;
     }
 
-    #region API Methods
+    #region Methods
 
     public void ConstructionComplete()
     {

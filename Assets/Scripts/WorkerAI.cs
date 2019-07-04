@@ -40,7 +40,7 @@ public class WorkerAI : MonoBehaviour
     }
 
     private float distanceToNode;
-    private float distanceToNearestNode = float.MaxValue;
+   // private float distanceToNearestNode = float.MaxValue;
 
     //SphereCaster for closest JobNode Search
     private Transform searchSphere;
@@ -428,7 +428,9 @@ public class WorkerAI : MonoBehaviour
                     transform.LookAt(m_NavMeshAgent.destination);
 
 
-                    if (this.gameObject.tag == "LightWarden" && ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax())
+                    if (this.gameObject.tag == "LightWarden" && 
+                        ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax() && 
+                        ResourceBank.GetWoodStock() > 0)
                     {
                         inventorySize = 1;
                         sphereLayerMask = LayerMask.GetMask("Buildings");
@@ -494,14 +496,29 @@ public class WorkerAI : MonoBehaviour
                 {
                     Debug.Log("Job Node reached");
                     m_Animator.SetBool("IsWalking", false);
-                    if (this.gameObject.tag == "Builder" && Target.tag == "Storage")
+                    if (this.gameObject.tag == "Builder")
                     {
-                        state = State.LoadToConstruction;
+                        BuildingInfo building = Target.GetComponent<BuildingInfo>();
+                        if (Target.tag == "Construction" && ( building.currentWood + building.currentStone ) < 
+                                (building.costWood + building.costStone))
+                        {
+                            state = State.LoadToConstruction;
+                        }
+
+
+                        if (Target.tag == "Construction" && (building.currentWood + building.currentStone) ==
+                                (building.costWood + building.costStone))
+                        {
+                            state = State.ConstructionWork;
+                        }                  
+                        
+                        else
+                        {
+                            Debug.Log("Waiting for remaining ressources on the way");
+                        }
                     }
-                    if (this.gameObject.tag == "Builder" && Target.tag != "Storage")
-                    {
-                        state = State.ConstructionWork;
-                    }
+             
+                    
                     else
                     {
                         state = State.WorkingOnJob;
@@ -566,6 +583,19 @@ public class WorkerAI : MonoBehaviour
                         MineStone();
                     }                 
                     
+                    if (this.gameObject.tag == "Unemployed")
+                    {
+                        if (inventoryAmount > 0)
+                        {
+                            GoToNearestStorage();
+                            state = State.MovingToStorage;
+                        }
+                        else
+                        {
+                            GoToNearestFire();
+                            state = State.MovingToFire;
+                        }                        
+                    }
                 }
                 
                 else
@@ -582,29 +612,7 @@ public class WorkerAI : MonoBehaviour
                         GoToNearestStorage();
                         state = State.MovingToStorage;
                     }
-                }
-                /*                                                                                                      
-                    
-                    m_Animator.speed = 1;
-                    workTime += Time.deltaTime;
-                    transform.LookAt(m_NavMeshAgent.destination);
-                    if (workTime >= 12 / workSpeed)
-                    {
-                        //Temporary fix- should mine last jobs loot -->
-                        if (this.gameObject.tag == "Unemployed")
-                        {
-                            // Try and find an EnemyHealth script on the gameobject hit.
-                            TreeNode woodAmount = GetNodeCollider().GetComponent<TreeNode>();
-                            // If the EnemyHealth component exist...
-                            if (woodAmount != null)
-                            {
-                                // ... the enemy should take damage.
-                                woodAmount.TakeDamage();
-                                inventoryAmount += 1;
-                            }
-                            workTime -= (int)workTime;
-                        }  */                                                      
-                        
+                }                                                                      
                 break;
 
             #endregion
@@ -662,10 +670,12 @@ public class WorkerAI : MonoBehaviour
                 if (this.gameObject.tag == "LightWarden" ||
                     this.gameObject.tag == "Unemployed")
                 {
-                    if (inventoryAmount < inventorySize)
+                    if (inventoryAmount < inventorySize && ResourceBank.GetWoodStock() > 0)
                     {
+                        Debug.Log("Taking Wood");
                         TakeResource("Wood");
                     }
+                    
                     else
                     {
                         Debug.Log("Taking complete");
@@ -848,7 +858,7 @@ public class WorkerAI : MonoBehaviour
                     else
                     {
                         m_Animator.SetBool("IsLumbering", true);
-                        state = State.WorkingOnJob;
+                        state = State.ConstructionWork;
                     }
                 }
                 break;
@@ -894,7 +904,8 @@ public class WorkerAI : MonoBehaviour
                 }
                 break;
 
-                #endregion
+            #endregion
+
         }
     }
 }

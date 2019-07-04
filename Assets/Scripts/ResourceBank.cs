@@ -9,12 +9,12 @@ public static class ResourceBank
     public static EventHandler OnFireLifeChanged;
     public static EventHandler OnWoodStockChanged;
     public static EventHandler OnStoneStockChanged;
-    private static int fireLifeMax = 20;
-    private static int fireLife = 15;
-    private static int stoneStock = 20;
-    private static int woodStock = 20;
-    private static float burnTime = 0.0f;
-    private static float burnSpeed = 10f; //-- Fire Life per Second Lost *10
+    public static int fireLifeMax = 20;
+    public static int fireLife = 10;
+    public static int stoneStock = 10;
+    public static int woodStock = 10;
+    public static float burnTime = 0.0f;
+    public static float burnSpeed = 10f; //-- Fire Life per Second Lost
 
     //-- Fire --//
 

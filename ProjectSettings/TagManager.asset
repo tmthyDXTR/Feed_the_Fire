@@ -17,6 +17,7 @@ TagManager:
   - Storage
   - ResidentialHouse
   - MiningArea
+  - Tavern
   layers:
   - Default
   - TransparentFX

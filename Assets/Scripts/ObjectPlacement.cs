@@ -41,7 +41,7 @@ public class ObjectPlacement : MonoBehaviour
                 }
 
                 else
-                {                   
+                {
                     miningArea = currentObject.GetComponent<MiningArea>();
                     miningArea.SetNodesToMinable("TreeNodes");
                     miningArea.SetNodesToMinable("StoneNodes");
@@ -53,8 +53,15 @@ public class ObjectPlacement : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1))
             {
-                if (placeableObject != null)
+                if (placeableObject != null && currentObject.tag != "MiningArea")
+                {                    
+                    Destroy(currentObject.gameObject);
+                    hasPlaced = false;
+                }
+                else
                 {
+                    miningArea = currentObject.GetComponent<MiningArea>();
+                    miningArea.HideMinableNodes();
                     Destroy(currentObject.gameObject);
                     hasPlaced = false;
                 }

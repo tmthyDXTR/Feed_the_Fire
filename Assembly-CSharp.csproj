@@ -64,6 +64,8 @@
      <Compile Include="Assets\Scripts\BuildingManager.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\ChangeColour.cs" />
+     <Compile Include="Assets\Scripts\FireLight.cs" />
+     <Compile Include="Assets\Scripts\FireSize.cs" />
      <Compile Include="Assets\Scripts\JobManager.cs" />
      <Compile Include="Assets\Scripts\MiningArea.cs" />
      <Compile Include="Assets\Scripts\ObjectPlacement.cs" />
@@ -74,6 +76,7 @@
      <Compile Include="Assets\Scripts\Window_ResourceBank.cs" />
      <Compile Include="Assets\Scripts\Window_WorkerBank.cs" />
      <Compile Include="Assets\Scripts\WorkerAI.cs" />
+     <None Include="Assets\Readme.txt" />
      <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\Vegitation.shader" />
      <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\Grid.shader" />
      <None Include="Assets\Reference\Nature\Fantasy Forest Set\Sources\Shaders\StandardSpecular_2Sided.shader" />
