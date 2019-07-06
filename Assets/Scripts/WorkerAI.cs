@@ -193,8 +193,8 @@ public class WorkerAI : MonoBehaviour
     {
         m_NavMeshAgent.isStopped = false;
         sphereLayerMask = LayerMask.GetMask("SafePlaceNodes");
-        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector("WorkInactive"));
-        Target = GetTarget("WorkInactive");
+        m_NavMeshAgent.SetDestination(GetClosestInactiveNodeVector("Untagged"));
+        Target = GetTarget("Untagged");
         m_Animator.SetBool("IsWalking", true);
         m_Animator.SetBool("IsLumbering", false);
     }
@@ -213,7 +213,7 @@ public class WorkerAI : MonoBehaviour
         if (workTime >= 12 / workSpeed)
         {
             // Try and find a Nodes Resource script on the gameobject hit.
-            TreeNode treeNode = Target.GetComponent<TreeNode>();
+            TreeNodes treeNode = Target.GetComponent<TreeNodes>();
             // If the Node Resource script component exists...
             if (treeNode != null)
             {
@@ -237,7 +237,7 @@ public class WorkerAI : MonoBehaviour
         if (workTime >= 12 / workSpeed)
         {
             // Try and find an Nodes Resource script on the gameobject hit.
-            StoneNode stoneAmount = Target.GetComponent<StoneNode>();
+            StoneNodes stoneAmount = Target.GetComponent<StoneNodes>();
             // If the Node Resource component exists...
             if (stoneAmount != null)
             {

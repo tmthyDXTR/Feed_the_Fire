@@ -31,7 +31,7 @@ TagManager:
   - TreeNodes
   - StoneNodes
   - 
-  - 
+  - MiningArea
   - SafePlaceNodes
   - StorageNodes
   - Buildings

@@ -5,7 +5,7 @@ using UnityEngine;
 public class FireLight : MonoBehaviour
 {
     public Light lt;
-    private float originalRange;
+    public float originalRange = 175.0f;
 
     void Awake()
     {

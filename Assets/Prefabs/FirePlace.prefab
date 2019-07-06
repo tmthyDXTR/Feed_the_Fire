@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 221371475979582768}
   m_Layer: 13
   m_Name: FirePlace Capsule
-  m_TagString: WorkInactive
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -557,7 +557,7 @@ GameObject:
   - component: {fileID: 688626330383494595}
   m_Layer: 13
   m_Name: FirePlace
-  m_TagString: WorkInactive
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -761,6 +761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lt: {fileID: 0}
+  originalRange: 175
 --- !u!1 &6802794563420457824
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,6 +28,12 @@ public class ObjectPlacement : MonoBehaviour
             currentObject.position = new Vector3(p.x, 0, p.z);
             RotateCurrentObject();
 
+            if (currentObject.tag == "MiningArea")
+            {
+                miningArea = currentObject.GetComponent<MiningArea>();
+                miningArea.ShowMinableNodes();
+            }
+
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -40,16 +46,15 @@ public class ObjectPlacement : MonoBehaviour
                     }
                 }
 
-                else
-                {
-                    miningArea = currentObject.GetComponent<MiningArea>();
+                if (currentObject.tag == "MiningArea")
+                {                                                                            
                     miningArea.SetNodesToMinable("TreeNodes");
                     miningArea.SetNodesToMinable("StoneNodes");
                     miningArea.HideMinableNodes();
+                    Destroy(currentObject.gameObject, 1);
                     hasPlaced = true;
                 }
 
-                             
             }
             if (Input.GetMouseButtonDown(1))
             {
@@ -58,12 +63,13 @@ public class ObjectPlacement : MonoBehaviour
                     Destroy(currentObject.gameObject);
                     hasPlaced = false;
                 }
-                else
+                if (currentObject.tag == "MiningArea")
                 {
-                    miningArea = currentObject.GetComponent<MiningArea>();
                     miningArea.HideMinableNodes();
                     Destroy(currentObject.gameObject);
                     hasPlaced = false;
+
+
                 }
             }
         }

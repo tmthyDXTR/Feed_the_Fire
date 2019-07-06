@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3416201885841057495}
   - component: {fileID: 5473789857244285481}
   - component: {fileID: 4320785138473593913}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MiningArea
   m_TagString: MiningArea
   m_Icon: {fileID: 0}
@@ -61,6 +61,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sphereRadius: 30
   miningNodes: []
+  minableNodes: {fileID: 6260651120315348600, guid: 011eeba9426220a4cbd6b3b2aa0a1017,
+    type: 3}
   originalMaterial: {fileID: 0}
   newMaterial: {fileID: 2100000, guid: debe653ad3890354c9bd94e81535e439, type: 2}
 --- !u!114 &5473789857244285481

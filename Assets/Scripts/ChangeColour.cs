@@ -7,23 +7,6 @@ public class ChangeColour : MonoBehaviour
     public Material originalMaterial;
     public Material newMaterial;
 
-
-    //void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.tag == "MiningArea")
-    //    {
-    //        ChangeToMinableMat();
-    //    }
-    //}
-
-    //void OnTriggerExit(Collider other)
-    //{
-    //    if (other.tag == "MiningArea")
-    //    {
-    //        ChangeToOriginalMat();
-    //    }
-    //}
-
     public void ChangeToMinableMat()
     {
         this.gameObject.transform.GetChild(0).GetComponent<Renderer>().material = newMaterial;
@@ -34,13 +17,13 @@ public class ChangeColour : MonoBehaviour
         this.gameObject.transform.GetChild(0).GetComponent<Renderer>().material = originalMaterial;
     }
 
-    void Awake()
+    void Start()
     {
         originalMaterial = this.gameObject.transform.GetChild(0).GetComponent<Renderer>().material;
     }
 
     void Update()
     {
-        
+
     }
 }
