@@ -18,6 +18,8 @@ public class FogOfWarManager : MonoBehaviour
     [SerializeField] private Color _fogOfWarColor;
     [SerializeField] private LayerMask _fogOfWarLayer;
     [SerializeField] private bool onOff = false;
+    [SerializeField] private int mapSize = 500;
+    [SerializeField] private Camera m_MainCamera;
     private Texture2D _texture;
     private Color[] _pixels;
     private List<Revealer> _revealers;
@@ -43,9 +45,10 @@ public class FogOfWarManager : MonoBehaviour
 
     private void Awake()
     {
-
+        m_MainCamera = Camera.main;
+        transform.localScale = new Vector3(0, 0, 1);
         toggleOnOff();
-
+        transform.localScale += new Vector3(mapSize, mapSize, 0);
         _instance = this;
 
         if (!SystemInfo.supportsComputeShaders)
@@ -100,6 +103,11 @@ public class FogOfWarManager : MonoBehaviour
         _revealers.Add(revealer);
     }
 
+    public void DeregisterRevealer(Revealer revealer)
+    {
+        _revealers.Remove(revealer);
+    }
+
     private void ClearPixels()
     {
         for (var i = 0; i < _pixels.Length; i++)
@@ -134,20 +142,28 @@ public class FogOfWarManager : MonoBehaviour
 
         foreach (var revealer in _revealers)
         {
-            // should do a raycast from the revealer to the camera.
-            var screenPoint = Camera.main.WorldToScreenPoint(revealer.transform.position);
-            var ray = Camera.main.ScreenPointToRay(screenPoint);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1000, _fogOfWarLayer.value))
+            if (revealer != null)
             {
-                // Translates the revealer to the center of the fog of war.
-                // This way the position lines up with the center pixel and can be converted easier.
-                var translatedPos = hit.point - transform.position;
 
-                var pixelPosX = Mathf.RoundToInt(translatedPos.x * _pixelsPerUnit + _centerPixel.x);
-                var pixelPosY = Mathf.RoundToInt(translatedPos.z * _pixelsPerUnit + _centerPixel.y);
+                //should do a raycast from the revealer to the camera.
+                var screenPoint = m_MainCamera.WorldToScreenPoint(revealer.transform.position);
+                var ray = Camera.main.ScreenPointToRay(screenPoint);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, _fogOfWarLayer.value))
+                {
+                    // Translates the revealer to the center of the fog of war.
+                    // This way the position lines up with the center pixel and can be converted easier.
+                    var translatedPos = hit.point - transform.position;
 
-                CreateCircle(pixelPosX, pixelPosY, revealer.radius);
+                    var pixelPosX = Mathf.RoundToInt(translatedPos.x * _pixelsPerUnit + _centerPixel.x);
+                    var pixelPosY = Mathf.RoundToInt(translatedPos.z * _pixelsPerUnit + _centerPixel.y);
+
+                    CreateCircle(pixelPosX, pixelPosY, revealer.radius);
+                }
+            }
+            else
+            {
+                DeregisterRevealer(revealer);
             }
         }
 

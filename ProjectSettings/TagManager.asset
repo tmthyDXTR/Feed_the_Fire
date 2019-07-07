@@ -18,6 +18,7 @@ TagManager:
   - ResidentialHouse
   - MiningArea
   - Tavern
+  - Bonfire
   layers:
   - Default
   - TransparentFX

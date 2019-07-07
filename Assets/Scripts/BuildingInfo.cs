@@ -45,6 +45,14 @@ public class BuildingInfo : MonoBehaviour
             costStone = 15;
         }
 
+        if (this.gameObject.CompareTag("Bonfire"))
+        {
+            originalTag = this.gameObject.tag;
+            maxHealth = 15;
+            costWood = 15;
+            costStone = 0;
+        }
+
 
         currentHealth = 0.01f;
         isConstruction = true;

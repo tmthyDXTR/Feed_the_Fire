@@ -7,6 +7,7 @@ public class ObjectPlacement : MonoBehaviour
     private PlaceableObject placeableObject;
     private Transform currentObject;
     private MiningArea miningArea;
+    [SerializeField] private FogOfWarManager fogOfWarManager;
 
     private float objectRotationSpeed = 100f;
     public bool hasPlaced;
@@ -58,6 +59,11 @@ public class ObjectPlacement : MonoBehaviour
                     hasPlaced = true;
                 }
 
+                //if (currentObject.tag == "Bonfire")
+                //{
+                    
+                //}
+
             }
             if (Input.GetMouseButtonDown(1))
             {
@@ -71,9 +77,13 @@ public class ObjectPlacement : MonoBehaviour
                     miningArea.HideMinableNodes();
                     Destroy(currentObject.gameObject);
                     hasPlaced = false;
-
-
                 }
+                //if (currentObject.tag == "Bonfire" && currentObject != null)
+                //{
+                //    FogOfWarManager.Instance.DeregisterRevealer(currentObject);
+                //    Destroy(currentObject.gameObject);
+                //    hasPlaced = false;
+                //}
             }
         }
     }
