@@ -100,16 +100,23 @@ public class BuildingInfo : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public bool waitForRemainingResource()
+    {
+        if (moreResourcesNeeded() == false && (currentWood + currentStone) != (costWood + costStone))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public bool moreResourcesNeeded()        
     {
         if (reqWood + reqStone > 0)
         {
             return true;
-        }
-
-        if (reqWood + reqStone == 0)
-        {
-            return false;
         }
         else
         {
@@ -173,9 +180,21 @@ public class BuildingInfo : MonoBehaviour
         }
     }
 
+    public void ReqResourcePlus(string resource)
+    {
+        if (resource == "Wood")
+        {
+            reqWood += 1;
+        }
+        if (resource == "Stone")
+        {
+            reqStone += 1;
+        }
+    }
+
     #endregion
 
-   
+
     void Update()
     {
         

@@ -163,6 +163,7 @@ public class WorkerAI : MonoBehaviour
         m_Animator.SetBool("IsWalking", true);
         m_Animator.SetBool("IsLumbering", false);
         m_NavMeshAgent.stoppingDistance = 3;
+        m_Animator.speed = 2;
     }
 
     void GoToNearestStoneNode()
@@ -175,6 +176,7 @@ public class WorkerAI : MonoBehaviour
         m_Animator.SetBool("IsWalking", true); 
         m_Animator.SetBool("IsLumbering", false);
         m_NavMeshAgent.stoppingDistance = 3;
+        m_Animator.speed = 2;
     }
 
     void GoToNearestStorage()
@@ -186,6 +188,7 @@ public class WorkerAI : MonoBehaviour
         m_Animator.SetBool("IsLumbering", false);
         m_Animator.SetBool("IsWalking", true);
         m_NavMeshAgent.stoppingDistance = 3;
+        m_Animator.speed = 2;
     }
 
     void GoToNearestFire()
@@ -196,6 +199,7 @@ public class WorkerAI : MonoBehaviour
         Target = GetTarget("Untagged");
         m_Animator.SetBool("IsWalking", true);
         m_Animator.SetBool("IsLumbering", false);
+        m_Animator.speed = 2;
     }
 
     #endregion
@@ -278,6 +282,38 @@ public class WorkerAI : MonoBehaviour
 
 
     #region Resource Methods
+
+    void StoreResourceForConstruction(string resource)
+    {
+        BuildingInfo reqResources = nextNodeCollider.GetComponent<BuildingInfo>();
+
+        if (resource == "Wood")
+        {
+            workTime += Time.deltaTime;
+            transform.LookAt(m_NavMeshAgent.destination);
+            if (workTime >= 1)
+            {                
+                inventoryAmount -= (int)workTime;
+                inventoryWood -= (int)workTime;
+                ResourceBank.AddWoodToStock((int)workTime);
+                reqResources.ReqResourcePlus("Wood");
+                workTime -= (int)workTime;              
+            }
+        }
+        if (resource == "Stone")
+        {
+            workTime += Time.deltaTime;
+            transform.LookAt(m_NavMeshAgent.destination);
+            if (workTime >= 1)
+            {                
+                inventoryAmount -= (int)workTime;
+                inventoryStone -= (int)workTime;
+                ResourceBank.AddStoneToStock((int)workTime);
+                reqResources.ReqResourcePlus("Stone");
+                workTime -= (int)workTime;               
+            }
+        }
+    }
 
     void TakeResourceForConstruction(string resource)
     {
@@ -484,6 +520,21 @@ public class WorkerAI : MonoBehaviour
 
             case State.MovingToJobNode:
                 Debug.Log("State: MovingToJobNode");
+                if (this.gameObject.tag == "Unemployed")
+                {
+                    if (inventoryAmount > 0)
+                    {
+                        GoToNearestStorage();
+                        state = State.MovingToStorage;
+                    }
+                    else
+                    {
+                        GoToNearestFire();
+                        state = State.MovingToFire;
+                    }
+                }
+
+
                 if (m_NavMeshAgent.pathPending)
                 {
                     distanceToNode = Vector3.Distance(transform.position, Target.transform.position);
@@ -548,6 +599,8 @@ public class WorkerAI : MonoBehaviour
 
                         if (GetInactiveNodesCount() != 0)
                         {
+                            sphereLayerMask = LayerMask.GetMask("Buildings");
+                            GetNodeCollider("Construction");
                             Target = GetTarget("Storage");
                             GoToNearestStorage();
                             state = State.MovingToStorage;
@@ -558,6 +611,11 @@ public class WorkerAI : MonoBehaviour
                             state = State.MovingToFire;
                         }
                     }
+                }
+                else
+                {
+                    GoToNearestFire();
+                    state = State.MovingToFire;
                 }
 
                 break;
@@ -629,6 +687,7 @@ public class WorkerAI : MonoBehaviour
             case State.MovingToStorage:
                 Debug.Log("State: MovingToStorage");
                 m_Animator.SetBool("IsWalking", true);
+                m_Animator.speed = 2;
                 if (m_NavMeshAgent.pathPending)
                 {
                     distanceToNode = Vector3.Distance(transform.position, Target.transform.position);
@@ -674,23 +733,40 @@ public class WorkerAI : MonoBehaviour
 
             case State.TakingFromStorage:
                 Debug.Log("State: TakingFromStorage");
-                if (this.gameObject.tag == "LightWarden" ||
-                    this.gameObject.tag == "Unemployed")
+                if (this.gameObject.tag == "LightWarden")
                 {
                     if (inventoryAmount < inventorySize && ResourceBank.GetWoodStock() > 0)
                     {
                         Debug.Log("Taking Wood");
                         TakeResource("Wood");
-                    }
-                    
+                    }                    
                     else
                     {
-                        Debug.Log("Taking complete");
-                        if (this.gameObject.tag == "Unemployed" || this.gameObject.tag == "LightWarden")
+                        Debug.Log("Taking complete");                        
+                        GoToNearestFire();
+                        state = State.MovingToFire;                        
+                    }
+                }
+
+                if (this.gameObject.tag == "Unemployed")
+                {
+                    if (inventoryAmount > 0)
+                    {
+                        Debug.Log("Loading to Storage");
+                        if (inventoryWood > 0)
                         {
-                            GoToNearestFire();
-                            state = State.MovingToFire;
+                            StoreResource("Wood");
                         }
+                        if (inventoryStone > 0)
+                        {
+                            StoreResource("Stone");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Storing complete");
+                        GoToNearestFire();
+                        state = State.MovingToFire;
                     }
                 }
 
@@ -700,19 +776,18 @@ public class WorkerAI : MonoBehaviour
                     Debug.Log("Required Wood for Construction: " + reqResources.GetReqResource("Wood"));
                     Debug.Log("Required Stone for Construction: " + reqResources.GetReqResource("Stone"));
                     
-                    if (inventoryAmount < inventorySize)
+                    if (inventoryAmount < inventorySize && reqResources.moreResourcesNeeded() == true)
                     {
-                        if (reqResources.moreResourcesNeeded() == true)
+                        
+                        if (reqResources.GetReqResource("Wood") > 0)
                         {
-                            if (reqResources.GetReqResource("Wood") > 0)
-                            {
-                                TakeResourceForConstruction("Wood");
-                            }
-                            if (reqResources.GetReqResource("Stone") > 0)
-                            {
-                                TakeResourceForConstruction("Stone");
-                            }
-                        }                        
+                            TakeResourceForConstruction("Wood");
+                        }
+                        if (reqResources.GetReqResource("Stone") > 0)
+                        {
+                            TakeResourceForConstruction("Stone");
+                        }
+                                             
                     }                
                     
                     if (inventoryAmount == inventorySize || reqResources.moreResourcesNeeded() == false)
@@ -739,21 +814,32 @@ public class WorkerAI : MonoBehaviour
                     workTime += Time.deltaTime;
                     if (workTime >= 1)
                     {
-                        //Temporary fix- should mine last jobs loot -->
                         if (this.gameObject.tag == "Unemployed")
                         {
-                            inventoryAmount -= (int)workTime;
-                            inventoryWood -= (int)workTime;
-                            if (Target.gameObject.layer == 14) //-- If Target is Storage
+                            if (nextNodeCollider.tag == "Construction")
                             {
-                                ResourceBank.AddWoodToStock((int)workTime);
+                                if (inventoryWood > 0)
+                                {
+                                    StoreResourceForConstruction("Wood");
+                                }
+                                if (inventoryStone > 0)
+                                {
+                                    StoreResourceForConstruction("Stone");
+                                }
                             }
-                            if (Target.gameObject.layer == 13) //-- If Target is FirePlace
+                            else
                             {
-                                ResourceBank.AddWoodToFire((int)workTime);
+                                if (inventoryWood > 0)
+                                {
+                                    StoreResource("Wood");
+                                }
+                                if (inventoryStone > 0)
+                                {
+                                    StoreResource("Stone");
+                                }
                             }
-                            workTime -= (int)workTime;
                         }
+
                         if (this.gameObject.tag == "LightWarden")
                         {
                             PutWoodInFire();
@@ -824,10 +910,15 @@ public class WorkerAI : MonoBehaviour
 
             case State.LoadToConstruction:
                 Debug.Log("State: LoadToConstruction");
+                if (this.gameObject.tag == "Unemployed" && inventoryAmount == 0)
+                {
+                    GoToNearestFire();
+                    state = State.MovingToFire;
+                }
+
                 if (inventoryAmount > 0)
                 {
                     BuildingInfo currentResources = nextNodeCollider.GetComponent<BuildingInfo>();
-
                     workTime += Time.deltaTime;
                     if (workTime >= 1)
                     {
@@ -837,9 +928,7 @@ public class WorkerAI : MonoBehaviour
                             inventoryWood -= (int)workTime;
                             currentResources.CurrentResourcePlus("Wood");
                             workTime -= (int)workTime;
-                        }
-                        
-                                 
+                        }                                                      
                     }
                     workTime += Time.deltaTime;
                     if (workTime >= 1)
@@ -851,8 +940,7 @@ public class WorkerAI : MonoBehaviour
                             currentResources.CurrentResourcePlus("Stone");
                             workTime -= (int)workTime;
                         }
-                    }
-                        
+                    }                        
                 }
                 else
                 {
@@ -861,6 +949,10 @@ public class WorkerAI : MonoBehaviour
                     {
                         GoToNearestStorage();
                         state = State.MovingToStorage;
+                    }
+                    if (moreResources.waitForRemainingResource() == true)
+                    {
+                        Debug.Log("Waiting for remaining Resources");
                     }
                     else
                     {
