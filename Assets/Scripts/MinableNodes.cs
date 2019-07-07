@@ -16,12 +16,12 @@ public class MinableNodes : MonoBehaviour
 
     void Start()
     {
-        //minableNodesList = null;
+
     }
 
 
     void Update()
     {
-        
+        minableNodesList.RemoveAll(Collider => Collider == null);
     }
 }

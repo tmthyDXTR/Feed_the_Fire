@@ -68,12 +68,14 @@
      <Compile Include="Assets\Scripts\ClickObject.cs" />
      <Compile Include="Assets\Scripts\FireLight.cs" />
      <Compile Include="Assets\Scripts\FireSize.cs" />
+     <Compile Include="Assets\Scripts\FogOfWarManager.cs" />
      <Compile Include="Assets\Scripts\JobManager.cs" />
      <Compile Include="Assets\Scripts\MinableNodes.cs" />
      <Compile Include="Assets\Scripts\MiningArea.cs" />
      <Compile Include="Assets\Scripts\ObjectPlacement.cs" />
      <Compile Include="Assets\Scripts\PlaceableObject.cs" />
      <Compile Include="Assets\Scripts\ResourceBank.cs" />
+     <Compile Include="Assets\Scripts\Revealer.cs" />
      <Compile Include="Assets\Scripts\StoneNodes.cs" />
      <Compile Include="Assets\Scripts\TreeNodes.cs" />
      <Compile Include="Assets\Scripts\Window_ResourceBank.cs" />

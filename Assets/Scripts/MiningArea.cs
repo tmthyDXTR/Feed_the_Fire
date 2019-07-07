@@ -32,7 +32,7 @@ public class MiningArea : MonoBehaviour
             {
                 node.gameObject.tag = "WorkInactive";
                 nodeCounter += 1;
-                minableNodes.GetMinableNodesList().Add(node);
+                minableNodes.minableNodesList.Add(node);
             }                            
         }
         Debug.Log(nodeCounter + " " + nodeLayer + " set to Minable");
@@ -45,7 +45,7 @@ public class MiningArea : MonoBehaviour
         {
             changeColour = other.GetComponent<ChangeColour>();
 
-            miningNodes.Add(other);
+            minableNodes.minableNodesList.Add(other);
             changeColour.ChangeToMinableMat();
         }
     }
@@ -58,44 +58,42 @@ public class MiningArea : MonoBehaviour
             changeColour = other.GetComponent<ChangeColour>();
 
             changeColour.ChangeToOriginalMat();
-            miningNodes.Remove(other);          
+            minableNodes.minableNodesList.Remove(other);          
         }
-    }
-
-    public void ChangeToMinableMat(Collider node)
-    {
-        changeColour = node.GetComponent<ChangeColour>();
-        changeColour.ChangeToMinableMat();
-    }
-
-    public void ChangeToOriginalMat(Collider node)
-    {
-        changeColour = node.GetComponent<ChangeColour>();
-        changeColour.ChangeToOriginalMat();
     }
 
     public void ShowMinableNodes()
     {
         foreach (Collider node in minableNodes.GetMinableNodesList())
         {
-            ChangeToMinableMat(node);
+            changeColour = node.GetComponent<ChangeColour>();
+            if (changeColour != null)
+            {
+                changeColour.ChangeToMinableMat();
+            }
         }
-        foreach (Collider node in miningNodes)
-        {
-            ChangeToMinableMat(node);
-        }
+        //foreach (Collider node in miningNodes)
+        //{
+        //    changeColour = node.GetComponent<ChangeColour>();
+        //    if (changeColour != null)
+        //    {
+        //        changeColour.ChangeToMinableMat();
+        //    }
+        //}
     }
 
     public void HideMinableNodes()
     {
         foreach (Collider node in minableNodes.GetMinableNodesList())
         {
-            ChangeToOriginalMat(node);
+            changeColour = node.GetComponent<ChangeColour>();
+            changeColour.ChangeToOriginalMat();
         }
-        foreach (Collider node in miningNodes)
-        {
-            ChangeToOriginalMat(node);
-        }
+        //foreach (Collider node in miningNodes)
+        //{
+        //    changeColour = node.GetComponent<ChangeColour>();
+        //    changeColour.ChangeToOriginalMat();
+        //}
     }
 
     

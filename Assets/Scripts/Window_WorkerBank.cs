@@ -39,19 +39,22 @@ public class Window_WorkerBank : MonoBehaviour
             "Stonecutter: " + jobManager.GetWorkerCount("Stonecutter");
     }
 
-
-    private void Awake()
-    {
-
-    }
-
-    private void Update()
+    public void UpdateJobsCounter()
     {
         UpdateUnemployedTotalTextObject();
         UpdateLightWardenTotalTextObject();
         UpdateBuilderTotalTextObject();
         UpdateWoodcutterTotalTextObject();
         UpdateStonecutterTotalTextObject();
+    }
+
+    private void Awake()
+    {
+        UpdateJobsCounter();
+    }
+
+    private void Update()
+    {
     }
 
 }

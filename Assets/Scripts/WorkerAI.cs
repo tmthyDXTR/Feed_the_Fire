@@ -10,7 +10,6 @@ public class WorkerAI : MonoBehaviour
     #region Variables
 
     public LayerMask groundLayer;
-
     public Vector3 nextNode;
     public Collider nextNodeCollider;
     public Collider Target;
@@ -23,7 +22,7 @@ public class WorkerAI : MonoBehaviour
     public int inventoryStone = 0;
     public int animationSpeed = 2;
 
-    private State state;
+    [SerializeField] private State state;
     private enum State
     {
         JustSpawned,
@@ -202,7 +201,7 @@ public class WorkerAI : MonoBehaviour
     #endregion
 
 
-    #region Job Methods
+     #region Job Methods
 
     void MineWood()
     {
@@ -212,19 +211,21 @@ public class WorkerAI : MonoBehaviour
         transform.LookAt(m_NavMeshAgent.destination);
         if (workTime >= 12 / workSpeed)
         {
-            // Try and find a Nodes Resource script on the gameobject hit.
-            TreeNodes treeNode = Target.GetComponent<TreeNodes>();
-            // If the Node Resource script component exists...
-            if (treeNode != null)
+            if (Target !=null)
             {
-                // ... the Node should lose resources.
-                treeNode.TakeDamage();
-                inventoryAmount += 1;
-                inventoryWood += 1;
-                Debug.Log("Wood mined");
-                workTime -= (int)workTime;
+                // Try and find a Nodes Resource script on the gameobject hit.
+                TreeNodes treeNode = Target.GetComponent<TreeNodes>();
+                // If the Node Resource script component exists...
+                if (treeNode != null)
+                {
+                    // ... the Node should lose resources.
+                    treeNode.TakeDamage();
+                    inventoryAmount += 1;
+                    inventoryWood += 1;
+                    Debug.Log("Wood mined");
+                    workTime -= (int)workTime;
+                }
             }
-            
         }
     }
 
@@ -237,12 +238,12 @@ public class WorkerAI : MonoBehaviour
         if (workTime >= 12 / workSpeed)
         {
             // Try and find an Nodes Resource script on the gameobject hit.
-            StoneNodes stoneAmount = Target.GetComponent<StoneNodes>();
+            StoneNodes stoneNode = Target.GetComponent<StoneNodes>();
             // If the Node Resource component exists...
-            if (stoneAmount != null)
+            if (stoneNode != null)
             {
                 // ... the Node should lose resources.
-                stoneAmount.TakeDamage();
+                stoneNode.TakeDamage();
                 inventoryAmount += 1;
                 inventoryStone += 1;
                 Debug.Log("Stone mined");
@@ -411,7 +412,7 @@ public class WorkerAI : MonoBehaviour
 
 
     void Update()
-    {        
+    {
         switch (state)
         {
             #region State IdleAtFire
@@ -567,9 +568,9 @@ public class WorkerAI : MonoBehaviour
 
             case State.WorkingOnJob:
                 Debug.Log("State: WorkingOnJob");
-                if (inventoryAmount < inventorySize)
+                if (inventoryAmount < inventorySize && Target != null)
                 {
-                    if (this.gameObject.tag == "Woodcutter")
+                    if (this.gameObject.tag == "Woodcutter" )
                     {
                         m_NavMeshAgent.isStopped = true;
                         Debug.Log("Mining Wood");
@@ -594,8 +595,8 @@ public class WorkerAI : MonoBehaviour
                         {
                             GoToNearestFire();
                             state = State.MovingToFire;
-                        }                        
-                    }
+                        }
+                    }                    
                 }
                 
                 else
@@ -608,9 +609,15 @@ public class WorkerAI : MonoBehaviour
                         if (Target != null)
                         {
                             Target.gameObject.tag = "WorkInactive";
+                            GoToNearestStorage();
+                            state = State.MovingToStorage;
                         }
-                        GoToNearestStorage();
-                        state = State.MovingToStorage;
+                        
+                        else
+                        {
+                            GoToNearestStorage();
+                            state = State.MovingToStorage;
+                        }
                     }
                 }                                                                      
                 break;

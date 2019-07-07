@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class AddRemoveStonecutterButton : MonoBehaviour, IPointerClickHandler
 {
     public JobManager jobManager;
+    public Window_WorkerBank window_WorkerBank;
     public UnityEvent leftClick;
     public UnityEvent middleClick;
     public UnityEvent rightClick;
@@ -20,6 +21,7 @@ public class AddRemoveStonecutterButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Left click");
             leftClick.Invoke();
             jobManager.MoveWorkerToJob("Unemployed", "Stonecutter");
+            window_WorkerBank.UpdateJobsCounter();
 
         }
 
@@ -33,6 +35,7 @@ public class AddRemoveStonecutterButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Right click");
             rightClick.Invoke();
             jobManager.MoveWorkerToJob("Stonecutter", "Unemployed");
+            window_WorkerBank.UpdateJobsCounter();
 
 
 

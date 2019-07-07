@@ -31,7 +31,10 @@ public class ObjectPlacement : MonoBehaviour
             if (currentObject.tag == "MiningArea")
             {
                 miningArea = currentObject.GetComponent<MiningArea>();
-                miningArea.ShowMinableNodes();
+                if (miningArea != null)
+                {
+                    miningArea.ShowMinableNodes();
+                }
             }
 
 
@@ -63,7 +66,7 @@ public class ObjectPlacement : MonoBehaviour
                     Destroy(currentObject.gameObject);
                     hasPlaced = false;
                 }
-                if (currentObject.tag == "MiningArea")
+                if (currentObject.tag == "MiningArea" && currentObject != null)
                 {
                     miningArea.HideMinableNodes();
                     Destroy(currentObject.gameObject);

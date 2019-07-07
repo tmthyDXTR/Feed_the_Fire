@@ -15,9 +15,7 @@ public class JobManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        GetWorkerCounts();
-        
-
+        GetWorkerCounts();     
     }
 
     // Update is called once per frame

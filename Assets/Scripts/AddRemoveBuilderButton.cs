@@ -21,7 +21,7 @@ public class AddRemoveBuilderButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Left click");
             leftClick.Invoke();
             jobManager.MoveWorkerToJob("Unemployed", "Builder");
-            
+            window_WorkerBank.UpdateJobsCounter();
         }
 
         else if (eventData.button == PointerEventData.InputButton.Middle)
@@ -34,7 +34,7 @@ public class AddRemoveBuilderButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Right click");
             rightClick.Invoke();
             jobManager.MoveWorkerToJob("Builder", "Unemployed");
-
-        }        
+            window_WorkerBank.UpdateJobsCounter();
+        }
     }
 }
