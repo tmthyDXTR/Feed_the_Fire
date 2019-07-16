@@ -19,6 +19,8 @@ TagManager:
   - MiningArea
   - Tavern
   - Bonfire
+  - FogOfWar
+  - Worker
   layers:
   - Default
   - TransparentFX
@@ -37,8 +39,8 @@ TagManager:
   - StorageNodes
   - Buildings
   - FogOfWar
-  - 
-  - 
+  - PlayerUnits
+  - Worker
   - 
   - 
   - 

@@ -74,11 +74,16 @@
      <Compile Include="Assets\Scripts\MiningArea.cs" />
      <Compile Include="Assets\Scripts\ObjectPlacement.cs" />
      <Compile Include="Assets\Scripts\PlaceableObject.cs" />
+     <Compile Include="Assets\Scripts\PlayerUnitWorker.cs" />
      <Compile Include="Assets\Scripts\ResourceBank.cs" />
      <Compile Include="Assets\Scripts\Revealer.cs" />
+     <Compile Include="Assets\Scripts\Selection.cs" />
      <Compile Include="Assets\Scripts\StoneNodes.cs" />
      <Compile Include="Assets\Scripts\TreeNodes.cs" />
+     <Compile Include="Assets\Scripts\Window_Construction.cs" />
      <Compile Include="Assets\Scripts\Window_ResourceBank.cs" />
+     <Compile Include="Assets\Scripts\Window_WoodcutterHut.cs" />
+     <Compile Include="Assets\Scripts\Window_Worker.cs" />
      <Compile Include="Assets\Scripts\Window_WorkerBank.cs" />
      <Compile Include="Assets\Scripts\WorkerAI.cs" />
      <None Include="Assets\Readme.txt" />

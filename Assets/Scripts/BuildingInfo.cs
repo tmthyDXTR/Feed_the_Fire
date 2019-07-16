@@ -55,16 +55,62 @@ public class BuildingInfo : MonoBehaviour
 
 
         currentHealth = 0.01f;
-        isConstruction = true;
+        //isConstruction = true;
         reqWood = costWood;
         reqStone = costStone;
+        isConstruction = true;
     }
 
     #region Methods
 
+    public void SetBuildingModel(int stage)    // 0-4    0 = Construction Start, 4 = Construction Complete 
+    {
+        if (stage == 0)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(true);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameObject.transform.GetChild(3).gameObject.SetActive(false);
+            gameObject.transform.GetChild(4).gameObject.SetActive(false);
+        }
+        if (stage == 1)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(1).gameObject.SetActive(true);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameObject.transform.GetChild(3).gameObject.SetActive(false);
+            gameObject.transform.GetChild(4).gameObject.SetActive(false);
+        }
+        if (stage == 2)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            gameObject.transform.GetChild(3).gameObject.SetActive(false);
+            gameObject.transform.GetChild(4).gameObject.SetActive(false);
+        }
+        if (stage == 3)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameObject.transform.GetChild(3).gameObject.SetActive(true);
+            gameObject.transform.GetChild(4).gameObject.SetActive(false);
+        }
+        if (stage == 4)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameObject.transform.GetChild(3).gameObject.SetActive(false);
+            gameObject.transform.GetChild(4).gameObject.SetActive(true);
+        }
+    }
+
     public void ConstructionComplete()
     {
         this.gameObject.tag = originalTag;
+        isConstruction = false;
     }
 
     public void GainHealth()

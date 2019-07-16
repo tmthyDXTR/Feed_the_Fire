@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 5982320349432921975}
   - component: {fileID: 3842925532210114782}
   - component: {fileID: 8300521894340041621}
+  - component: {fileID: 8766991424116142328}
   m_Layer: 10
   m_Name: Stone (1)
   m_TagString: WorkActive
@@ -159,6 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stoneAmount: 24
   currentAmount: 0
+  isMinable: 0
 --- !u!114 &8300521894340041621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +175,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   originalMaterial: {fileID: 0}
   newMaterial: {fileID: 2100000, guid: a3d00492bb7abf347b4ae1e2177e8d26, type: 2}
+--- !u!114 &8766991424116142328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4612118697831540227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selected: 0
 --- !u!1001 &3614070017835646196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -180,21 +195,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3201331455329934321}
     m_Modifications:
-    - target: {fileID: 3999841567458963215, guid: 4c5f08a13e0ab0649925ee1809565821,
-        type: 3}
-      propertyPath: m_Name
-      value: rock_g (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3999841567458963215, guid: 4c5f08a13e0ab0649925ee1809565821,
-        type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 3999841567458963215, guid: 4c5f08a13e0ab0649925ee1809565821,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3999841567458986321, guid: 4c5f08a13e0ab0649925ee1809565821,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -248,6 +248,21 @@ PrefabInstance:
     - target: {fileID: 3999841567458986321, guid: 4c5f08a13e0ab0649925ee1809565821,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999841567458963215, guid: 4c5f08a13e0ab0649925ee1809565821,
+        type: 3}
+      propertyPath: m_Name
+      value: rock_g (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999841567458963215, guid: 4c5f08a13e0ab0649925ee1809565821,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 3999841567458963215, guid: 4c5f08a13e0ab0649925ee1809565821,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:

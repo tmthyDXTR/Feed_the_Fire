@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class ObjectPlacement : MonoBehaviour
 {
+    private BuildingInfo buildingInfo;
     private PlaceableObject placeableObject;
+    private ClickableObject clickableObject;
+    public GameObject constructionWindow;
+    public GameObject woodcutterWindow;
     private Transform currentObject;
     private MiningArea miningArea;
     [SerializeField] private FogOfWarManager fogOfWarManager;
@@ -18,7 +22,6 @@ public class ObjectPlacement : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (currentObject != null && !hasPlaced)
@@ -37,17 +40,27 @@ public class ObjectPlacement : MonoBehaviour
                     miningArea.ShowMinableNodes();
                 }
             }
-
-
+            
             if (Input.GetMouseButtonDown(0))
             {
                 if (currentObject.tag != "MiningArea")
                 {
-                    if (IsLegalPosition())
+                    constructionWindow.SetActive(true);
+                    if (currentObject.tag == "Storage")
                     {
-                        currentObject.tag = "Construction";
-                        hasPlaced = true;
-                    }
+                        if (IsLegalPosition())
+                        {
+                            buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                            clickableObject = currentObject.GetComponent<ClickableObject>();
+                            clickableObject.infoPanel = GameObject.Find("Window_Construction");
+                            woodcutterWindow.SetActive(true);
+                            clickableObject.originalInfoPanel = GameObject.Find("Window_WoodcutterHut");
+                            woodcutterWindow.SetActive(false);
+                            buildingInfo.SetBuildingModel(0);
+                            currentObject.tag = "Construction";
+                            hasPlaced = true;
+                        }
+                    }                    
                 }
 
                 if (currentObject.tag == "MiningArea")
@@ -59,10 +72,6 @@ public class ObjectPlacement : MonoBehaviour
                     hasPlaced = true;
                 }
 
-                //if (currentObject.tag == "Bonfire")
-                //{
-                    
-                //}
 
             }
             if (Input.GetMouseButtonDown(1))
@@ -70,6 +79,7 @@ public class ObjectPlacement : MonoBehaviour
                 if (placeableObject != null && currentObject.tag != "MiningArea")
                 {                    
                     Destroy(currentObject.gameObject);
+                    constructionWindow.SetActive(false);
                     hasPlaced = false;
                 }
                 if (currentObject.tag == "MiningArea" && currentObject != null)

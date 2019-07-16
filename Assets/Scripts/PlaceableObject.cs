@@ -6,13 +6,13 @@ public class PlaceableObject : MonoBehaviour
 {
     public List<Collider> colliders = new List<Collider>();
 
-    // Start is called before the first frame update
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         

@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 7668411327464089752}
   - component: {fileID: 4962167796595973996}
   - component: {fileID: -5636484585124657632}
+  - component: {fileID: 3946578406010480929}
   m_Layer: 9
   m_Name: Tree (1)
   m_TagString: WorkActive
@@ -160,6 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodAmount: 24
   currentAmount: 0
+  isMinable: 0
 --- !u!114 &-5636484585124657632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,6 +176,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   originalMaterial: {fileID: 0}
   newMaterial: {fileID: 2100000, guid: debe653ad3890354c9bd94e81535e439, type: 2}
+--- !u!114 &3946578406010480929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6301779108623577252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selected: 0
 --- !u!1001 &4081475353138203866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -181,21 +196,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5824102716326248491}
     m_Modifications:
-    - target: {fileID: 8718335301133466238, guid: 8f34fe0205721684a90565e6b8a423eb,
-        type: 3}
-      propertyPath: m_Name
-      value: Tree_3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8718335301133466238, guid: 8f34fe0205721684a90565e6b8a423eb,
-        type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 8718335301133466238, guid: 8f34fe0205721684a90565e6b8a423eb,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6952944257748031567, guid: 8f34fe0205721684a90565e6b8a423eb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -249,6 +249,21 @@ PrefabInstance:
     - target: {fileID: 6952944257748031567, guid: 8f34fe0205721684a90565e6b8a423eb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8718335301133466238, guid: 8f34fe0205721684a90565e6b8a423eb,
+        type: 3}
+      propertyPath: m_Name
+      value: Tree_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8718335301133466238, guid: 8f34fe0205721684a90565e6b8a423eb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 8718335301133466238, guid: 8f34fe0205721684a90565e6b8a423eb,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -35,6 +35,7 @@ public class Window_ResourceBank : MonoBehaviour
         //-- Test Stock Init for Job Debugging --//
         UpdateWoodResourceTextObject();
         UpdateStoneResourceTextObject();
+        UpdateFireLifeTextObject();
 
 
 

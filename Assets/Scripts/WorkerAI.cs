@@ -14,6 +14,7 @@ public class WorkerAI : MonoBehaviour
     public Collider nextNodeCollider;
     public Collider Target;
 
+    public string currentJob = "Unemployed";
     private float workTime = 0.0f;
     public int workSpeed = 1;
     public int inventorySize = 1;
@@ -442,8 +443,6 @@ public class WorkerAI : MonoBehaviour
 
         //Set Inventory Amount
         inventoryAmount = 0;
-
-        gameObject.tag = "Unemployed";
     }
 
 
@@ -455,7 +454,7 @@ public class WorkerAI : MonoBehaviour
 
             case State.IdleAtFire:
                 Debug.Log("State: IdleAtFire");                
-                if (this.gameObject.tag == "Unemployed" || this.gameObject.tag == "LightWarden")
+                if (currentJob == "Unemployed" || currentJob == "LightWarden")
                 {
                     Debug.Log("State: IdleAtFire");
                     inventorySize = 1;
@@ -465,7 +464,7 @@ public class WorkerAI : MonoBehaviour
                     transform.LookAt(m_NavMeshAgent.destination);
 
 
-                    if (this.gameObject.tag == "LightWarden" && 
+                    if (currentJob == "LightWarden" && 
                         ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax() && 
                         ResourceBank.GetWoodStock() > 0)
                     {
@@ -479,7 +478,7 @@ public class WorkerAI : MonoBehaviour
                     }
                 }
 
-                if (this.gameObject.tag == "Builder")
+                if (currentJob == "Builder")
                 {
                     inventorySize = 5;
                     sphereLayerMask = LayerMask.GetMask("Buildings");
@@ -491,7 +490,7 @@ public class WorkerAI : MonoBehaviour
                     }
                 }
 
-                if (this.gameObject.tag == "Woodcutter")
+                if (currentJob == "Woodcutter")
                 {
                     inventorySize = 1;
                     sphereLayerMask = LayerMask.GetMask("TreeNodes");
@@ -502,7 +501,7 @@ public class WorkerAI : MonoBehaviour
                     }                                     
                 }
 
-                if (this.gameObject.tag == "Stonecutter")
+                if (currentJob == "Stonecutter")
                 {
                     inventorySize = 1;
                     sphereLayerMask = LayerMask.GetMask("StoneNodes");
@@ -520,7 +519,7 @@ public class WorkerAI : MonoBehaviour
 
             case State.MovingToJobNode:
                 Debug.Log("State: MovingToJobNode");
-                if (this.gameObject.tag == "Unemployed")
+                if (currentJob == "Unemployed")
                 {
                     if (inventoryAmount > 0)
                     {
@@ -548,7 +547,7 @@ public class WorkerAI : MonoBehaviour
                 {
                     Debug.Log("Job Node reached");
                     m_Animator.SetBool("IsWalking", false);
-                    if (this.gameObject.tag == "Builder")
+                    if (currentJob == "Builder")
                     {
                         BuildingInfo building = Target.GetComponent<BuildingInfo>();
                         if (Target.tag == "Construction" && ( building.currentWood + building.currentStone ) < 
@@ -584,17 +583,37 @@ public class WorkerAI : MonoBehaviour
 
             case State.ConstructionWork:
                 Debug.Log("State: ConstructionWork");
-                if (this.gameObject.tag == "Builder")
+                if (currentJob == "Builder")
                 {
                     m_NavMeshAgent.isStopped = true;
                     sphereLayerMask = LayerMask.GetMask("Buildings");
-                    Debug.Log("Constructing Building");
-                    ConstructBuilding();
-
                     BuildingInfo building = Target.GetComponent<BuildingInfo>();
                     Debug.Log("Building Info Script found");
+                    Debug.Log("Constructing Building");
+                    ConstructBuilding();
+                    //-- Set Building Model during Construction --//
+                    if ((int)building.currentHealth <= building.maxHealth * 0.25)
+                    {
+                        building.SetBuildingModel(1);
+                    }
+                    if ((int)building.currentHealth <= building.maxHealth * 0.50 && (int)building.currentHealth > building.maxHealth * 0.25)
+                    {
+                        building.SetBuildingModel(2);
+                    }
+                    if ((int)building.currentHealth <= building.maxHealth * 0.75 && (int)building.currentHealth > building.maxHealth * 0.50)
+                    {
+                        building.SetBuildingModel(3);
+                    }
+                    if ((int)building.currentHealth <= building.maxHealth * 1 && (int)building.currentHealth > building.maxHealth * 0.75)
+                    {
+                        building.SetBuildingModel(4);
+                    }
+
+
                     if (building.currentHealth == building.maxHealth)
                     {
+                        ClickableObject clickObject = Target.GetComponent<ClickableObject>();
+                        clickObject.infoPanel = clickObject.originalInfoPanel;
                         building.ConstructionComplete();
 
                         if (GetInactiveNodesCount() != 0)
@@ -628,21 +647,21 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("State: WorkingOnJob");
                 if (inventoryAmount < inventorySize && Target != null)
                 {
-                    if (this.gameObject.tag == "Woodcutter" )
+                    if (currentJob == "Woodcutter" )
                     {
                         m_NavMeshAgent.isStopped = true;
                         Debug.Log("Mining Wood");
                         MineWood();
                     }
 
-                    if (this.gameObject.tag == "Stonecutter")
+                    if (currentJob == "Stonecutter")
                     {
                         m_NavMeshAgent.isStopped = true;
                         Debug.Log("Mining Stone");
                         MineStone();
                     }                 
                     
-                    if (this.gameObject.tag == "Unemployed")
+                    if (currentJob == "Unemployed")
                     {
                         if (inventoryAmount > 0)
                         {
@@ -662,7 +681,7 @@ public class WorkerAI : MonoBehaviour
                     Debug.Log("Job Done");
                     m_Animator.speed = animationSpeed;
 
-                    if (this.gameObject.tag == "Woodcutter" || this.gameObject.tag == "Stonecutter")
+                    if (currentJob == "Woodcutter" || currentJob == "Stonecutter")
                     {
                         if (Target != null)
                         {
@@ -702,7 +721,7 @@ public class WorkerAI : MonoBehaviour
                     m_Animator.SetBool("IsWalking", false);
                     m_Animator.SetBool("IsLumbering", false);
 
-                    if (this.gameObject.tag == "Unemployed")
+                    if (currentJob == "Unemployed")
                     {
                         if (inventoryAmount > 0)
                         {
@@ -715,12 +734,12 @@ public class WorkerAI : MonoBehaviour
                         }                                                                
                     }
 
-                    if (this.gameObject.tag == "LightWarden" || this.gameObject.tag == "Builder")
+                    if (currentJob == "LightWarden" || currentJob == "Builder")
                     {                        
                         state = State.TakingFromStorage;
                     }
 
-                    if (this.gameObject.tag == "Stonecutter" || this.gameObject.tag == "Woodcutter")
+                    if (currentJob == "Stonecutter" || currentJob == "Woodcutter")
                     {
                         state = State.LoadToStorage;
                     }                     
@@ -733,7 +752,7 @@ public class WorkerAI : MonoBehaviour
 
             case State.TakingFromStorage:
                 Debug.Log("State: TakingFromStorage");
-                if (this.gameObject.tag == "LightWarden")
+                if (currentJob == "LightWarden")
                 {
                     if (inventoryAmount < inventorySize && ResourceBank.GetWoodStock() > 0)
                     {
@@ -748,7 +767,7 @@ public class WorkerAI : MonoBehaviour
                     }
                 }
 
-                if (this.gameObject.tag == "Unemployed")
+                if (currentJob == "Unemployed")
                 {
                     if (inventoryAmount > 0)
                     {
@@ -770,7 +789,7 @@ public class WorkerAI : MonoBehaviour
                     }
                 }
 
-                if (this.gameObject.tag == "Builder")
+                if (currentJob == "Builder")
                 {
                     BuildingInfo reqResources = nextNodeCollider.GetComponent<BuildingInfo>();
                     Debug.Log("Required Wood for Construction: " + reqResources.GetReqResource("Wood"));
@@ -814,7 +833,7 @@ public class WorkerAI : MonoBehaviour
                     workTime += Time.deltaTime;
                     if (workTime >= 1)
                     {
-                        if (this.gameObject.tag == "Unemployed")
+                        if (currentJob == "Unemployed")
                         {
                             if (nextNodeCollider.tag == "Construction")
                             {
@@ -840,15 +859,15 @@ public class WorkerAI : MonoBehaviour
                             }
                         }
 
-                        if (this.gameObject.tag == "LightWarden")
+                        if (currentJob == "LightWarden")
                         {
                             PutWoodInFire();
                         }
-                        if (this.gameObject.tag == "Woodcutter")
+                        if (currentJob == "Woodcutter")
                         {
                             StoreResource("Wood");
                         }
-                        if (this.gameObject.tag == "Stonecutter")
+                        if (currentJob == "Stonecutter")
                         {
                             StoreResource("Stone");
                         }
@@ -858,17 +877,17 @@ public class WorkerAI : MonoBehaviour
                 else
                 {
                     Debug.Log("Loading complete");
-                    if (this.gameObject.tag == "Unemployed")
+                    if (currentJob == "Unemployed")
                     {
                         GoToNearestFire();
                         m_NavMeshAgent.stoppingDistance = 5;
                         state = State.MovingToFire;
                     }
-                    if (this.gameObject.tag == "LightWarden")
+                    if (currentJob == "LightWarden")
                     {                        
                         state = State.IdleAtFire;
                     }
-                    if (this.gameObject.tag == "Woodcutter")
+                    if (currentJob == "Woodcutter")
                     {
                         sphereLayerMask = LayerMask.GetMask("TreeNodes");
                         if (GetInactiveNodesCount() != 0)
@@ -886,7 +905,7 @@ public class WorkerAI : MonoBehaviour
                        
                     }
 
-                    if (this.gameObject.tag == "Stonecutter")
+                    if (currentJob == "Stonecutter")
                     {
                         sphereLayerMask = LayerMask.GetMask("StoneNodes");
                         if (GetInactiveNodesCount() != 0)
@@ -910,7 +929,7 @@ public class WorkerAI : MonoBehaviour
 
             case State.LoadToConstruction:
                 Debug.Log("State: LoadToConstruction");
-                if (this.gameObject.tag == "Unemployed" && inventoryAmount == 0)
+                if (currentJob == "Unemployed" && inventoryAmount == 0)
                 {
                     GoToNearestFire();
                     state = State.MovingToFire;
@@ -918,7 +937,7 @@ public class WorkerAI : MonoBehaviour
 
                 if (inventoryAmount > 0)
                 {
-                    BuildingInfo currentResources = nextNodeCollider.GetComponent<BuildingInfo>();
+                    BuildingInfo buildingInfo = nextNodeCollider.GetComponent<BuildingInfo>();
                     workTime += Time.deltaTime;
                     if (workTime >= 1)
                     {
@@ -926,7 +945,7 @@ public class WorkerAI : MonoBehaviour
                         {
                             inventoryAmount -= (int)workTime;
                             inventoryWood -= (int)workTime;
-                            currentResources.CurrentResourcePlus("Wood");
+                            buildingInfo.CurrentResourcePlus("Wood");
                             workTime -= (int)workTime;
                         }                                                      
                     }
@@ -937,24 +956,25 @@ public class WorkerAI : MonoBehaviour
                         {
                             inventoryAmount -= (int)workTime;
                             inventoryStone -= (int)workTime;
-                            currentResources.CurrentResourcePlus("Stone");
+                            buildingInfo.CurrentResourcePlus("Stone");
                             workTime -= (int)workTime;
                         }
                     }                        
                 }
                 else
                 {
-                    BuildingInfo moreResources = nextNodeCollider.GetComponent<BuildingInfo>();
-                    if (moreResources.moreResourcesNeeded() == true)
+                    BuildingInfo buildingInfo = nextNodeCollider.GetComponent<BuildingInfo>();
+                    if (buildingInfo.moreResourcesNeeded() == true)
                     {
                         GoToNearestStorage();
+                        Debug.Log("More resources needed - go to storage");
                         state = State.MovingToStorage;
                     }
-                    if (moreResources.waitForRemainingResource() == true)
+                    if (buildingInfo.waitForRemainingResource() == true)
                     {
                         Debug.Log("Waiting for remaining Resources");
                     }
-                    else
+                    if (buildingInfo.moreResourcesNeeded() == false)
                     {
                         m_Animator.SetBool("IsLumbering", true);
                         state = State.ConstructionWork;
@@ -968,7 +988,7 @@ public class WorkerAI : MonoBehaviour
 
             case State.MovingToFire:
                 Debug.Log("State: MovingToFire");
-                if (this.gameObject.tag == "LightWarden")
+                if (currentJob == "LightWarden")
                 {
                     m_NavMeshAgent.stoppingDistance = 3;
                 }
@@ -988,9 +1008,9 @@ public class WorkerAI : MonoBehaviour
                     Debug.Log("Fire reached");
                     m_Animator.SetBool("IsWalking", false);
 
-                    if (this.gameObject.tag == "Unemployed" && inventoryWood > 0 && 
+                    if (currentJob == "Unemployed" && inventoryWood > 0 && 
                         ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax() || 
-                        this.gameObject.tag == "LightWarden" && inventoryWood > 0 && 
+                        currentJob == "LightWarden" && inventoryWood > 0 && 
                         ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax())
                         {
                         state = State.LoadToStorage;
