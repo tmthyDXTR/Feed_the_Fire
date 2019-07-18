@@ -17,7 +17,7 @@ public class FireLight : MonoBehaviour
     void Update()
     {
         lt.range = 18 + (float)originalRange *
-            ((float)ResourceBank.GetFireLife() / (float)ResourceBank.GetFireLifeMax());
+            ((float)ResourceBank.GetFireLife() / (float)ResourceBank.fireLifeFull);
 
     }
 }

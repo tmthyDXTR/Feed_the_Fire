@@ -21,6 +21,10 @@ TagManager:
   - Bonfire
   - FogOfWar
   - Worker
+  - WoodcutterHut
+  - StorageFull
+  - StorageEmpty
+  - MainFire
   layers:
   - Default
   - TransparentFX

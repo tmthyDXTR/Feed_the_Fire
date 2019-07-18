@@ -13,7 +13,7 @@ public class Window_ResourceBank : MonoBehaviour
     private void UpdateFireLifeTextObject()
     {
         transform.Find("FireLife").GetComponent<Text>().text =
-            "Fire Life: " + ResourceBank.GetFireLife() + " / " + ResourceBank.GetFireLifeMax();
+            "Fire Life: " + ResourceBank.GetFireLife() + " / " + ResourceBank.fireLifeFull;
     }
 
     private void UpdateWoodResourceTextObject()

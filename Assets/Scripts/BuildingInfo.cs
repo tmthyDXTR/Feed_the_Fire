@@ -26,15 +26,15 @@ public class BuildingInfo : MonoBehaviour
         if (this.gameObject.CompareTag("ResidentialHouse"))
         {
             originalTag = this.gameObject.tag;
-            maxHealth = 20;
-            costWood = 10;
-            costStone = 10;
-        }
-        if (this.gameObject.CompareTag("Storage"))
-        {
-            originalTag = this.gameObject.tag;
             maxHealth = 15;
             costWood = 15;
+            costStone = 0;
+        }
+        if (this.gameObject.CompareTag("WoodcutterHut"))
+        {
+            originalTag = this.gameObject.tag;
+            maxHealth = 10;
+            costWood = 10;
             costStone = 0;
         }
         if (this.gameObject.CompareTag("Tavern"))
@@ -48,8 +48,8 @@ public class BuildingInfo : MonoBehaviour
         if (this.gameObject.CompareTag("Bonfire"))
         {
             originalTag = this.gameObject.tag;
-            maxHealth = 15;
-            costWood = 15;
+            maxHealth = 10;
+            costWood = 10;
             costStone = 0;
         }
 
@@ -63,7 +63,7 @@ public class BuildingInfo : MonoBehaviour
 
     #region Methods
 
-    public void SetBuildingModel(int stage)    // 0-4    0 = Construction Start, 4 = Construction Complete 
+    public void SetBuildingModel(int stage)    // 0-5    0 = Construction Start, 5 = Construction Complete 
     {
         if (stage == 0)
         {
@@ -72,6 +72,8 @@ public class BuildingInfo : MonoBehaviour
             gameObject.transform.GetChild(2).gameObject.SetActive(false);
             gameObject.transform.GetChild(3).gameObject.SetActive(false);
             gameObject.transform.GetChild(4).gameObject.SetActive(false);
+            gameObject.transform.GetChild(5).gameObject.SetActive(false);
+
         }
         if (stage == 1)
         {
@@ -80,6 +82,7 @@ public class BuildingInfo : MonoBehaviour
             gameObject.transform.GetChild(2).gameObject.SetActive(false);
             gameObject.transform.GetChild(3).gameObject.SetActive(false);
             gameObject.transform.GetChild(4).gameObject.SetActive(false);
+            gameObject.transform.GetChild(5).gameObject.SetActive(false);
         }
         if (stage == 2)
         {
@@ -88,6 +91,7 @@ public class BuildingInfo : MonoBehaviour
             gameObject.transform.GetChild(2).gameObject.SetActive(true);
             gameObject.transform.GetChild(3).gameObject.SetActive(false);
             gameObject.transform.GetChild(4).gameObject.SetActive(false);
+            gameObject.transform.GetChild(5).gameObject.SetActive(false);
         }
         if (stage == 3)
         {
@@ -96,6 +100,7 @@ public class BuildingInfo : MonoBehaviour
             gameObject.transform.GetChild(2).gameObject.SetActive(false);
             gameObject.transform.GetChild(3).gameObject.SetActive(true);
             gameObject.transform.GetChild(4).gameObject.SetActive(false);
+            gameObject.transform.GetChild(5).gameObject.SetActive(false);
         }
         if (stage == 4)
         {
@@ -104,6 +109,16 @@ public class BuildingInfo : MonoBehaviour
             gameObject.transform.GetChild(2).gameObject.SetActive(false);
             gameObject.transform.GetChild(3).gameObject.SetActive(false);
             gameObject.transform.GetChild(4).gameObject.SetActive(true);
+            gameObject.transform.GetChild(5).gameObject.SetActive(false);
+        }
+        if (stage == 5)
+        {
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameObject.transform.GetChild(3).gameObject.SetActive(false);
+            gameObject.transform.GetChild(4).gameObject.SetActive(false);
+            gameObject.transform.GetChild(5).gameObject.SetActive(true);
         }
     }
 
@@ -111,6 +126,26 @@ public class BuildingInfo : MonoBehaviour
     {
         this.gameObject.tag = originalTag;
         isConstruction = false;
+        if (this.gameObject.tag == "WoodcutterHut")
+        {
+            foreach (Transform child in transform)
+            {
+                if (child.name == "WoodLogs")
+                {
+                    child.gameObject.SetActive(true);
+                }
+            }
+        }
+        if (this.gameObject.tag == "Bonfire")
+        {
+            foreach (Transform child in transform)
+            {
+                if (child.name == "Point Light" || child.name == "Flame" || child.name == "Revealer")
+                {
+                    child.gameObject.SetActive(true);
+                }
+            }
+        }
     }
 
     public void GainHealth()

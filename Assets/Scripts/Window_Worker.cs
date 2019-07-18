@@ -70,12 +70,15 @@ public class Window_Worker : MonoBehaviour
     {
         if (gameObject.activeSelf == true)
         {
-            if (selection.selectedObjects[0] != null)
+            
+            if (selection.selectedObjects[0] != null && selection.selectedObjects[0].tag == "Worker")
             {
-                selectedObject = selection.selectedObjects[0];
+                //selection.selectedObjects.Clear();
+                selectedObject = selection.selectedObjects[selection.selectedObjects.Count - 1];
                 Debug.Log("Update Worker Info");
                 UpdateInfo();
             }                      
+
             else
             {
                 selectedObject = null;

@@ -14,6 +14,7 @@ public class ClickObject : MonoBehaviour
     private LayerMask layerStoneNodes;
     private LayerMask layerSafePlaceNodes;
     private LayerMask layerGround;
+    private LayerMask layerUI;
     ArrayList layerList = new ArrayList();
 
     private void Awake()
@@ -23,12 +24,14 @@ public class ClickObject : MonoBehaviour
         layerTreeNodes = LayerMask.GetMask("TreeNodes");
         layerStoneNodes = LayerMask.GetMask("StoneNodes");
         layerSafePlaceNodes = LayerMask.GetMask("SafePlaceNodes");
+        layerUI = LayerMask.GetMask("UI");
         //layerGround = LayerMask.GetMask("Ground");
         layerList.Add(layerBuildings);
         layerList.Add(layerPlayerUnits);
         layerList.Add(layerTreeNodes);
         layerList.Add(layerStoneNodes);
         layerList.Add(layerSafePlaceNodes);
+        layerList.Add(layerUI);
         //layerList.Add(layerGround);
         foreach (var layer in layerList)
         {
@@ -44,7 +47,7 @@ public class ClickObject : MonoBehaviour
             {
                 ClickableObject clickableObject = selectedObject.GetComponent<ClickableObject>();
                 clickableObject.selected = false;
-                selection.selectedObjects.Remove(selectedObject);
+                selection.selectedObjects.Clear();
                 clickableObject.CloseInfo();
                 selectedObject = null;
             }
@@ -81,7 +84,7 @@ public class ClickObject : MonoBehaviour
             if (clickableObject.selected != false)
             {
                 clickableObject.selected = false;
-                selection.selectedObjects.Remove(selectedObject);
+                selection.selectedObjects.Clear();
                 clickableObject.CloseInfo();
                 selectedObject = null;
 

@@ -10,14 +10,15 @@ public static class ResourceBank
     public static EventHandler OnWoodStockChanged;
     public static EventHandler OnStoneStockChanged;
     public static EventHandler OnHousingChanged;
-    public static int fireLifeMax = 20;
+    public static int fireLifeFull = 20;
+    public static int fireLifeMax = 20; //-- Slider Control
     public static int fireLife = 20;
-    public static int stoneStock = 40;
-    public static int woodStock = 40;
+    public static int stoneStock = 0;
+    public static int woodStock = 20;
     public static int housingNeeded = 0;
     public static int housingCurrent = 0;
     public static float burnTime = 0.0f;
-    public static float burnSpeed = 14f; //-- Seconds to lose 1 Fire Life
+    public static float burnSpeed = 20f; //-- Seconds to lose 1 Fire Life
 
     //-- Fire --//
 

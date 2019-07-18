@@ -9,6 +9,8 @@ public class ObjectPlacement : MonoBehaviour
     private ClickableObject clickableObject;
     public GameObject constructionWindow;
     public GameObject woodcutterWindow;
+    public GameObject residentialHouseWindow;
+    public GameObject bonfireWindow;
     private Transform currentObject;
     private MiningArea miningArea;
     [SerializeField] private FogOfWarManager fogOfWarManager;
@@ -16,7 +18,6 @@ public class ObjectPlacement : MonoBehaviour
     private float objectRotationSpeed = 100f;
     public bool hasPlaced;
 
-    // Use this for initialization
     void Start()
     {
         
@@ -46,7 +47,8 @@ public class ObjectPlacement : MonoBehaviour
                 if (currentObject.tag != "MiningArea")
                 {
                     constructionWindow.SetActive(true);
-                    if (currentObject.tag == "Storage")
+                    bonfireWindow.SetActive(true);
+                    if (currentObject.tag == "WoodcutterHut")
                     {
                         if (IsLegalPosition())
                         {
@@ -60,7 +62,37 @@ public class ObjectPlacement : MonoBehaviour
                             currentObject.tag = "Construction";
                             hasPlaced = true;
                         }
-                    }                    
+                    }      
+                    if (currentObject.tag == "ResidentialHouse")
+                    {
+                        if (IsLegalPosition())
+                        {
+                            buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                            clickableObject = currentObject.GetComponent<ClickableObject>();
+                            clickableObject.infoPanel = GameObject.Find("Window_Construction");
+                            residentialHouseWindow.SetActive(true);
+                            clickableObject.originalInfoPanel = GameObject.Find("Window_ResidentialHouse");
+                            residentialHouseWindow.SetActive(false);
+                            buildingInfo.SetBuildingModel(0);
+                            currentObject.tag = "Construction";
+                            hasPlaced = true;
+                        }                            
+                    }
+                    if (currentObject.tag == "Bonfire")
+                    {
+                        if (IsLegalPosition())
+                        {
+                            buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                            clickableObject = currentObject.GetComponent<ClickableObject>();
+                            clickableObject.infoPanel = GameObject.Find("Window_Construction");
+                            residentialHouseWindow.SetActive(true);
+                            clickableObject.originalInfoPanel = GameObject.Find("Window_Bonfire");
+                            residentialHouseWindow.SetActive(false);
+                            //buildingInfo.SetBuildingModel(0);
+                            currentObject.tag = "Construction";
+                            hasPlaced = true;
+                        }
+                    }
                 }
 
                 if (currentObject.tag == "MiningArea")

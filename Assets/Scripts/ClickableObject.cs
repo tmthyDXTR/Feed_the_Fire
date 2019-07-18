@@ -39,8 +39,24 @@ public class ClickableObject : MonoBehaviour
 
         if (gameObject.layer == 15) // Buildings Layer
         {
+            BuildingInfo buildingInfo = gameObject.GetComponent<BuildingInfo>();            
+            //if (gameObject.tag == "Storage" || gameObject.tag == "StorageFull" || gameObject.tag == "StorageEmpty")
+            //{
+
+            //}
+            //if (gameObject.tag == "ResidentialHouse")
+            //{
+
+            //}
+            //else
+            //{
+            //    infoPanel = GameObject.Find("Window_Construction");
+            //}
+        }
+
+        if (gameObject.layer == 13) // SafePlaceNodes Layer
+        {
             BuildingInfo buildingInfo = gameObject.GetComponent<BuildingInfo>();
-            infoPanel = GameObject.Find("Window_Construction");
 
         }
 
@@ -50,14 +66,7 @@ public class ClickableObject : MonoBehaviour
             infoPanel = GameObject.Find("Window_Worker");
             Debug.Log("Window_Worker found");
 
-        }
-
-
-        //if (this.gameObject.CompareTag("Bonfire"))
-        //{
-
-        //}
-
+        }      
     }
 
     void Update()
