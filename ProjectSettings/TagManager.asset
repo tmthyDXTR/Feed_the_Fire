@@ -25,6 +25,9 @@ TagManager:
   - StorageFull
   - StorageEmpty
   - MainFire
+  - Wall
+  - SnapPoint
+  - WallPole
   layers:
   - Default
   - TransparentFX

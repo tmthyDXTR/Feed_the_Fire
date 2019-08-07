@@ -1,0 +1,20 @@
+#
+## Alias OBJ Material File
+# Exported from SketchUp, (c) 2000-2012 Trimble Navigation Limited
+
+newmtl FrontColor
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.330000 0.330000 0.330000
+
+newmtl old_wooden_fence_grass_2
+Ka 0.000000 0.000000 0.000000
+Kd 0.627451 0.529412 0.435294
+Ks 0.330000 0.330000 0.330000
+map_Kd Palisade wall Low Poly/old_wooden_fence_grass_2.jpg
+
+newmtl ForegroundColor
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.330000 0.330000 0.330000
+

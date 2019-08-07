@@ -70,6 +70,8 @@
      <Compile Include="Assets\Scripts\FireMaxSlider.cs" />
      <Compile Include="Assets\Scripts\FireSize.cs" />
      <Compile Include="Assets\Scripts\FogOfWarManager.cs" />
+     <Compile Include="Assets\Scripts\GameTimeManager.cs" />
+     <Compile Include="Assets\Scripts\GridManager.cs" />
      <Compile Include="Assets\Scripts\JobManager.cs" />
      <Compile Include="Assets\Scripts\MinableNodes.cs" />
      <Compile Include="Assets\Scripts\MiningArea.cs" />

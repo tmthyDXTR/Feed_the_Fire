@@ -487,14 +487,16 @@ public class WorkerAI : MonoBehaviour
     void PutWoodInFire()
     {
         workTime += Time.deltaTime;
-        if (workTime >= 1)
+        if (ResourceBank.fireLife < ResourceBank.fireLifeMax)
         {
-            inventoryAmount -= 1;
-            inventoryWood -= 1;
-            ResourceBank.AddWoodToFire(1);
-            workTime -= (int)workTime;
-        }
-            
+            if (workTime >= 1)
+            {
+                inventoryAmount -= 1;
+                inventoryWood -= 1;
+                ResourceBank.AddWoodToFire(1);
+                workTime -= (int)workTime;
+            }
+        }                   
     }
 
     void StoreResource(string resource)
@@ -988,12 +990,12 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("State: LoadingToStorage");
                 WoodLogs woodStorage = Target.GetComponent<WoodLogs>();
 
-                if (inventoryAmount > 0 && woodStorage != null)
+                if (inventoryAmount > 0)
                 {
                     workTime += Time.deltaTime;
                     if (workTime >= 1)
                     {
-                        if (currentJob == "Unemployed")
+                        if (currentJob == "Unemployed" && woodStorage != null)
                         {
                             if (nextNodeCollider != null)
                             {
@@ -1026,6 +1028,7 @@ public class WorkerAI : MonoBehaviour
                         }
                         if (currentJob == "LightWarden")
                         {
+                            Debug.Log("Put Wood in Fire");
                             PutWoodInFire();
                         }
                         if (currentJob == "Woodcutter")
@@ -1039,7 +1042,7 @@ public class WorkerAI : MonoBehaviour
                                 }
                                 if (Target.transform.tag == "StorageFull")
                                 {
-                                    Debug.Log("Storage Full - LightWarden Cant Store Wood - Going to next Storage");
+                                    Debug.Log("Storage Full - Woodcutter Cant Store Wood - Going to next Storage");
                                     GoToNearestStorage("Store");
                                     state = State.MovingToStorage;
                                 }

@@ -7,6 +7,8 @@ public class ClickObject : MonoBehaviour
     public GameObject selectedObject;
     public Selection selection;
     public ClickableObject clickableObject;
+    public ObjectPlacement objectPlacement;
+
     public LayerMask layer;
     private LayerMask layerBuildings;
     private LayerMask layerPlayerUnits;
@@ -19,6 +21,7 @@ public class ClickObject : MonoBehaviour
 
     private void Awake()
     {
+        objectPlacement = GetComponent<ObjectPlacement>();
         layerBuildings = LayerMask.GetMask("Buildings");
         layerPlayerUnits = LayerMask.GetMask("PlayerUnits");
         layerTreeNodes = LayerMask.GetMask("TreeNodes");
@@ -41,63 +44,82 @@ public class ClickObject : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (objectPlacement.currentObject == null)
         {
-            if (selectedObject != null)
+            
+            Debug.Log("No Object selected to Build");
+            if (Input.GetMouseButtonDown(0))
             {
-                ClickableObject clickableObject = selectedObject.GetComponent<ClickableObject>();
-                clickableObject.selected = false;
-                selection.selectedObjects.Clear();
-                clickableObject.CloseInfo();
-                selectedObject = null;
-            }
-            RaycastHit rayHit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            foreach (LayerMask layer in layerList)
-            {
-                if (Physics.Raycast(ray, out rayHit, Mathf.Infinity, layer))
-                {
-                    if (rayHit.transform != null)
-                    {
-                        selectedObject = rayHit.transform.gameObject;
-                        PrintName(rayHit.transform.gameObject);
-                        ClickableObject clickableObject = selectedObject.GetComponent<ClickableObject>();
-                        if (clickableObject != null)
-                        {
-                            Debug.Log("clickableObject Script found");
+                Debug.Log("Mouse click position: " + GetWorldPoint());
 
-                            if (clickableObject.selected != true)
+                if (selectedObject != null)
+                {
+                    ClickableObject clickableObject = selectedObject.GetComponent<ClickableObject>();
+                    clickableObject.selected = false;
+                    selection.selectedObjects.Clear();
+                    clickableObject.CloseInfo();
+                    selectedObject = null;
+                }
+                RaycastHit rayHit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                foreach (LayerMask layer in layerList)
+                {
+                    if (Physics.Raycast(ray, out rayHit, Mathf.Infinity, layer))
+                    {
+                        if (rayHit.transform != null)
+                        {
+                            selectedObject = rayHit.transform.gameObject;
+                            PrintName(rayHit.transform.gameObject);
+                            ClickableObject clickableObject = selectedObject.GetComponent<ClickableObject>();
+                            if (clickableObject != null)
                             {
-                                clickableObject.selected = true;
-                                selection.selectedObjects.Add(selectedObject);
-                                clickableObject.OpenInfo();
+                                Debug.Log("clickableObject Script found");
+
+                                if (clickableObject.selected != true)
+                                {
+                                    clickableObject.selected = true;
+                                    selection.selectedObjects.Add(selectedObject);
+                                    clickableObject.OpenInfo();
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-        
-        if (Input.GetMouseButtonDown(1))
-        {
-            ClickableObject clickableObject = selectedObject.GetComponent<ClickableObject>();
-            if (clickableObject.selected != false)
+
+            if (Input.GetMouseButtonDown(1))
             {
-                clickableObject.selected = false;
-                selection.selectedObjects.Clear();
-                clickableObject.CloseInfo();
-                selectedObject = null;
+                ClickableObject clickableObject = selectedObject.GetComponent<ClickableObject>();
+                if (clickableObject.selected != false)
+                {
+                    clickableObject.selected = false;
+                    selection.selectedObjects.Clear();
+                    clickableObject.CloseInfo();
+                    selectedObject = null;
+
+                }
 
             }
-
+        }     
+        else
+        {
+            Debug.Log("Can not select Object - Because Object still to build");
         }
-
-
     }
 
     private void PrintName(GameObject obj)
     {
         print(obj.name);
+    }
+    Vector3 GetWorldPoint()
+    {
+        Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.point;
+        }
+        return Vector3.zero;
     }
 
 }

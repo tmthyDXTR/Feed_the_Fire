@@ -11,26 +11,41 @@ public class ObjectPlacement : MonoBehaviour
     public GameObject woodcutterWindow;
     public GameObject residentialHouseWindow;
     public GameObject bonfireWindow;
-    private Transform currentObject;
+
+    public GameObject wallStart;
+    public GameObject wallEnd;
+    public GameObject wallPrefab;
+    public GameObject wallPart;
+    GameObject wallPoleCursor;
+    public bool creatingWall;
+    private BoxCollider m_BoxCollider;
+
+    public float unsnapMouseDistance = 25;
+    private Vector3 snapMousePos;
+    public Transform snapTarget;
+
+    public Transform currentObject;
     private MiningArea miningArea;
-    [SerializeField] private FogOfWarManager fogOfWarManager;
 
     private float objectRotationSpeed = 100f;
-    public bool hasPlaced;
+    public bool hasPlaced = false;
 
-    void Start()
+    private GridManager grid;
+
+    Vector3 mousePos;
+
+    void Awake()
     {
-        
+        grid = FindObjectOfType<GridManager>();
     }
 
     void Update()
     {
         if (currentObject != null && !hasPlaced)
         {
-            Vector3 m = Input.mousePosition;
-            m = new Vector3(m.x, m.y, transform.position.y);
-            Vector3 p = GetComponent<Camera>().ScreenToWorldPoint(m);
-            currentObject.position = new Vector3(p.x, 0, p.z);
+            Cursor.visible = false;
+            mousePos = new Vector3(GetWorldPoint().x, 0f, GetWorldPoint().z);
+            currentObject.position = grid.GetNearestPointOnGrid(mousePos);
             RotateCurrentObject();
 
             if (currentObject.tag == "MiningArea")
@@ -41,13 +56,38 @@ public class ObjectPlacement : MonoBehaviour
                     miningArea.ShowMinableNodes();
                 }
             }
-            
+
+            if (currentObject.tag == "WallPole")
+            {
+                //currentObject.position = GetWorldPoint();
+                if (IsLegalPosition() && !creatingWall && Input.GetMouseButtonDown(0))
+                {
+                    SetStart();
+                    Debug.Log("Set Wall Start");
+                }
+                else if (Input.GetMouseButtonDown(0))
+                {
+                    AddWall();
+                    Debug.Log("Add Wall");
+                }
+                else
+                {
+                    if (creatingWall)
+                    {
+                        Adjust();
+                    }
+                }
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
+                Debug.Log("Mouse click position: " + GetWorldPoint());
                 if (currentObject.tag != "MiningArea")
                 {
+                    //--Fix this, temp Window activation--//
                     constructionWindow.SetActive(true);
                     bonfireWindow.SetActive(true);
+
                     if (currentObject.tag == "WoodcutterHut")
                     {
                         if (IsLegalPosition())
@@ -60,7 +100,7 @@ public class ObjectPlacement : MonoBehaviour
                             woodcutterWindow.SetActive(false);
                             buildingInfo.SetBuildingModel(0);
                             currentObject.tag = "Construction";
-                            hasPlaced = true;
+                            PlaceObject();
                         }
                     }      
                     if (currentObject.tag == "ResidentialHouse")
@@ -75,8 +115,8 @@ public class ObjectPlacement : MonoBehaviour
                             residentialHouseWindow.SetActive(false);
                             buildingInfo.SetBuildingModel(0);
                             currentObject.tag = "Construction";
-                            hasPlaced = true;
-                        }                            
+                            PlaceObject();
+                        }
                     }
                     if (currentObject.tag == "Bonfire")
                     {
@@ -90,10 +130,10 @@ public class ObjectPlacement : MonoBehaviour
                             residentialHouseWindow.SetActive(false);
                             //buildingInfo.SetBuildingModel(0);
                             currentObject.tag = "Construction";
-                            hasPlaced = true;
+                            PlaceObject();
                         }
-                    }
-                }
+                    }                    
+                }               
 
                 if (currentObject.tag == "MiningArea")
                 {                                                                            
@@ -101,18 +141,23 @@ public class ObjectPlacement : MonoBehaviour
                     miningArea.SetNodesToMinable("StoneNodes");
                     miningArea.HideMinableNodes();
                     Destroy(currentObject.gameObject, 1);
-                    hasPlaced = true;
+                    PlaceObject();
                 }
-
-
             }
+
             if (Input.GetMouseButtonDown(1))
             {
+                Cursor.visible = true;
                 if (placeableObject != null && currentObject.tag != "MiningArea")
                 {                    
                     Destroy(currentObject.gameObject);
                     constructionWindow.SetActive(false);
                     hasPlaced = false;
+                    if (currentObject.tag == "WallPole")
+                    {
+                        creatingWall = false;
+                        Destroy(wallPart.gameObject);
+                    }
                 }
                 if (currentObject.tag == "MiningArea" && currentObject != null)
                 {
@@ -120,6 +165,7 @@ public class ObjectPlacement : MonoBehaviour
                     Destroy(currentObject.gameObject);
                     hasPlaced = false;
                 }
+                currentObject = null;
                 //if (currentObject.tag == "Bonfire" && currentObject != null)
                 //{
                 //    FogOfWarManager.Instance.DeregisterRevealer(currentObject);
@@ -129,6 +175,62 @@ public class ObjectPlacement : MonoBehaviour
             }
         }
     }
+
+    #region Wall Building Methods
+
+    void SetStart()
+    {
+        creatingWall = true;
+        wallStart.transform.position = new Vector3(GetWorldPoint().x, 0, GetWorldPoint().z);
+
+        wallPart = (GameObject)Instantiate(wallPrefab, wallStart.transform.position, Quaternion.identity);
+        snapTarget = wallPart.gameObject.transform.GetChild(0);
+    }
+    //void SetEnd()
+    //{
+    //    creatingWall = false;
+    //    wallEnd.transform.position = wallStart.transform.position;
+    //    //PlaceObject();
+    //}
+    void Adjust()
+    {
+        wallEnd.transform.position = new Vector3(GetWorldPoint().x, 0, GetWorldPoint().z);
+        AdjustWall();
+    }
+    void AdjustWall()
+    {
+        wallStart.transform.LookAt(wallEnd.transform.position);
+        wallEnd.transform.LookAt(wallStart.transform.position);
+        wallPart.transform.LookAt(wallStart.transform.position);
+        //currentObject.transform.LookAt(wallEnd.transform.position);
+        float distance = Vector3.Distance(wallStart.transform.position, wallEnd.transform.position);
+        wallPart.transform.position = wallStart.transform.position + wallStart.transform.forward;
+        m_BoxCollider = wallPart.GetComponent<BoxCollider>();
+        //if (distance > m_BoxCollider.size.z - 2)
+        //{
+        //    Debug.Log("Adding Wall");
+        //    AddWall();
+        //    //(GameObject)Instantiate(wallPrefab, wallStart.transform.position, Quaternion.identity);
+        //}
+    }
+    void AddWall()
+    {
+        creatingWall = true;
+        //if (snapTarget == null)
+        //{
+        //    snapTarget = wallPart.gameObject.transform.GetChild(0);
+        //    wallPart = (GameObject)Instantiate(wallPrefab, snapTarget.transform.position, Quaternion.identity);
+
+        //}
+        snapTarget = wallPart.gameObject.transform.GetChild(0);
+        wallStart.transform.position = snapTarget.transform.position;
+        wallPart = (GameObject)Instantiate(wallPrefab, wallStart.transform.position, Quaternion.identity);
+        
+        //wallStart.transform.position += wallStart.transform.forward;
+    }
+
+
+    #endregion
 
     bool IsLegalPosition()
     {
@@ -154,9 +256,28 @@ public class ObjectPlacement : MonoBehaviour
     public void SetItem(GameObject objectToBuild)
     {
         hasPlaced = false;
-        currentObject = ((GameObject)Instantiate(objectToBuild)).transform;
+        currentObject = ((GameObject)Instantiate(objectToBuild, mousePos, Quaternion.identity)).transform;
         placeableObject = currentObject.GetComponent<PlaceableObject>();               
     }
 
+    private void PlaceObject()
+    {
+        hasPlaced = true;
+        currentObject = null;
+        Cursor.visible = true;
+    }
+
+    Vector3 GetWorldPoint()
+    {
+        Ray ray = GetComponent<Camera>().ScreenPointToRay (Input.mousePosition);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
+        {
+            return hit.point;
+        }
+        return Vector3.zero;
+    }
+
+    
 
 }
