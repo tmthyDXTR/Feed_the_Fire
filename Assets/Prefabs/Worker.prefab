@@ -1214,6 +1214,7 @@ GameObject:
   - component: {fileID: 4656626618735790403}
   - component: {fileID: 8251712237004496527}
   - component: {fileID: 1435469835987859855}
+  - component: {fileID: 2422604284892753404}
   m_Layer: 17
   m_Name: Worker
   m_TagString: Worker
@@ -1362,6 +1363,18 @@ MonoBehaviour:
   infoPanel: {fileID: 0}
   originalInfoPanel: {fileID: 0}
   selected: 0
+--- !u!114 &2422604284892753404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3719550282298044123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2be28e4a2ba1fd4eaf17315d27e550e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3719550282298044125
 GameObject:
   m_ObjectHideFlags: 0

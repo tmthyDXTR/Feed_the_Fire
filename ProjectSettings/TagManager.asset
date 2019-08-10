@@ -28,6 +28,7 @@ TagManager:
   - Wall
   - SnapPoint
   - WallPole
+  - Ghoul
   layers:
   - Default
   - TransparentFX
@@ -48,8 +49,8 @@ TagManager:
   - FogOfWar
   - PlayerUnits
   - Worker
-  - 
-  - 
+  - Enemy
+  - EnemySpawn
   - 
   - 
   - 

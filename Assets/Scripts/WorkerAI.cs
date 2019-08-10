@@ -22,6 +22,7 @@ public class WorkerAI : MonoBehaviour
     public int inventoryStone = 0;
     public int animationSpeed = 2;
 
+
     [SerializeField] private State state;
     private enum State
     {
@@ -828,51 +829,60 @@ public class WorkerAI : MonoBehaviour
                 Debug.Log("State: MovingToStorage");
                 m_Animator.SetBool("IsWalking", true);
                 m_Animator.speed = 2;
-                if (m_NavMeshAgent.pathPending)
+                if (Target != null)
                 {
-                    distanceToNode = Vector3.Distance(transform.position, Target.transform.position);
+                    if (m_NavMeshAgent.pathPending)
+                    {
+                        distanceToNode = Vector3.Distance(transform.position, Target.transform.position);
+                    }
+                    else
+                    {
+                        distanceToNode = m_NavMeshAgent.remainingDistance;
+                    }
+                    Debug.Log("MovingToStorage - Distance to Storage Node: " + distanceToNode);
+                    if (distanceToNode <= m_NavMeshAgent.stoppingDistance)
+                    {
+                        m_Animator.SetBool("IsWalking", false);
+                        m_Animator.SetBool("IsLumbering", false);
+
+                        if (currentJob == "Unemployed")
+                        {
+                            if (inventoryAmount > 0)
+                            {
+                                state = State.LoadToStorage;
+                            }
+                            else
+                            {
+                                GoToNearestFire();
+                                state = State.MovingToFire;
+                            }
+                        }
+
+                        if (currentJob == "LightWarden" || currentJob == "Builder")
+                        {
+                            state = State.TakingFromStorage;
+                        }
+
+                        if (currentJob == "Stonecutter" || currentJob == "Woodcutter")
+                        {
+                            if (Target.tag != "StorageFull")
+                            {
+                                state = State.LoadToStorage;
+                            }
+                            else
+                            {
+                                GoToNearestFire();
+                                state = State.MovingToFire;
+                            }                            
+                        }
+                    }
                 }
                 else
                 {
-                    distanceToNode = m_NavMeshAgent.remainingDistance;
+                    GoToNearestFire();
+                    state = State.MovingToFire;
                 }
-                Debug.Log("MovingToStorage - Distance to Storage Node: " + distanceToNode);
-                if (distanceToNode <= m_NavMeshAgent.stoppingDistance)
-                {
-                    m_Animator.SetBool("IsWalking", false);
-                    m_Animator.SetBool("IsLumbering", false);
-
-                    if (currentJob == "Unemployed")
-                    {
-                        if (inventoryAmount > 0)
-                        {
-                            state = State.LoadToStorage;
-                        }
-                        else
-                        {
-                            GoToNearestFire();
-                            state = State.MovingToFire;
-                        }                                                                
-                    }
-
-                    if (currentJob == "LightWarden" || currentJob == "Builder")
-                    {                        
-                        state = State.TakingFromStorage;
-                    }
-
-                    if (currentJob == "Stonecutter" || currentJob == "Woodcutter")
-                    {
-                        if (Target != null)
-                        {
-                            state = State.LoadToStorage;
-                        }
-                        else
-                        {
-                            GoToNearestStorage("Store");
-                            state = State.MovingToStorage;
-                        }
-                    }                     
-                }
+                
                 break;
 
             #endregion
@@ -1026,6 +1036,10 @@ public class WorkerAI : MonoBehaviour
                                 state = State.MovingToStorage;
                             }
                         }
+                        else if (currentJob == "Unemployed" && Target.tag == "MainFire")
+                        {
+                            PutWoodInFire();
+                        }
                         if (currentJob == "LightWarden")
                         {
                             Debug.Log("Put Wood in Fire");
@@ -1033,20 +1047,33 @@ public class WorkerAI : MonoBehaviour
                         }
                         if (currentJob == "Woodcutter")
                         {
-
-                            if (woodStorage != null)
+                            if (Target != null)
                             {
-                                if (woodStorage.currentAmount < woodStorage.woodCapacity)
+                                if (woodStorage != null)
                                 {
-                                    StoreResource("Wood");
+                                    if (woodStorage.currentAmount < woodStorage.woodCapacity)
+                                    {
+                                        StoreResource("Wood");
+                                    }
+                                    if (Target.transform.tag == "StorageFull")
+                                    {
+                                        Debug.Log("Storage Full - Woodcutter Cant Store Wood - Going to next Storage");
+                                        GoToNearestStorage("Store");
+                                        state = State.MovingToStorage;
+                                    }
                                 }
-                                if (Target.transform.tag == "StorageFull")
+                                else
                                 {
-                                    Debug.Log("Storage Full - Woodcutter Cant Store Wood - Going to next Storage");
-                                    GoToNearestStorage("Store");
-                                    state = State.MovingToStorage;
+                                    Debug.Log("Put Wood in Fire");
+                                    PutWoodInFire();
                                 }
-                            }                            
+                            }
+                            else
+                            {
+                                GoToNearestStorage("Store");
+                                state = State.MovingToStorage;
+                            }
+                            
                         }                        
                         
                         if (currentJob == "Stonecutter")
@@ -1193,6 +1220,8 @@ public class WorkerAI : MonoBehaviour
                     if (currentJob == "Unemployed" && inventoryWood > 0 && 
                         ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax() || 
                         currentJob == "LightWarden" && inventoryWood > 0 && 
+                        ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax() ||
+                        currentJob == "Woodcutter" && inventoryWood > 0 &&
                         ResourceBank.GetFireLife() < ResourceBank.GetFireLifeMax())
                         {
                         state = State.LoadToStorage;

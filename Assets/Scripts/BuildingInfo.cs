@@ -55,7 +55,6 @@ public class BuildingInfo : MonoBehaviour
 
 
         currentHealth = 0.01f;
-        //isConstruction = true;
         reqWood = costWood;
         reqStone = costStone;
         isConstruction = true;
@@ -155,7 +154,7 @@ public class BuildingInfo : MonoBehaviour
             // ... no need to gain health so exit the function.
             return;
 
-        // Reduce the current health by the amount of damage sustained.
+        // Increase the current health by the amount of Health gained.
         if ((int)currentHealth < (int)maxHealth)
         {
             currentHealth += (maxHealth / (costWood + costStone) * 1f);  //-- Construction Speed 
