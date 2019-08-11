@@ -7,6 +7,7 @@ public class TreeNodes : MonoBehaviour
 {
     public int woodAmount = 24;
     public int currentAmount;
+    public GameObject stumpPrefab;
     public bool isMinable = false;
     bool isDead;
     CapsuleCollider capsuleCollider;
@@ -58,6 +59,10 @@ public class TreeNodes : MonoBehaviour
     void Death()
     {
         isDead = true;
+        Instantiate(stumpPrefab, new Vector3(
+            this.transform.position.x, 
+            this.transform.position.y, 
+            this.transform.position.z), Quaternion.identity);
         Destroy(gameObject);
     }
 }

@@ -407,7 +407,7 @@ public class WorkerAI : MonoBehaviour
                     {
                         if (woodLogs != null && woodLogs.currentAmount > 0)
                         {
-                            woodLogs.TakeDamage();
+                            woodLogs.CollectWood();
                             inventoryAmount += 1;
                             inventoryWood += 1;
                             Debug.Log("Wood collected");
@@ -453,7 +453,7 @@ public class WorkerAI : MonoBehaviour
                     Debug.Log("Wood Logs Script found");
                     if (woodLogs != null && woodLogs.currentAmount > 0)
                     {                        
-                        woodLogs.TakeDamage();
+                        woodLogs.CollectWood();
                         ResourceBank.RemoveWoodFromStock(1);
                         inventoryAmount += 1;
                         inventoryWood += 1;

@@ -21,8 +21,6 @@ public class AddRemoveWoodcutterButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Left click");
             leftClick.Invoke();
             jobManager.MoveWorkerToJob("Unemployed", "Woodcutter");
-            window_WorkerBank.UpdateJobsCounter();
-
         }
 
         else if (eventData.button == PointerEventData.InputButton.Middle)
@@ -35,8 +33,6 @@ public class AddRemoveWoodcutterButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Right click");
             rightClick.Invoke();
             jobManager.MoveWorkerToJob("Woodcutter", "Unemployed");
-            window_WorkerBank.UpdateJobsCounter();
-
         }
     }
 }

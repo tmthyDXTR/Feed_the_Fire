@@ -159,8 +159,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daec17e549a6cc04ba6dfe57fb0dfac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodAmount: 24
+  woodAmount: 1
   currentAmount: 0
+  stumpPrefab: {fileID: 6873636770908053891, guid: ca37a9e84bb1c484d863a0242a1a7103,
+    type: 3}
   isMinable: 0
 --- !u!114 &-5636484585124657632
 MonoBehaviour:
@@ -188,6 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoPanel: {fileID: 0}
+  originalInfoPanel: {fileID: 0}
   selected: 0
 --- !u!1001 &4081475353138203866
 PrefabInstance:

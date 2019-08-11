@@ -8,114 +8,139 @@ public class JobManager : MonoBehaviour
     public int workerTotalCount = 0;
     public int unemployedCount = 0;
     public int lighWardenCount = 0;
-    public int stonecutterCount = 0;
+    public int builderCount = 0;
     public int woodcutterCount = 0;
-    public GameObject[] workerList;
-    
+    public int stonecutterCount = 0;
+
+    public WorkerUnitAI worker;
 
     void Awake()
     {
-        GetWorkerCounts();     
+
     }
 
     void Update()
     {
-        
-    }
-
-    public void MoveWorkerToJob(string currentJob, string newJob)
-    {
-        
-        workerList = GetWorkerList(currentJob);
-        Debug.Log("woker list length current: " + workerList.Length);
-        
-        if (workerList.Length >= 1)
-        {
-            WorkerAI workerAI = workerList[workerList.Length - 1].GetComponent<WorkerAI>();
-            workerAI.currentJob = newJob;
-        }
         GetWorkerCounts();
     }
 
-
-    public GameObject[] GetWorkerList(string job)
+    public void MoveWorkerToJob(string job, string newJob)
     {
-        int listLength = GetWorkerCount(job);
-        int counter = 0;
-
-        GameObject[] workerList = new GameObject[listLength];       
-
-        foreach (Transform worker in transform)
+        List<GameObject> workerList = new List<GameObject>();
+        workerList = GetWorkerList(job);
+        if (workerList.Count >= 1)
         {
-            WorkerAI workerAI = worker.GetComponent<WorkerAI>();
-            if (workerAI.currentJob == job)
+            WorkerUnitAI worker = workerList[0].GetComponent<WorkerUnitAI>();
+            if (newJob == "Unemployed")
             {
-                workerList[counter] = worker.gameObject;
-                counter += 1;
+                worker.job = WorkerUnitAI.Job.Unemployed;
             }
+            if (newJob == "Woodcutter")
+            {
+                worker.job = WorkerUnitAI.Job.Woodcutter;
+            }
+            if (newJob == "LightWarden")
+            {
+                worker.job = WorkerUnitAI.Job.LightWarden;
+            }
+            if (newJob == "Builder")
+            {
+                worker.job = WorkerUnitAI.Job.Builder;
+            }
+            if (newJob == "Stonecutter")
+            {
+                worker.job = WorkerUnitAI.Job.Stonecutter;
+            }
+        }
+    }
 
+    private List<GameObject> GetWorkerList(string job)
+    {
+        List<GameObject> workerList = new List<GameObject>();
+        if (job == "Unemployed")
+        {
+            foreach (Transform unit in transform)
+            {
+                WorkerUnitAI worker = unit.GetComponent<WorkerUnitAI>();
+                if (worker.job == WorkerUnitAI.Job.Unemployed)
+                {
+                    workerList.Add(unit.gameObject);
+                }
+            }
+        }
+        if (job == "Woodcutter")
+        {
+            foreach (Transform unit in transform)
+            {
+                WorkerUnitAI worker = unit.GetComponent<WorkerUnitAI>();
+                if (worker.job == WorkerUnitAI.Job.Woodcutter)
+                {
+                    workerList.Add(unit.gameObject);
+                }
+            }
+        }
+        if (job == "LightWarden")
+        {
+            foreach (Transform unit in transform)
+            {
+                WorkerUnitAI worker = unit.GetComponent<WorkerUnitAI>();
+                if (worker.job == WorkerUnitAI.Job.LightWarden)
+                {
+                    workerList.Add(unit.gameObject);
+                }
+            }
+        }
+        if (job == "Builder")
+        {
+            foreach (Transform unit in transform)
+            {
+                WorkerUnitAI worker = unit.GetComponent<WorkerUnitAI>();
+                if (worker.job == WorkerUnitAI.Job.Builder)
+                {
+                    workerList.Add(unit.gameObject);
+                }
+            }
         }
         return workerList;
     }
-
-    public int GetWorkerCount(string jobTag)
-    {
-        int counter = 0;     
-
-        foreach (Transform worker in transform)
-        {
-            WorkerAI workerAI = worker.GetComponent<WorkerAI>();
-            if (workerAI.currentJob == jobTag)
-            {
-                counter += 1;
-            }            
-        }
-        Debug.Log(jobTag + " Count: " + counter);
-        return counter;
-    }
-
 
     public void GetWorkerCounts()
     {
         workerTotalCount = 0;
         unemployedCount = 0;
         lighWardenCount = 0;
+        builderCount = 0;
         woodcutterCount = 0;
-        stonecutterCount = 0;
 
-        foreach (Transform worker in transform)
+        foreach (Transform unit in transform)
         {
-            WorkerAI workerAI = worker.GetComponent<WorkerAI>();
-            if (workerAI.currentJob == "Unemployed")
+            WorkerUnitAI worker = unit.GetComponent<WorkerUnitAI>();
+            if (worker.job == WorkerUnitAI.Job.Unemployed)
             {
                 unemployedCount += 1;
             }
 
-            if (workerAI.currentJob == "LightWarden")
+            if (worker.job == WorkerUnitAI.Job.LightWarden)
             {
                 lighWardenCount += 1;
             }
 
-            if (workerAI.currentJob == "Woodcutter")
+            if (worker.job == WorkerUnitAI.Job.Woodcutter)
             {
                 woodcutterCount += 1;
             }
 
-            if (workerAI.currentJob == "Stonecutter")
+            if (worker.job == WorkerUnitAI.Job.Builder)
             {
-                stonecutterCount += 1;
+                builderCount += 1;
             }
 
             workerTotalCount += 1;
         }
         Debug.Log("Worker Total Count: " + workerTotalCount);
-        Debug.Log("Unemployed Worker Total Count: " + unemployedCount);
-        Debug.Log("Worker Total Count: " + lighWardenCount);
-        Debug.Log("Woodcutter Worker Total Count: " + woodcutterCount);
-        Debug.Log("Stonecutter Worker Total Count: " + stonecutterCount);
+        Debug.Log("Unemployed Count: " + unemployedCount);
+        Debug.Log("LightWarden Count: " + lighWardenCount);
+        Debug.Log("Woodcutter Count: " + woodcutterCount);
+        Debug.Log("Builder Count: " + builderCount);
     }
-        
-            
-
-    
 }

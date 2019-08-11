@@ -21,8 +21,6 @@ public class AddRemoveStonecutterButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Left click");
             leftClick.Invoke();
             jobManager.MoveWorkerToJob("Unemployed", "Stonecutter");
-            window_WorkerBank.UpdateJobsCounter();
-
         }
 
         else if (eventData.button == PointerEventData.InputButton.Middle)
@@ -34,11 +32,7 @@ public class AddRemoveStonecutterButton : MonoBehaviour, IPointerClickHandler
         {
             Debug.Log("Right click");
             rightClick.Invoke();
-            jobManager.MoveWorkerToJob("Stonecutter", "Unemployed");
-            window_WorkerBank.UpdateJobsCounter();
-
-
-
+            jobManager.MoveWorkerToJob("Stonecutter", "Unemployed");         
         }
     }
 }

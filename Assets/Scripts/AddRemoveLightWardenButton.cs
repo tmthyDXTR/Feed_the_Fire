@@ -21,7 +21,6 @@ public class AddRemoveLightWardenButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Left click");
             leftClick.Invoke();
             jobManager.MoveWorkerToJob("Unemployed", "LightWarden");
-            window_WorkerBank.UpdateJobsCounter();
         }
 
         else if (eventData.button == PointerEventData.InputButton.Middle)
@@ -34,7 +33,6 @@ public class AddRemoveLightWardenButton : MonoBehaviour, IPointerClickHandler
             Debug.Log("Right click");
             rightClick.Invoke();
             jobManager.MoveWorkerToJob("LightWarden", "Unemployed");
-            window_WorkerBank.UpdateJobsCounter();
         }
     }
 }

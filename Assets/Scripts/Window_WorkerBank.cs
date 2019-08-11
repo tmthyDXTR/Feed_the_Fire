@@ -12,31 +12,31 @@ public class Window_WorkerBank : MonoBehaviour
     private void UpdateUnemployedTotalTextObject()
     {
         transform.Find("Unemployed").GetComponent<Text>().text =
-            "Unemployed: " + jobManager.GetWorkerCount("Unemployed");
+            "Unemployed: " + jobManager.unemployedCount;
     }
 
     private void UpdateLightWardenTotalTextObject()
     {
         transform.Find("LightWarden").GetComponent<Text>().text =
-            "LightWarden: " + jobManager.GetWorkerCount("LightWarden");
+            "LightWarden: " + jobManager.lighWardenCount;
     }
 
     private void UpdateBuilderTotalTextObject()
     {
         transform.Find("Builder").GetComponent<Text>().text =
-            "Builder: " + jobManager.GetWorkerCount("Builder");
+            "Builder: " + jobManager.builderCount;
     }
 
     private void UpdateWoodcutterTotalTextObject()
     {
         transform.Find("Woodcutter").GetComponent<Text>().text =
-            "Woodcutter: " + jobManager.GetWorkerCount("Woodcutter");
+            "Woodcutter: " + jobManager.woodcutterCount;
     }
 
     private void UpdateStonecutterTotalTextObject()
     {
         transform.Find("Stonecutter").GetComponent<Text>().text =
-            "Stonecutter: " + jobManager.GetWorkerCount("Stonecutter");
+            "Stonecutter: " + jobManager.stonecutterCount;
     }
 
     public void UpdateJobsCounter()
@@ -55,6 +55,7 @@ public class Window_WorkerBank : MonoBehaviour
 
     private void Update()
     {
+        UpdateJobsCounter();
     }
 
 }

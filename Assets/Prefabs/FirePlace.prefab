@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2318233914203631851}
   - component: {fileID: 221371475979582768}
   - component: {fileID: 8378619985123814173}
-  m_Layer: 13
+  m_Layer: 15
   m_Name: FirePlace
-  m_TagString: Untagged
+  m_TagString: Bonfire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -781,6 +781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lt: {fileID: 0}
   fow: {fileID: 0}
+  collider: {fileID: 0}
   originalRange: 200
   min: 0.95
   max: 1.03

@@ -55,7 +55,7 @@ public class WoodLogs : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    public void TakeDamage()
+    public void CollectWood()
     {
         if (isDead)
             return;

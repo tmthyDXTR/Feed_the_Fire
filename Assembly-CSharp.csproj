@@ -66,9 +66,7 @@
      <Compile Include="Assets\Scripts\ChangeColour.cs" />
      <Compile Include="Assets\Scripts\ClickableObject.cs" />
      <Compile Include="Assets\Scripts\ClickObject.cs" />
-     <Compile Include="Assets\Scripts\CloudAutoHider.cs" />
-     <Compile Include="Assets\Scripts\CloudGen.cs" />
-     <Compile Include="Assets\Scripts\CloudScaler.cs" />
+     <Compile Include="Assets\Scripts\CreateUnitButton.cs" />
      <Compile Include="Assets\Scripts\EnemyRoam.cs" />
      <Compile Include="Assets\Scripts\EnemySpawner.cs" />
      <Compile Include="Assets\Scripts\FireLight.cs" />
@@ -108,6 +106,8 @@
      <Compile Include="Assets\Scripts\WoodLogs.cs" />
      <Compile Include="Assets\Scripts\WoodLogsStatic.cs" />
      <Compile Include="Assets\Scripts\WorkerAI.cs" />
+     <Compile Include="Assets\Scripts\WorkerController.cs" />
+     <Compile Include="Assets\Scripts\WorkerUnitAI.cs" />
      <None Include="Assets\Scripts\SimpleFogOfWar\Resources\FOWViewStampShader.shader" />
      <None Include="Assets\Readme.txt" />
      <None Include="Assets\Scripts\SimpleFogOfWar\Resources\FOWSeeThroughShader.shader" />

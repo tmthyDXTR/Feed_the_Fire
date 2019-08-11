@@ -5,12 +5,17 @@ using UnityEngine;
 public class UnitInfo : MonoBehaviour
 {
     public int health = 10;
+    public string job;
+    public int invMax = 1;
+    public int invWood = 0;
     public bool isAlive = true;
 
-    private EnemyRoam attacker;
+    private WorkerUnitAI unitAI;
+    private EnemyRoam attacker; // Temp Fix
 
     void Awake()
     {
+        unitAI = GetComponent<WorkerUnitAI>();
         isAlive = true;
     }
 

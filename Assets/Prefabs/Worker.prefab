@@ -1212,8 +1212,9 @@ GameObject:
   - component: {fileID: 8059541926984194931}
   - component: {fileID: 8869114999525909910}
   - component: {fileID: 4656626618735790403}
-  - component: {fileID: 8251712237004496527}
   - component: {fileID: 1435469835987859855}
+  - component: {fileID: 3265196993942522946}
+  - component: {fileID: 2832320346574407741}
   - component: {fileID: 2422604284892753404}
   m_Layer: 17
   m_Name: Worker
@@ -1257,7 +1258,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -1287,7 +1288,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: e1345f231bddd7a488397fb5ca71c0cb, type: 3}
   m_Controller: {fileID: 9100000, guid: cae3a41a1eab86d4daf030e576a8f3f0, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
@@ -1309,7 +1310,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 225
-  m_StoppingDistance: 7
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1317,37 +1318,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &8251712237004496527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3719550282298044123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1f63af28c920d74b9d2cfb63987e3c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  nextNode: {x: 0, y: 0, z: 0}
-  nextNodeCollider: {fileID: 0}
-  Target: {fileID: 0}
-  currentJob: Unemployed
-  workSpeed: 1
-  inventorySize: 1
-  inventoryAmount: 0
-  inventoryWood: 0
-  inventoryStone: 0
-  animationSpeed: 2
-  state: 0
-  sphereOrigin: {x: 0, y: 0, z: 0}
-  sphereRadius: 40
-  sphereLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!114 &1435469835987859855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1363,6 +1333,43 @@ MonoBehaviour:
   infoPanel: {fileID: 0}
   originalInfoPanel: {fileID: 0}
   selected: 0
+--- !u!114 &3265196993942522946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3719550282298044123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7bbd305efc36fc47b56bdcdb428904d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  target: {fileID: 0}
+  targetReached: 0
+  workSpeed: 1
+  animationSpeed: 2
+  searchRadius: 30
+  searchLayer:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &2832320346574407741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3719550282298044123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c599c35ddcb9ba64ba4b2a38c6c7e687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  job: 0
+  state: 0
 --- !u!114 &2422604284892753404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1375,6 +1382,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2be28e4a2ba1fd4eaf17315d27e550e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 10
+  job: 
+  invMax: 1
+  invWood: 0
+  isAlive: 1
 --- !u!1 &3719550282298044125
 GameObject:
   m_ObjectHideFlags: 0
