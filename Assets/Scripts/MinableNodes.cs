@@ -5,6 +5,7 @@ using UnityEngine;
 public class MinableNodes : MonoBehaviour
 {
     public List<Collider> minableNodesList = new List<Collider>();
+    public List<Collider> selectionNodes = new List<Collider>();
 
 
 
@@ -12,7 +13,21 @@ public class MinableNodes : MonoBehaviour
     {
         return minableNodesList;
     }
+    public List<Collider> GetSelectionNodes()
+    {
+        return selectionNodes;
+    }
 
+
+    public void RegisterNode()
+    {
+
+    }
+
+    public void DeregisterNode()
+    {
+
+    }
 
     void Start()
     {
@@ -22,6 +37,6 @@ public class MinableNodes : MonoBehaviour
 
     void Update()
     {
-        minableNodesList.RemoveAll(Collider => Collider == null);
+        //minableNodesList.RemoveAll(Collider => Collider == null);
     }
 }

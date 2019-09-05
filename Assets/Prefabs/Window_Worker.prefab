@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1360160044134862797}
   - component: {fileID: 1360160044134862794}
   m_Layer: 0
-  m_Name: Occupation
+  m_Name: Info_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 1360160044169410898}
   - component: {fileID: 1360160044169410899}
   m_Layer: 0
-  m_Name: Target
+  m_Name: Info_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 1360160044462224955}
   - component: {fileID: 1360160044462224952}
   m_Layer: 0
-  m_Name: UnitName
+  m_Name: Info_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 1360160044630287165}
   - component: {fileID: 1360160044630287162}
   m_Layer: 0
-  m_Name: InvWood
+  m_Name: Info_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 1360160045314880746}
   - component: {fileID: 1360160045314880747}
   m_Layer: 0
-  m_Name: InvStone
+  m_Name: Info_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

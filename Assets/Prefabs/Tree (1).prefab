@@ -91,10 +91,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5824102716326248491}
   - component: {fileID: 3438228664191826929}
+  - component: {fileID: 8833523329936515153}
   - component: {fileID: 7668411327464089752}
   - component: {fileID: 4962167796595973996}
   - component: {fileID: -5636484585124657632}
-  - component: {fileID: 3946578406010480929}
   m_Layer: 9
   m_Name: Tree (1)
   m_TagString: WorkActive
@@ -131,6 +131,20 @@ CapsuleCollider:
   m_Height: 7.66
   m_Direction: 1
   m_Center: {x: 0, y: 1.94, z: 0}
+--- !u!136 &8833523329936515153
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6301779108623577252}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 3.88
+  m_Height: 10.78
+  m_Direction: 1
+  m_Center: {x: 0, y: 7.24, z: 0}
 --- !u!208 &7668411327464089752
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -176,23 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9992d5930398bcb4bbb68f1e1049185e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  originalMaterial: {fileID: 0}
+  originalMaterial: {fileID: 2100000, guid: e29aa589d8480784abf4a60b7bea89bd, type: 2}
   newMaterial: {fileID: 2100000, guid: debe653ad3890354c9bd94e81535e439, type: 2}
---- !u!114 &3946578406010480929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6301779108623577252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  infoPanel: {fileID: 0}
-  originalInfoPanel: {fileID: 0}
-  selected: 0
 --- !u!1001 &4081475353138203866
 PrefabInstance:
   m_ObjectHideFlags: 0

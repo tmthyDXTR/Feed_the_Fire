@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4534811307098712293}
   - component: {fileID: 228908706442266908}
   m_Layer: 0
-  m_Name: CostWood
+  m_Name: Info_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -484.47, y: -199.5}
+  m_AnchoredPosition: {x: 400, y: -242}
   m_SizeDelta: {x: 142.95, y: 40.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4534811307098712293
@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'CostWood: '
+  m_Text: 
 --- !u!1 &2987703504701351059
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +94,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2987703504701351060
 RectTransform:
   m_ObjectHideFlags: 0
@@ -110,13 +110,14 @@ RectTransform:
   - {fileID: 4783601110714074174}
   - {fileID: 1021998272994609657}
   - {fileID: 8403204035703582378}
+  - {fileID: 2426721225312563522}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 777.4, y: 0}
-  m_SizeDelta: {x: -1280, y: -1426}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -2418, y: -1258}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2987703505322665023
 GameObject:
@@ -130,7 +131,7 @@ GameObject:
   - component: {fileID: 2987703505322664898}
   - component: {fileID: 2987703505322664897}
   m_Layer: 0
-  m_Name: BuildingName
+  m_Name: Info_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +153,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -484.47, y: -199.5}
+  m_AnchoredPosition: {x: 399.99997, y: -199.5}
   m_SizeDelta: {x: 142.95, y: 40.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2987703505322664898
@@ -196,7 +197,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Fire Place
+  m_Text: 'Construction: '
 --- !u!1 &4381304600249224750
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +210,7 @@ GameObject:
   - component: {fileID: 3713869397217524331}
   - component: {fileID: 3940513067018302272}
   m_Layer: 0
-  m_Name: CostStone
+  m_Name: Info_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -231,7 +232,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -484.47, y: -199.5}
+  m_AnchoredPosition: {x: 399.99997, y: -263}
   m_SizeDelta: {x: 142.95, y: 40.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3713869397217524331
@@ -275,7 +276,86 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'CostStone: '
+  m_Text: 
+--- !u!1 &7930255677341050193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2426721225312563522}
+  - component: {fileID: 6541283256420868818}
+  - component: {fileID: 2367398333465720965}
+  m_Layer: 0
+  m_Name: Info_5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2426721225312563522
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930255677341050193}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2987703504701351060}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 399.99997, y: -286}
+  m_SizeDelta: {x: 142.95, y: 40.1}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6541283256420868818
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930255677341050193}
+  m_CullTransparentMesh: 0
+--- !u!114 &2367398333465720965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930255677341050193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.8396226, g: 0.73116493, b: 0.06732824, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 16
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
 --- !u!1 &8254985714837376635
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +368,7 @@ GameObject:
   - component: {fileID: 1804015606145490542}
   - component: {fileID: 7581913510531956743}
   m_Layer: 0
-  m_Name: Progress
+  m_Name: Info_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -310,7 +390,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -484.47, y: -199.5}
+  m_AnchoredPosition: {x: 399.99997, y: -221}
   m_SizeDelta: {x: 142.95, y: 40.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1804015606145490542
@@ -354,4 +434,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Progress: '
+  m_Text: 

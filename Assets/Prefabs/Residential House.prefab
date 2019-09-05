@@ -1917,7 +1917,6 @@ GameObject:
   - component: {fileID: 4158361080094380821}
   - component: {fileID: 1148339398358593210}
   - component: {fileID: 4486162990960882586}
-  - component: {fileID: 4790874912252717131}
   m_Layer: 15
   m_Name: Residential House
   m_TagString: ResidentialHouse
@@ -2021,26 +2020,10 @@ MonoBehaviour:
   costStone: 10
   reqWood: 0
   reqStone: 0
-  currentWood: 0
-  currentStone: 0
+  wood: 0
+  stone: 0
   originalTag: 
   isConstruction: 0
---- !u!114 &4790874912252717131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2815974526700792852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  infoPanel: {fileID: 0}
-  originalInfoPanel: {fileID: 2941728478498269008, guid: 01c6baa8e46baf24481fa92283f00d39,
-    type: 3}
-  selected: 0
 --- !u!1 &2973005444785461088
 GameObject:
   m_ObjectHideFlags: 0

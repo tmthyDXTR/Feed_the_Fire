@@ -16,11 +16,38 @@ public class JobManager : MonoBehaviour
 
     void Awake()
     {
+        GetWorkerCounts();
 
     }
 
     void Update()
     {
+        
+    }
+
+    public void MoveThisWorkerToJob(GameObject workerToChangeJob, string newJob)
+    {
+        WorkerUnitAI worker = workerToChangeJob.GetComponent<WorkerUnitAI>();
+        if (newJob == "Unemployed")
+        {
+            worker.job = WorkerUnitAI.Job.Unemployed;
+        }
+        if (newJob == "Woodcutter")
+        {
+            worker.job = WorkerUnitAI.Job.Woodcutter;
+        }
+        if (newJob == "LightWarden")
+        {
+            worker.job = WorkerUnitAI.Job.LightWarden;
+        }
+        if (newJob == "Builder")
+        {
+            worker.job = WorkerUnitAI.Job.Builder;
+        }
+        if (newJob == "Stonecutter")
+        {
+            worker.job = WorkerUnitAI.Job.Stonecutter;
+        }
         GetWorkerCounts();
     }
 
@@ -52,6 +79,7 @@ public class JobManager : MonoBehaviour
                 worker.job = WorkerUnitAI.Job.Stonecutter;
             }
         }
+        GetWorkerCounts();
     }
 
     private List<GameObject> GetWorkerList(string job)
@@ -137,10 +165,5 @@ public class JobManager : MonoBehaviour
 
             workerTotalCount += 1;
         }
-        Debug.Log("Worker Total Count: " + workerTotalCount);
-        Debug.Log("Unemployed Count: " + unemployedCount);
-        Debug.Log("LightWarden Count: " + lighWardenCount);
-        Debug.Log("Woodcutter Count: " + woodcutterCount);
-        Debug.Log("Builder Count: " + builderCount);
     }
 }

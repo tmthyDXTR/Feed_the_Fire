@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 4570485601320960664}
   - component: {fileID: 1338629884272643325}
   - component: {fileID: 4861442920139999392}
+  - component: {fileID: 4707019594596573967}
   m_Layer: 15
-  m_Name: Fancy_Tavern
+  m_Name: Tavern
   m_TagString: Tavern
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,10 +134,25 @@ MonoBehaviour:
   costStone: 0
   reqWood: 0
   reqStone: 0
-  currentWood: 0
-  currentStone: 0
+  wood: 0
+  stone: 0
   originalTag: 
   isConstruction: 0
+--- !u!114 &4707019594596573967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infoPanel: {fileID: 0}
+  originalInfoPanel: {fileID: 0}
+  selected: 0
 --- !u!1 &140934
 GameObject:
   m_ObjectHideFlags: 0

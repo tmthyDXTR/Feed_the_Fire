@@ -3796,8 +3796,8 @@ MonoBehaviour:
   costStone: 0
   reqWood: 0
   reqStone: 0
-  currentWood: 0
-  currentStone: 0
+  wood: 0
+  stone: 0
   originalTag: 
   isConstruction: 0
 --- !u!114 &5560159376285239220
@@ -3812,10 +3812,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  infoPanel: {fileID: 0}
-  originalInfoPanel: {fileID: 3157829434574701693, guid: bca31378c94346341b836f568c2c8135,
+  isSelected: 0
+  infoWindow: {fileID: 0}
+  windowBuilding: {fileID: 3157829434574701693, guid: bca31378c94346341b836f568c2c8135,
     type: 3}
-  selected: 0
 --- !u!1 &5349312829850221574
 GameObject:
   m_ObjectHideFlags: 0

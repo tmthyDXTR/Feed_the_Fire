@@ -88,7 +88,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1205793775571628280}
-  - component: {fileID: 6885510772374541584}
   m_Layer: 0
   m_Name: Window_Bonfire
   m_TagString: Untagged
@@ -117,18 +116,6 @@ RectTransform:
   m_AnchoredPosition: {x: 777.4, y: 0}
   m_SizeDelta: {x: -1280, y: -1426}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6885510772374541584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1205793775571628287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4aa43218bbdb0148b73b74db934e9eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2345936500601720505
 GameObject:
   m_ObjectHideFlags: 0

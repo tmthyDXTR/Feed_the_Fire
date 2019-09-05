@@ -26,7 +26,7 @@ public static class ResourceBank
     {
         if (fireLife > 0)
         {
-            Debug.Log("Fire Burning");
+            //Debug.Log("Fire Burning");
             burnTime += Time.deltaTime;
             if (burnTime >= burnSpeed)
             {               

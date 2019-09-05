@@ -3960,7 +3960,6 @@ GameObject:
   - component: {fileID: 7423874051805661413}
   - component: {fileID: 2823765583666204179}
   - component: {fileID: 6072807833386141358}
-  - component: {fileID: 2083217198435916084}
   m_Layer: 15
   m_Name: WoodLogs
   m_TagString: Storage
@@ -4035,21 +4034,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodCapacity: 10
   currentAmount: 0
---- !u!114 &2083217198435916084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7708682162282776366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  infoPanel: {fileID: 0}
-  originalInfoPanel: {fileID: 0}
-  selected: 0
 --- !u!1 &7862615676773480222
 GameObject:
   m_ObjectHideFlags: 0

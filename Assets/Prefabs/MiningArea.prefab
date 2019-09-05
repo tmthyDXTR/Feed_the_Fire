@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3416201885841057495}
   - component: {fileID: 5473789857244285481}
   - component: {fileID: 4320785138473593913}
+  - component: {fileID: 7237549057425987898}
   m_Layer: 12
   m_Name: MiningArea
   m_TagString: MiningArea
@@ -59,11 +60,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edf2835821769cf4890926c05011a848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sphereRadius: 30
+  sphereRadius: 20
   miningNodes: []
   minableNodes: {fileID: 6260651120315348600, guid: 011eeba9426220a4cbd6b3b2aa0a1017,
     type: 3}
-  originalMaterial: {fileID: 0}
+  originalMaterial: {fileID: 2100000, guid: e29aa589d8480784abf4a60b7bea89bd, type: 2}
   newMaterial: {fileID: 2100000, guid: debe653ad3890354c9bd94e81535e439, type: 2}
 --- !u!114 &5473789857244285481
 MonoBehaviour:
@@ -94,3 +95,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7237549057425987898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3416201885841057494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5eaf35b1bf2a5246ab2f857449e3e63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 0
+  currentHealth: 0
+  costWood: 0
+  costStone: 0
+  reqWood: 0
+  reqStone: 0
+  wood: 0
+  stone: 0
+  originalTag: 
+  isConstruction: 0

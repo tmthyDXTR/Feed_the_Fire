@@ -6,11 +6,16 @@ public class ObjectPlacement : MonoBehaviour
 {
     private BuildingInfo buildingInfo;
     private PlaceableObject placeableObject;
-    private ClickableObject clickableObject;
-    public GameObject constructionWindow;
-    public GameObject woodcutterWindow;
-    public GameObject residentialHouseWindow;
-    public GameObject bonfireWindow;
+    private SelectableObject selectableObject;
+    private MiningArea miningArea;
+    private ConstructionManager constructionManager;
+    private SelectionManager selectionManager;
+    private GridManager grid;
+
+
+    public Transform currentObject;
+    public bool hasPlaced = false;
+          
 
     public GameObject wallStart;
     public GameObject wallEnd;
@@ -23,156 +28,141 @@ public class ObjectPlacement : MonoBehaviour
     public float unsnapMouseDistance = 25;
     private Vector3 snapMousePos;
     public Transform snapTarget;
-
-    public Transform currentObject;
-    private MiningArea miningArea;
-
-    private float objectRotationSpeed = 100f;
-    public bool hasPlaced = false;
-
-    private GridManager grid;
+    private float objectRotationSpeed = 100f;    
 
     Vector3 mousePos;
 
     void Awake()
     {
+        selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+        constructionManager = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
         grid = FindObjectOfType<GridManager>();
     }
 
     void Update()
     {
-        if (currentObject != null && !hasPlaced)
+        // Check if an Object is selected in SelectionManager
+        if (selectionManager.objectSelected == true)
         {
-            Cursor.visible = false;
-            mousePos = new Vector3(GetWorldPoint().x, 0f, GetWorldPoint().z);
-            currentObject.position = grid.GetNearestPointOnGrid(mousePos);
-            RotateCurrentObject();
-
-            if (currentObject.tag == "MiningArea")
+            if (currentObject != null)
             {
-                miningArea = currentObject.GetComponent<MiningArea>();
-                if (miningArea != null)
-                {
-                    miningArea.ShowMinableNodes();
-                }
-            }
-
-            if (currentObject.tag == "WallPole")
-            {
-                //currentObject.position = GetWorldPoint();
-                if (IsLegalPosition() && !creatingWall && Input.GetMouseButtonDown(0))
-                {
-                    SetStart();
-                    Debug.Log("Set Wall Start");
-                }
-                else if (Input.GetMouseButtonDown(0))
-                {
-                    AddWall();
-                    Debug.Log("Add Wall");
-                }
-                else
-                {
-                    if (creatingWall)
-                    {
-                        Adjust();
-                    }
-                }
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                Debug.Log("Mouse click position: " + GetWorldPoint());
-                if (currentObject.tag != "MiningArea")
-                {
-                    //--Fix this, temp Window activation--//
-                    constructionWindow.SetActive(true);
-                    bonfireWindow.SetActive(true);
-
-                    if (currentObject.tag == "WoodcutterHut")
-                    {
-                        if (IsLegalPosition())
-                        {
-                            buildingInfo = currentObject.GetComponent<BuildingInfo>();
-                            clickableObject = currentObject.GetComponent<ClickableObject>();
-                            clickableObject.infoPanel = GameObject.Find("Window_Construction");
-                            woodcutterWindow.SetActive(true);
-                            clickableObject.originalInfoPanel = GameObject.Find("Window_WoodcutterHut");
-                            woodcutterWindow.SetActive(false);
-                            buildingInfo.SetBuildingModel(0);
-                            currentObject.tag = "Construction";
-                            PlaceObject();
-                        }
-                    }      
-                    if (currentObject.tag == "ResidentialHouse")
-                    {
-                        if (IsLegalPosition())
-                        {
-                            buildingInfo = currentObject.GetComponent<BuildingInfo>();
-                            clickableObject = currentObject.GetComponent<ClickableObject>();
-                            clickableObject.infoPanel = GameObject.Find("Window_Construction");
-                            residentialHouseWindow.SetActive(true);
-                            clickableObject.originalInfoPanel = GameObject.Find("Window_ResidentialHouse");
-                            residentialHouseWindow.SetActive(false);
-                            buildingInfo.SetBuildingModel(0);
-                            currentObject.tag = "Construction";
-                            PlaceObject();
-                        }
-                    }
-                    if (currentObject.tag == "Bonfire")
-                    {
-                        if (IsLegalPosition())
-                        {
-                            buildingInfo = currentObject.GetComponent<BuildingInfo>();
-                            clickableObject = currentObject.GetComponent<ClickableObject>();
-                            clickableObject.infoPanel = GameObject.Find("Window_Construction");
-                            residentialHouseWindow.SetActive(true);
-                            clickableObject.originalInfoPanel = GameObject.Find("Window_Bonfire");
-                            residentialHouseWindow.SetActive(false);
-                            //buildingInfo.SetBuildingModel(0);
-                            currentObject.tag = "Construction";
-                            PlaceObject();
-                        }
-                    }                    
-                }               
+                Cursor.visible = false;
+                mousePos = new Vector3(GetWorldPoint().x, 0f, GetWorldPoint().z);
+                currentObject.position = grid.GetNearestPointOnGrid(mousePos);
+                RotateCurrentObject();
 
                 if (currentObject.tag == "MiningArea")
-                {                                                                            
-                    miningArea.SetNodesToMinable("TreeNodes");
-                    miningArea.SetNodesToMinable("StoneNodes");
-                    miningArea.HideMinableNodes();
-                    Destroy(currentObject.gameObject, 1);
-                    PlaceObject();
-                }
-            }
-
-            if (Input.GetMouseButtonDown(1))
-            {
-                Cursor.visible = true;
-                if (placeableObject != null && currentObject.tag != "MiningArea")
-                {                    
-                    Destroy(currentObject.gameObject);
-                    constructionWindow.SetActive(false);
-                    hasPlaced = false;
-                    if (currentObject.tag == "WallPole")
+                {
+                    miningArea = currentObject.GetComponent<MiningArea>();
+                    if (miningArea != null)
                     {
-                        creatingWall = false;
-                        Destroy(wallPart.gameObject);
+                        miningArea.ShowMinableNodes();
+                    }
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        miningArea.SetNodesToMinable("TreeNodes");
+                        miningArea.SetNodesToMinable("StoneNodes");
+                        miningArea.HideMinableNodes();
+                        selectionManager.Deselect(currentObject.gameObject);
+                        PlaceObject();
+                        Destroy(currentObject.gameObject);
+                        currentObject = null;
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        selectionManager.Deselect(currentObject.gameObject);
+                        miningArea.HideMinableNodes();
+                        DeleteObject();
                     }
                 }
-                if (currentObject.tag == "MiningArea" && currentObject != null)
+
+                else if (currentObject.tag == "WoodcutterHut")
                 {
-                    miningArea.HideMinableNodes();
-                    Destroy(currentObject.gameObject);
-                    hasPlaced = false;
+                    buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                    if (Input.GetMouseButtonDown(0) && IsLegalPosition())
+                    {
+                        PlaceBuilding();
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        DeleteObject();
+                    }
                 }
-                currentObject = null;
-                //if (currentObject.tag == "Bonfire" && currentObject != null)
-                //{
-                //    FogOfWarManager.Instance.DeregisterRevealer(currentObject);
-                //    Destroy(currentObject.gameObject);
-                //    hasPlaced = false;
-                //}
+                else if (currentObject.tag == "ResidentialHouse")
+                {
+                    buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                    if (Input.GetMouseButtonDown(0) && IsLegalPosition())
+                    {
+                        PlaceBuilding();
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        DeleteObject();
+                    }
+                }
+                else if (currentObject.tag == "Bonfire")
+                {
+                    buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                    if (Input.GetMouseButtonDown(0) && IsLegalPosition())
+                    {
+                        PlaceBuilding();
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        DeleteObject();
+                    }
+                }
+                else if (currentObject.tag == "Tavern")
+                {
+                    buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                    if (Input.GetMouseButtonDown(0) && IsLegalPosition())
+                    {                        
+                        PlaceBuilding();
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        DeleteObject();
+                    }
+                }
+
             }
+            else
+            {
+                return;
+            }
+
+
+
+            //if (currentObject.tag == "WallPole")
+            //{
+            //    //currentObject.position = GetWorldPoint();
+            //    if (IsLegalPosition() && !creatingWall && Input.GetMouseButtonDown(0))
+            //    {
+            //        SetStart();
+            //        Debug.Log("Set Wall Start");
+            //    }
+            //    else if (Input.GetMouseButtonDown(0))
+            //    {
+            //        AddWall();
+            //        Debug.Log("Add Wall");
+            //    }
+            //    else
+            //    {
+            //        if (creatingWall)
+            //        {
+            //            Adjust();
+            //        }
+            //    }
+            //    if (Input.GetMouseButtonDown(1))
+            //    {
+            //        Cursor.visible = true;
+            //        creatingWall = false;
+            //        Destroy(wallPart.gameObject);
+            //    }
+            //}
+
+            // Buildings
         }
     }
 
@@ -257,12 +247,35 @@ public class ObjectPlacement : MonoBehaviour
     {
         hasPlaced = false;
         currentObject = ((GameObject)Instantiate(objectToBuild, mousePos, Quaternion.identity)).transform;
-        placeableObject = currentObject.GetComponent<PlaceableObject>();               
+        if (currentObject != null)
+        {
+            placeableObject = currentObject.GetComponent<PlaceableObject>();
+            selectionManager.Select(currentObject.gameObject);
+        }
+        
     }
 
     private void PlaceObject()
     {
         hasPlaced = true;
+        Cursor.visible = true;
+    }
+
+    private void PlaceBuilding()
+    {
+        buildingInfo.SetBuildingModel(0);
+        currentObject.tag = "Construction";
+        constructionManager.RegisterConstruction(currentObject.gameObject);
+        currentObject = null;
+        hasPlaced = true;
+        Cursor.visible = true;
+    }
+
+    private void DeleteObject()
+    {
+        hasPlaced = false;
+        selectionManager.Deselect(currentObject.gameObject);
+        Destroy(currentObject.gameObject);
         currentObject = null;
         Cursor.visible = true;
     }

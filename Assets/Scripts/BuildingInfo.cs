@@ -11,16 +11,18 @@ public class BuildingInfo : MonoBehaviour
     public int costStone;
     public int reqWood;
     public int reqStone;
-    public int currentWood;
-    public int currentStone;
+    public int wood;
+    public int stone;
     public string originalTag;
     public bool isConstruction;
     bool isDead;
     CapsuleCollider capsuleCollider;
+    ConstructionManager construction;
 
 
     void Awake()
     {
+        construction = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
 
         // Create According Building Stats
         if (this.gameObject.CompareTag("ResidentialHouse"))
@@ -125,6 +127,7 @@ public class BuildingInfo : MonoBehaviour
     {
         this.gameObject.tag = originalTag;
         isConstruction = false;
+        construction.DeregisterConstruction(this.gameObject);
         if (this.gameObject.tag == "WoodcutterHut")
         {
             foreach (Transform child in transform)
@@ -178,98 +181,6 @@ public class BuildingInfo : MonoBehaviour
         isDead = true;
 
         Destroy(gameObject);
-    }
-
-    public bool waitForRemainingResource()
-    {
-        if (moreResourcesNeeded() == false && (currentWood + currentStone) != (costWood + costStone))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool moreResourcesNeeded()        
-    {
-        if (reqWood + reqStone > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }         
-    }
-
-    public void CurrentResourcePlus(string resource)
-    {
-        if (resource == "Wood")
-        {
-            currentWood += 1;
-        }
-        if (resource == "Stone")
-        {
-            currentStone += 1;
-        }
-    }
-
-    public int GetCurrentResource(string resource)
-    {
-        if (resource == "Wood")
-        {
-            return currentWood;
-        }
-        if (resource == "Stone")
-        {
-            return currentStone;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public int GetReqResource(string resource)
-    {
-        if (resource == "Wood")
-        {
-            return reqWood;
-        }
-        if (resource == "Stone")
-        {
-            return reqStone;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public void ReqResourceMinus(string resource)
-    {
-        if (resource == "Wood")
-        {
-            reqWood -= 1;
-        }
-        if (resource == "Stone")
-        {
-            reqStone -= 1;
-        }
-    }
-
-    public void ReqResourcePlus(string resource)
-    {
-        if (resource == "Wood")
-        {
-            reqWood += 1;
-        }
-        if (resource == "Stone")
-        {
-            reqStone += 1;
-        }
     }
 
     #endregion

@@ -19,7 +19,7 @@ public class GameTimeManager : MonoBehaviour
             {
                 Time.timeScale *= 2;
                 gameSpeed = Time.timeScale;
-                Debug.Log(Time.timeScale);
+                //Debug.Log(Time.timeScale);
             }
             else
             {
@@ -33,7 +33,7 @@ public class GameTimeManager : MonoBehaviour
             {
                 Time.timeScale /= 2f;
                 gameSpeed = Time.timeScale;
-                Debug.Log(Time.timeScale);                
+                //Debug.Log(Time.timeScale);                
             }                
         }
     }
