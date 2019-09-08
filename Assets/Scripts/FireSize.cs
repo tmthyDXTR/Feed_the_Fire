@@ -15,34 +15,34 @@ public class FireSize : MonoBehaviour
     void Update()
     {
         // FireLife >= 75% -- Fire Level 4
-        if ((float)ResourceBank.GetFireLife() >= ((float)ResourceBank.GetFireLifeMax() * 0.75f))
+        if ((float)ResourceBank.fireLife >= ((float)ResourceBank.fireLifeFull * 0.75f))
         {
             var main = ps.main;
             main.startSize = new ParticleSystem.MinMaxCurve(pSize, pSize);
         }
         // 75% > FireLife >= 50% -- Fire Level 3
-        if (ResourceBank.GetFireLife() < (ResourceBank.GetFireLifeMax() * 0.75f) &&
-            ResourceBank.GetFireLife() >= (ResourceBank.GetFireLifeMax() * 0.50f))
+        if (ResourceBank.fireLife < (ResourceBank.fireLifeFull * 0.75f) &&
+            ResourceBank.fireLife >= (ResourceBank.fireLifeFull * 0.50f))
         {
             var main = ps.main;
             main.startSize = new ParticleSystem.MinMaxCurve((pSize*0.75f), (pSize * 0.75f));
         }
         // 50% > FireLife >= 25% -- Fire Level 2
-        if (ResourceBank.GetFireLife() < (ResourceBank.GetFireLifeMax() * 0.50f) &&
-            ResourceBank.GetFireLife() >= (ResourceBank.GetFireLifeMax() * 0.25f))
+        if (ResourceBank.fireLife < (ResourceBank.fireLifeFull * 0.50f) &&
+            ResourceBank.fireLife >= (ResourceBank.fireLifeFull * 0.25f))
         {
             var main = ps.main;
             main.startSize = new ParticleSystem.MinMaxCurve((pSize * 0.5f), (pSize * 0.5f));
         }
         // 25% > FireLife > 0% -- Fire Level 1
-        if (ResourceBank.GetFireLife() < (ResourceBank.GetFireLifeMax() * 0.25f) &&
-            ResourceBank.GetFireLife() >= (ResourceBank.GetFireLifeMax() * 0.001f))
+        if (ResourceBank.fireLife < (ResourceBank.fireLifeFull * 0.25f) &&
+            ResourceBank.fireLife >= (ResourceBank.fireLifeFull * 0.001f))
         {
             var main = ps.main;
             main.startSize = new ParticleSystem.MinMaxCurve((pSize * 0.25f), (pSize * 0.25f));
         }
         // FireLife = 0% -- Fire Level 0
-        if (ResourceBank.GetFireLife() == 0)
+        if (ResourceBank.fireLife == 0)
         {
             var main = ps.main;
             main.startSize = new ParticleSystem.MinMaxCurve((pSize * 0.01f), (pSize * 0.02f));

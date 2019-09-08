@@ -29,6 +29,10 @@ TagManager:
   - SnapPoint
   - WallPole
   - Ghoul
+  - Stump
+  - ShroomGrow
+  - ShroomArea
+  - FoodStorage
   layers:
   - Default
   - TransparentFX
@@ -51,7 +55,7 @@ TagManager:
   - Worker
   - Enemy
   - EnemySpawn
-  - 
+  - StumpNodes
   - 
   - 
   - 

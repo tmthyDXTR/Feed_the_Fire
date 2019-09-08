@@ -9,12 +9,16 @@ public static class ResourceBank
     public static EventHandler OnFireLifeChanged;
     public static EventHandler OnWoodStockChanged;
     public static EventHandler OnStoneStockChanged;
+    public static EventHandler OnFoodStockChanged;
+    public static EventHandler OnSporesStockChanged;
     public static EventHandler OnHousingChanged;
     public static int fireLifeFull = 20;
     public static int fireLifeMax = 20; //-- Slider Control
-    public static int fireLife = 11;
+    public static int fireLife = 20;
     public static int stoneStock = 0;
     public static int woodStock = 18;
+    public static int foodStock = 0;
+    public static int sporesStock = 1;
     public static int housingNeeded = 0;
     public static int housingCurrent = 0;
     public static float burnTime = 0.0f;
@@ -98,6 +102,35 @@ public static class ResourceBank
     {
         return stoneStock;
     }
+
+    //-- Food --//
+
+    public static void AddFoodToStock(int amount)
+    {
+        foodStock += amount;
+        if (OnFoodStockChanged != null) OnFoodStockChanged(null, EventArgs.Empty);
+    }
+
+    public static void RemoveFoodFromStock(int amount)
+    {
+        foodStock -= amount;
+        if (OnFoodStockChanged != null) OnFoodStockChanged(null, EventArgs.Empty);
+    }
+
+
+    public static void AddSporesToStock(int amount)
+    {
+        sporesStock += amount;
+        if (OnSporesStockChanged != null) OnSporesStockChanged(null, EventArgs.Empty);
+    }
+
+    public static void RemoveSporesFromStock(int amount)
+    {
+        sporesStock -= amount;
+        if (OnSporesStockChanged != null) OnSporesStockChanged(null, EventArgs.Empty);
+    }
+
+
 
 
     //-- Housing --//

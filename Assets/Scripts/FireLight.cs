@@ -33,16 +33,16 @@ public class FireLight : MonoBehaviour
     void UpdateCollider()
     {
         collider.radius = (float)10 *
-            ((float)ResourceBank.GetFireLife() / (float)ResourceBank.fireLifeFull);
+            ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
         if (collider.radius >= originalRange)
         {
             lt.range = originalRange;
         }
-        else if(ResourceBank.GetFireLife() < 5)
+        else if(ResourceBank.fireLife < 5)
         {
             collider.enabled = false;
         }
-        else if(ResourceBank.GetFireLife() >= 5)
+        else if(ResourceBank.fireLife >= 5)
         {
             collider.enabled = true;
         }
@@ -50,12 +50,14 @@ public class FireLight : MonoBehaviour
 
     void UpdateLightRange()
     {
-        lt.range = 18 + (float)originalRange *
-            ((float)ResourceBank.GetFireLife() / (float)ResourceBank.fireLifeFull);
-        if (lt.range >= originalRange)
-        {
-            lt.range = originalRange;
-        }
+        //lt.range = 18 + (float)originalRange *
+        //    ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
+        //if (lt.range >= originalRange)
+        //{
+        //    lt.range = originalRange;
+        //}
+
+        lt.range = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
     }
 
     void UpdateViewDistance()

@@ -12,6 +12,7 @@ public class WorkerController : MonoBehaviour
     public LayerMask groundLayer;
     public Collider target;
     public Collider constructionTarget;
+    public Collider burnTarget;
     private float distanceToTarget;
     public bool targetReached;
 
@@ -26,6 +27,8 @@ public class WorkerController : MonoBehaviour
     Animator m_Animator;
     AudioSource m_AudioSource;
     ConstructionManager construction;
+    BurnManager burnManager;
+    MinableNodes growManager;
     UnitInfo unitInfo;
 
     #endregion
@@ -35,6 +38,8 @@ public class WorkerController : MonoBehaviour
     {
         unitInfo = GetComponent<UnitInfo>();
         construction = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
+        burnManager = GameObject.Find("BurnManager").GetComponent<BurnManager>();
+        growManager = GameObject.Find("MinableNodes").GetComponent<MinableNodes>();
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
         m_Animator.speed = animationSpeed;
@@ -144,6 +149,200 @@ public class WorkerController : MonoBehaviour
         }
     }
 
+    public Collider SearchBurn()
+    {
+        // Check if there is a Object to Burn
+        if (burnManager.burnList.Count > 0)
+        {
+            foreach (GameObject obj in burnManager.burnList)
+            {
+                if (obj.GetComponent<Burnable>().isTargeted == false)
+                {
+                    burnTarget = obj.GetComponent<Collider>();
+                    
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            if (burnTarget != null)
+            {
+                burnTarget.GetComponent<Burnable>().isTargeted = true;
+                return burnTarget;
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public Collider SearchShroomGrow(string reason) // reason: "Plant" or "Collect"
+    {
+        // Check if there is a Object to Burn
+        if (growManager.shroomGrowList.Count > 0)
+        {
+            foreach (Collider shroomGrow in growManager.shroomGrowList)
+            {
+                if (reason == "Plant")
+                {
+                    if (shroomGrow.gameObject.GetComponent<GrowShroom>() != null 
+                        && shroomGrow.gameObject.GetComponent<GrowShroom>().hasSpores == false 
+                        && shroomGrow.gameObject.GetComponent<Burnable>().isBurning != true)
+                    {
+                        target = shroomGrow;
+                        return target;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }     
+                if (reason == "Collect")
+                {
+                    if (shroomGrow.gameObject.GetComponent<GrowShroom>() != null 
+                        && shroomGrow.gameObject.GetComponent<GrowShroom>().hasShrooms == true)
+                    {
+                        target = shroomGrow;
+                        return target;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }            
+        }        
+        return null;
+        
+    }
+
+    public Collider SearchFoodStorage(string reason, LayerMask storageLayer) // reason: "Collect" or "Store"?
+    {
+        searchLayer = storageLayer;
+        Collider[] colliderHits = Physics.OverlapSphere(transform.position, searchRadius, searchLayer);
+        List<Collider> targets = new List<Collider>();
+        float bestDistance = 999999.0f;
+        foreach (Collider collider in colliderHits)
+        {
+            float distance = Vector3.Distance(collider.transform.position, transform.position);
+            // Check Storage Search Reason: Store - search for not full
+            if (reason == "Store")
+            {
+                if (collider.transform.tag == "FoodStorage")
+                {
+                    if (collider.transform.GetComponent<Storage>().isFull == true)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        targets.Add(collider);
+                        if (distance < bestDistance)
+                        {
+                            bestDistance = distance;
+                            target = collider;
+                        }
+                    }
+                }
+            }
+            // Check Storage Search Reason: Collect - search for not empty
+            if (reason == "Collect")
+            {
+                    if (collider.transform.tag == "FoodStorage")
+                    {
+                        if (collider.transform.GetComponent<Storage>().isEmpty == true)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            targets.Add(collider);
+                            if (distance < bestDistance)
+                            {
+                                bestDistance = distance;
+                                target = collider;
+                            }
+                        }
+                    }
+            }
+        }
+        if (targets.Count > 0)
+        {
+            return target;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public Collider SearchSporesStorage(string reason, LayerMask storageLayer) // reason: "Collect" or "Store"?
+    {
+        searchLayer = storageLayer;
+        Collider[] colliderHits = Physics.OverlapSphere(transform.position, searchRadius, searchLayer);
+        List<Collider> targets = new List<Collider>();
+        float bestDistance = 999999.0f;
+        foreach (Collider collider in colliderHits)
+        {
+            float distance = Vector3.Distance(collider.transform.position, transform.position);
+            // Check Storage Search Reason: Store - search for not full
+            if (reason == "Store")
+            {
+                if (collider.transform.tag == "FoodStorage")
+                {
+                    if (collider.transform.GetComponent<Storage>().isFull == true)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        targets.Add(collider);
+                        if (distance < bestDistance)
+                        {
+                            bestDistance = distance;
+                            target = collider;
+                        }
+                    }
+                }
+            }
+            // Check Storage Search Reason: Collect - search for not empty
+            if (reason == "Collect")
+            {
+                if (collider.transform.tag == "FoodStorage")
+                {
+                    if (collider.transform.GetComponent<Storage>().stockSpores == 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        targets.Add(collider);
+                        if (distance < bestDistance)
+                        {
+                            bestDistance = distance;
+                            target = collider;
+                        }
+                    }
+                }
+            }
+        }
+        if (targets.Count > 0)
+        {
+            return target;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     #endregion
 
 
@@ -214,6 +413,25 @@ public class WorkerController : MonoBehaviour
 
 
     #region Ressource Methods
+
+    public void TakeFire()
+    {
+        workTime += Time.deltaTime;
+        if (workTime >= 1)
+        {
+            if (target != null)
+            {
+                UnitInfo unit = GetComponent<UnitInfo>();
+                
+                if (ResourceBank.fireLife > 0 && unit.invWood < 1)
+                {
+                    ResourceBank.fireLife -= 1;
+                    unit.invWood += 1;
+                    workTime -= (int)workTime;
+                }
+            }
+        }
+    }
 
     public void StoreWood()
     {
@@ -309,7 +527,7 @@ public class WorkerController : MonoBehaviour
         m_Animator.SetBool("IsLumbering", true);
         m_Animator.speed = 1;
         workTime += Time.deltaTime;        
-        if (workTime >= 12 / workSpeed)
+        if (workTime >= workSpeed)
         {
             if (target != null)
             {
@@ -386,6 +604,118 @@ public class WorkerController : MonoBehaviour
                 info.invWood -= 1;
                 ResourceBank.AddWoodToFire(1);
                 workTime -= (int)workTime;
+            }
+        }
+    }
+
+    public void BurnObject()
+    {
+        UnitInfo info = GetComponent<UnitInfo>();
+        workTime += Time.deltaTime;
+        if (workTime >= 4)
+        {
+            info.invWood -= 1;
+            info.target.gameObject.GetComponent<Burnable>().isBurning = true;
+            info.target.gameObject.GetComponent<Burnable>().AddBurnEffect();
+            workTime -= (int)workTime;
+            burnManager.DeregisterBurn(info.target.gameObject);
+        }
+        
+    }
+
+    public void PlantShroomSpores(GameObject target)
+    {
+        //Debug.Log("Growing Shrooms");
+        m_Animator.SetBool("IsWalking", false);
+        m_Animator.SetBool("IsLumbering", true);
+        m_Animator.speed = 1;
+        workTime += Time.deltaTime;
+        if (workTime >= workSpeed)
+        {
+            Debug.Log("Shroom Spore planted");
+            //selectionManager.selection.Remove(this.gameObject);
+            GameObject shrooms = Instantiate(Resources.Load("Shrooms")) as GameObject;
+            shrooms.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 0.5f, target.transform.position.z);
+            shrooms.transform.localScale = new Vector3(transform.localScale.x * 0.2f, transform.localScale.y * 0.2f, transform.localScale.z * 0.2f);
+            shrooms.transform.SetParent(target.transform);
+            target.transform.GetComponent<GrowShroom>().hasSpores = true;
+            workTime -= (int)workTime;
+        }
+    }
+
+    public void CollectShrooms()
+    {
+        m_Animator.SetBool("IsWalking", false);
+        m_Animator.SetBool("IsLumbering", true);
+        m_Animator.speed = 1;
+        workTime += Time.deltaTime;
+        if (workTime >= workSpeed)
+        {
+            if (target != null)
+            {
+                transform.LookAt(target.transform);
+                // Try and find a Nodes Resource script on the gameobject hit.
+                ShroomNodes shroom = target.GetComponent<ShroomNodes>();
+                UnitInfo info = GetComponent<UnitInfo>();
+                // If the Node Resource script component exists...
+                if (shroom != null)
+                {
+                    // ... the Node should lose resources.
+                    shroom.TakeDamage();
+                    info.invShroom += 1;
+                    Debug.Log("Shroom collected");
+                    workTime -= (int)workTime;
+                    m_Animator.SetBool("IsLumbering", false);
+                }
+            }
+        }
+    }
+
+    public void StoreShrooms()
+    {
+        workTime += Time.deltaTime;
+        if (workTime >= workSpeed / 6f)
+        {
+            if (target != null)
+            {
+                UnitInfo unit = GetComponent<UnitInfo>();
+                Storage storage = target.GetComponent<Storage>();
+                if (storage != null && storage.isFull != true)
+                {
+                    storage.StoreShrooms();
+                    unit.invShroom -= 1;
+                    ResourceBank.AddFoodToStock(1);
+                    workTime -= (int)workTime;
+                }
+            }
+        }
+    }
+
+    public void CollectSpores()
+    {
+        m_Animator.SetBool("IsWalking", false);
+        //m_Animator.SetBool("IsLumbering", true);
+        m_Animator.speed = 1;
+        workTime += Time.deltaTime;
+        if (workTime >= workSpeed / 6f)
+        {
+            if (target != null)
+            {
+                transform.LookAt(target.transform);
+                // Try and find a Nodes Resource script on the gameobject hit.
+                Storage storage = target.GetComponent<Storage>();
+                UnitInfo info = GetComponent<UnitInfo>();
+                // If the Node Resource script component exists...
+                if (storage != null)
+                {
+                    // ... the Node should lose resources.
+                    ResourceBank.RemoveSporesFromStock(1);
+                    storage.RemoveSpores();
+                    info.invSpores += 1;
+                    Debug.Log("Spores collected");
+                    workTime -= (int)workTime;
+                    //m_Animator.SetBool("IsLumbering", false);
+                }
             }
         }
     }

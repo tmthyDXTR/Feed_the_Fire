@@ -114,19 +114,46 @@ public class SelectionManager : MonoBehaviour
         {
             selectableObject = obj.GetComponent<SelectableObject>();
             selectableObject.isSelected = true;
-            if (selectableObject.infoWindow != null)
+            if (selectableObject.gameObject.layer == 17)
             {
-                selectableObject.OpenCloseInfo();
+                GameObject windowWorker = Instantiate(Resources.Load("Window_Worker")) as GameObject;
+                windowWorker.transform.SetParent(canvas);
+                windowWorker.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = windowWorker;
+
+                //selectableObject.OpenCloseInfo();
             }
-            else
+            else if (selectableObject.gameObject.layer == 15 && selectableObject.name != "FirePlace")
             {
-                Debug.Log("No Window! Now Instantiating");
+                GameObject windowBuilding = Instantiate(Resources.Load("Window_Building")) as GameObject;
+                windowBuilding.transform.SetParent(canvas);
+                windowBuilding.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = windowBuilding;
+
+                //selectableObject.OpenCloseInfo();
+            }
+            else if (selectableObject.name == "FirePlace")
+            {
+                //Debug.Log("No Window! Now Instantiating");
                 GameObject firePlaceWindow = Instantiate(Resources.Load("Window_FirePlace")) as GameObject;
                 firePlaceWindow.transform.SetParent(canvas);
                 firePlaceWindow.transform.localPosition = new Vector3(-200, -200, 0);
 
-                selectableObject = obj.GetComponent<SelectableObject>();
+                //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = firePlaceWindow;
+            }
+            else if (selectableObject.tag == "Stump" || selectableObject.tag == "ShroomGrow")
+            {
+                GameObject stumpWindow = Instantiate(Resources.Load("Window_Stump")) as GameObject;
+                stumpWindow.transform.SetParent(canvas);
+                stumpWindow.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = stumpWindow;
             }
         }
         selection.Add(obj);

@@ -27,7 +27,19 @@ public class Window_ResourceBank : MonoBehaviour
         transform.Find("StoneStock").GetComponent<Text>().text =
             "Stone: " + ResourceBank.GetStoneStock();
     }
-    
+
+    private void UpdateFoodStockTextObject()
+    {
+        transform.Find("FoodStock").GetComponent<Text>().text =
+            "Food: " + ResourceBank.foodStock;
+    }
+
+    private void UpdateSporesStockTextObject()
+    {
+        transform.Find("SporesStock").GetComponent<Text>().text =
+            "Spores: " + ResourceBank.sporesStock;
+    }
+
 
     private void Awake()
     {
@@ -36,6 +48,8 @@ public class Window_ResourceBank : MonoBehaviour
         UpdateWoodResourceTextObject();
         UpdateStoneResourceTextObject();
         UpdateFireLifeTextObject();
+        UpdateFoodStockTextObject();
+        UpdateSporesStockTextObject();
 
 
 
@@ -52,6 +66,16 @@ public class Window_ResourceBank : MonoBehaviour
         ResourceBank.OnStoneStockChanged += delegate (object sender, EventArgs e)
         {
             UpdateStoneResourceTextObject();
+        };
+
+        ResourceBank.OnFoodStockChanged += delegate (object sender, EventArgs e)
+        {
+            UpdateFoodStockTextObject();
+        };
+
+        ResourceBank.OnSporesStockChanged += delegate (object sender, EventArgs e)
+        {
+            UpdateSporesStockTextObject();
         };
 
     }

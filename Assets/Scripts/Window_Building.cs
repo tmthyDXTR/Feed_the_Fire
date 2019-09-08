@@ -22,9 +22,18 @@ public class Window_Building : MonoBehaviour
     }
 
 
-    void Awake()
+    void Start()
     {
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+        //buildingInfo = selectionManager.selection[0].transform.GetComponent<BuildingInfo>();
+        if (buildingInfo == null)
+        {
+            if (selectionManager.selection.Count != 0)
+            {
+                buildingInfo = selectionManager.selection[0].GetComponent<BuildingInfo>();
+                selectedObject = selectionManager.selection[0];
+            }
+        }
     }
 
     void Update()
@@ -42,7 +51,12 @@ public class Window_Building : MonoBehaviour
     {
         if (buildingInfo != null)
         {
-            transform.Find("Info_1").GetComponent<Text>().text = buildingInfo.gameObject.tag;
+            transform.Find("Info_1").GetComponent<Text>().text = buildingInfo.gameObject.tag + " " + buildingInfo.originalTag;
+            transform.Find("Info_2").GetComponent<Text>().text = "Wood cost " + buildingInfo.costWood;
+            transform.Find("Info_3").GetComponent<Text>().text = "Building Wood " + buildingInfo.wood;
+            transform.Find("Info_4").GetComponent<Text>().text = "Health " + buildingInfo.currentHealth + "/" + buildingInfo.maxHealth;
+            transform.Find("Info_5").GetComponent<Text>().text = "---";
+
         }
 
     }

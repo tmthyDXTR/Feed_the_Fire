@@ -20,14 +20,14 @@ public class PlaceableObject : MonoBehaviour
 
     void OnTriggerEnter(Collider c)
     {
-        if (c.gameObject.layer == 15 || c.gameObject.layer == 14 || c.gameObject.layer == 13 || c.gameObject.layer == 10 || c.gameObject.layer == 9)
+        if (c.gameObject.layer == 21 || c.gameObject.layer == 15 || c.gameObject.layer == 14 || c.gameObject.layer == 13 || c.gameObject.layer == 10 || c.gameObject.layer == 9)
         {
             colliders.Add(c);
         }
     }
     void OnTriggerExit(Collider c)
     {
-        if (c.gameObject.layer == 15 || c.gameObject.layer == 14 || c.gameObject.layer == 13 || c.gameObject.layer == 10 || c.gameObject.layer == 9)
+        if (c.gameObject.layer == 21 || c.gameObject.layer == 15 || c.gameObject.layer == 14 || c.gameObject.layer == 13 || c.gameObject.layer == 10 || c.gameObject.layer == 9)
         {
             colliders.Remove(c);
         }

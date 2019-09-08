@@ -19,7 +19,10 @@ public class ChangeColour : MonoBehaviour
 
     void Start()
     {
-        originalMaterial = this.gameObject.transform.GetChild(0).GetComponent<Renderer>().material;
+
+            originalMaterial = this.gameObject.transform.GetChild(0).GetComponent<Renderer>().material;
+
+
     }
 
     void Update()

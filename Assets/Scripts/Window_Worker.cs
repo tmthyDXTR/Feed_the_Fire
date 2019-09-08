@@ -9,6 +9,9 @@ public class Window_Worker : MonoBehaviour
     public UnitInfo unitInfo;
     public GameObject selectedObject;
 
+    private SelectionManager selectionManager;
+
+
     private void UpdateInfo()
     {
         UpdateUnitNameText();
@@ -25,8 +28,7 @@ public class Window_Worker : MonoBehaviour
 
     private void UpdateOccupationText()
     {
-        transform.Find("Info_2").GetComponent<Text>().text =
-            "Occupation: " + unitInfo.job;
+        transform.Find("Info_2").GetComponent<Text>().text = unitInfo.job;
     }
 
     private void UpdateTargetText()
@@ -34,7 +36,7 @@ public class Window_Worker : MonoBehaviour
         if (unitInfo.target != null)
         {
             transform.Find("Info_3").GetComponent<Text>().text =
-            "Target: " + unitInfo.target.gameObject.name;
+            "Going to " + unitInfo.target.gameObject.name;
         }        
     }
 
@@ -52,9 +54,18 @@ public class Window_Worker : MonoBehaviour
 
 
 
-    void Awake()
-    {        
-
+    void Start()
+    {
+        selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+        //buildingInfo = selectionManager.selection[0].transform.GetComponent<BuildingInfo>();
+        if (unitInfo == null)
+        {
+            if (selectionManager.selection.Count != 0)
+            {
+                unitInfo = selectionManager.selection[0].GetComponent<UnitInfo>();
+                selectedObject = selectionManager.selection[0];
+            }
+        }
     }
 
     void Update()

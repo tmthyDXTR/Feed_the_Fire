@@ -11,6 +11,7 @@ public class JobManager : MonoBehaviour
     public int builderCount = 0;
     public int woodcutterCount = 0;
     public int stonecutterCount = 0;
+    public int shroomerCount = 0;
 
     public WorkerUnitAI worker;
 
@@ -48,6 +49,10 @@ public class JobManager : MonoBehaviour
         {
             worker.job = WorkerUnitAI.Job.Stonecutter;
         }
+        if (newJob == "Shroomer")
+        {
+            worker.job = WorkerUnitAI.Job.Shroomer;
+        }
         GetWorkerCounts();
     }
 
@@ -77,6 +82,10 @@ public class JobManager : MonoBehaviour
             if (newJob == "Stonecutter")
             {
                 worker.job = WorkerUnitAI.Job.Stonecutter;
+            }
+            if (newJob == "Shroomer")
+            {
+                worker.job = WorkerUnitAI.Job.Shroomer;
             }
         }
         GetWorkerCounts();
@@ -129,6 +138,17 @@ public class JobManager : MonoBehaviour
                 }
             }
         }
+        if (job == "Shroomer")
+        {
+            foreach (Transform unit in transform)
+            {
+                WorkerUnitAI worker = unit.GetComponent<WorkerUnitAI>();
+                if (worker.job == WorkerUnitAI.Job.Shroomer)
+                {
+                    workerList.Add(unit.gameObject);
+                }
+            }
+        }
         return workerList;
     }
 
@@ -139,6 +159,7 @@ public class JobManager : MonoBehaviour
         lighWardenCount = 0;
         builderCount = 0;
         woodcutterCount = 0;
+        shroomerCount = 0;
 
         foreach (Transform unit in transform)
         {
@@ -161,6 +182,10 @@ public class JobManager : MonoBehaviour
             if (worker.job == WorkerUnitAI.Job.Builder)
             {
                 builderCount += 1;
+            }
+            if (worker.job == WorkerUnitAI.Job.Shroomer)
+            {
+                shroomerCount += 1;
             }
 
             workerTotalCount += 1;

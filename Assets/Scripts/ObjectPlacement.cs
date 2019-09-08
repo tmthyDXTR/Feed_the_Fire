@@ -8,6 +8,7 @@ public class ObjectPlacement : MonoBehaviour
     private PlaceableObject placeableObject;
     private SelectableObject selectableObject;
     private MiningArea miningArea;
+    private ShroomGrowingArea shroomGrowingArea;
     private ConstructionManager constructionManager;
     private SelectionManager selectionManager;
     private GridManager grid;
@@ -76,6 +77,32 @@ public class ObjectPlacement : MonoBehaviour
                         DeleteObject();
                     }
                 }
+
+                else if (currentObject.tag == "ShroomArea")
+                {
+                    shroomGrowingArea = currentObject.GetComponent<ShroomGrowingArea>();
+                    if (shroomGrowingArea != null)
+                    {
+                        shroomGrowingArea.ShowMinableNodes();
+                    }
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        shroomGrowingArea.SetNodesToMinable("StumpNodes");
+                        shroomGrowingArea.HideMinableNodes();
+                        selectionManager.Deselect(currentObject.gameObject);
+                        PlaceObject();
+                        Destroy(currentObject.gameObject);
+                        currentObject = null;
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        selectionManager.Deselect(currentObject.gameObject);
+                        shroomGrowingArea.HideMinableNodes();
+                        DeleteObject();
+                    }
+                }
+
 
                 else if (currentObject.tag == "WoodcutterHut")
                 {

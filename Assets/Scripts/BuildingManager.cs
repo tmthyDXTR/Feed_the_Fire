@@ -11,8 +11,8 @@ public class BuildingManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        buildingWindow = GameObject.Find("Window_Building");
-        buildingWindow.SetActive(false);
+        //buildingWindow = GameObject.Find("Window_Building");
+        //buildingWindow.SetActive(false);
         objectPlacement = GetComponent<ObjectPlacement>();
     }
 
@@ -28,7 +28,7 @@ public class BuildingManager : MonoBehaviour
         {
             if (GUI.Button(new Rect(Screen.width/20,Screen.height/15 + Screen.height/12 * i,100,30), objects[i].name))
             {
-                buildingWindow.SetActive(true);
+                //buildingWindow.SetActive(true);
                 objectPlacement.SetItem(objects[i]);
             }
         }

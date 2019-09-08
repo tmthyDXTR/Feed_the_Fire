@@ -39,6 +39,12 @@ public class Window_WorkerBank : MonoBehaviour
             "Stonecutter: " + jobManager.stonecutterCount;
     }
 
+    private void UpdateShroomerTotalTextObject()
+    {
+        transform.Find("Shroomer").GetComponent<Text>().text =
+            "Shroomer: " + jobManager.shroomerCount;
+    }
+
     public void UpdateJobsCounter()
     {
         UpdateUnemployedTotalTextObject();
@@ -46,6 +52,7 @@ public class Window_WorkerBank : MonoBehaviour
         UpdateBuilderTotalTextObject();
         UpdateWoodcutterTotalTextObject();
         UpdateStonecutterTotalTextObject();
+        UpdateShroomerTotalTextObject();
     }
 
     private void Awake()

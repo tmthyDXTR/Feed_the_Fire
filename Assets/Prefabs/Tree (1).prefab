@@ -69,6 +69,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -175,7 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   woodAmount: 1
   currentAmount: 0
-  stumpPrefab: {fileID: 6873636770908053891, guid: ca37a9e84bb1c484d863a0242a1a7103,
+  stumpPrefab: {fileID: 5504018142155277486, guid: d866de285b31bb341ac43c4b4c1295d8,
     type: 3}
   isMinable: 0
 --- !u!114 &-5636484585124657632

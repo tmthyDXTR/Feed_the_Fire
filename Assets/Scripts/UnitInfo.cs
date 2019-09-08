@@ -9,6 +9,8 @@ public class UnitInfo : MonoBehaviour
     public int invMax = 1;
     public int invWood = 0;
     public int invStone = 0;
+    public int invShroom = 0;
+    public int invSpores = 0;
     public bool isAlive = true;
     public Collider target;
 

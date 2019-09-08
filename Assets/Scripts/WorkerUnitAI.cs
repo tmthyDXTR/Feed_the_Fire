@@ -6,6 +6,7 @@ public class WorkerUnitAI : MonoBehaviour
 {
     private WorkerController util;
     private UnitInfo info;
+    
 
     [SerializeField] public Job job;
     public enum Job
@@ -15,6 +16,7 @@ public class WorkerUnitAI : MonoBehaviour
         LightWarden,
         Builder,
         Stonecutter,
+        Shroomer,
     }
 
     [SerializeField] private State state;
@@ -31,8 +33,16 @@ public class WorkerUnitAI : MonoBehaviour
         TakingResources,
         SearchingConstruction,
         MovingToConstruction,
+        MovingToBurn,
         Constructing,
         GrowingFire,
+        TakingFire,
+        BurningObject,
+        SearchingGrowArea,
+        MovingToStump,
+        PlantingShroomSpores,
+        CollectingShrooms,
+
     }
 
 
@@ -41,12 +51,35 @@ public class WorkerUnitAI : MonoBehaviour
         util = GetComponent<WorkerController>();
         info = GetComponent<UnitInfo>();
 
-        job = Job.Unemployed;
-        state = State.MovingToSafety;
+        //job = Job.Unemployed;
+        //state = State.MovingToSafety;
     }
 
     void Update()
     {
+        if (job == Job.Unemployed)
+        {
+            info.job = "Unemployed";
+        }
+        else if (job == Job.Woodcutter)
+        {
+            info.job = "Woodcutter";
+        }
+        else if (job == Job.LightWarden)
+        {
+            info.job = "LightWarden";
+        }
+        else if (job == Job.Builder)
+        {
+            info.job = "Builder";
+        }
+        else if (job == Job.Shroomer)
+        {
+            info.job = "Shroomer";
+        }
+
+
+
         switch (state)
         {
             #region State MovingToSafety
@@ -117,34 +150,48 @@ public class WorkerUnitAI : MonoBehaviour
                 }
                 else if (job == Job.LightWarden)
                 {
-                    //If Inventory empty Search for valid Storage
-                    if (info.invWood == 0)
+                    // Check if there is no Object to Burn
+                    if (util.SearchBurn() == null)
                     {
-                        if (util.SearchStorage("Collect", LayerMask.GetMask("Buildings")) != null)
+                        //If Inventory empty Search for valid Storage
+                        if (info.invWood == 0)
                         {
-                            state = State.MovingToStorage;
+                            if (util.SearchStorage("Collect", LayerMask.GetMask("Buildings")) != null)
+                            {
+                                state = State.MovingToStorage;
+                            }
+                            else
+                            {
+                                state = State.SearchingStorage;
+                            }
                         }
-                        else
+                        //If Inventory full Search for Fire
+                        if (info.invWood != 0)
                         {
-                            state = State.SearchingStorage;
+                            if (ResourceBank.fireLife < ResourceBank.fireLifeMax)
+                            {
+                                state = State.GrowingFire;
+                            }
+                            else
+                            {
+                                state = State.Idling;
+                            }
                         }
                     }
-                    //If Inventory full Search for Fire
-                    if (info.invWood != 0)
+                    else if (util.SearchBurn() != null)
                     {
-                        if (ResourceBank.fireLife < ResourceBank.fireLifeMax)
-                        {
-                            state = State.GrowingFire;
-                        }
-                        else
-                        {
-                            state = State.Idling;
-                        }
+                        
+                        state = State.TakingFire;
                     }
+                    
                 }
                 else if (job == Job.Builder)
                 {                    
                     state = State.SearchingConstruction;                    
+                }
+                else if (job == Job.Shroomer)
+                {
+                    state = State.SearchingGrowArea;
                 }
 
                 break;
@@ -220,6 +267,28 @@ public class WorkerUnitAI : MonoBehaviour
                         {
                             state = State.Constructing;
                         }
+                    }
+                }
+                else
+                {
+                    state = State.MovingToSafety;
+                }
+
+                break;
+            #endregion
+
+
+            #region State MovingToBurn
+
+            case State.MovingToBurn:
+                //Debug.Log("Worker Unit State: MovingToConstruction");
+                if (job == Job.LightWarden)
+                {
+                    util.target = util.burnTarget;
+                    util.MoveToTarget();
+                    if (util.TargetReached() == true)
+                    {
+                        state = State.BurningObject;
                     }
                 }
                 else
@@ -319,6 +388,17 @@ public class WorkerUnitAI : MonoBehaviour
                         state = State.SearchingStorage;
                     }
                 }
+                else if (job == Job.Shroomer)
+                {
+                    if (util.SearchFoodStorage("Store", LayerMask.GetMask("Buildings")) != null)
+                    {
+                        state = State.MovingToStorage;
+                    }
+                    else
+                    {
+                        state = State.SearchingStorage;
+                    }
+                }
                 break;
             #endregion
 
@@ -345,6 +425,17 @@ public class WorkerUnitAI : MonoBehaviour
                     else if (job == Job.Builder)
                     {
                         state = State.TakingResources;
+                    }
+                    else if (job == Job.Shroomer)
+                    {
+                        if (info.invShroom > 0)
+                        {
+                            state = State.StoringResources;
+                        }
+                        else
+                        {
+                            state = State.TakingResources;
+                        }
                     }
                 }
                 break;
@@ -373,6 +464,133 @@ public class WorkerUnitAI : MonoBehaviour
                     else
                     {
                         state = State.SearchingConstruction;
+                    }
+                }
+                else
+                {
+                    state = State.MovingToSafety;
+                }
+                break;
+            #endregion
+
+
+            #region State SearchingGrowArea
+
+            case State.SearchingGrowArea:
+                //Debug.Log("Worker Unit State: SearchingGrowArea");
+                if (job == Job.Shroomer)
+                {
+                    // Check if there is a Shroom ready to collect
+                    if (util.SearchShroomGrow("Collect") != null)
+                    {
+                        Debug.Log("Shroom found to Collect");
+                        util.target.GetComponent<GrowShroom>().isTargeted = true;
+                        util.MoveToTarget();
+                        state = State.MovingToStump;
+                    }
+
+                    // Check if there is a Stump to Plant Shroom Seed on
+                    else if (util.SearchShroomGrow("Plant") != null)
+                    {
+                        if (ResourceBank.sporesStock > 0)
+                        {
+                            Debug.Log("There are Spores to plant");
+                            util.SearchSporesStorage("Collect", LayerMask.GetMask("Buildings"));
+                            util.MoveToTarget();
+                            state = State.MovingToStorage;
+                        }
+                        //Debug.Log("Shroom Grow found to plant Spore Seed");
+                        //util.target.GetComponent<GrowShroom>().isTargeted = true;
+                        //util.MoveToTarget();
+                        //state = State.MovingToStump;
+                        else
+                        {
+                            Debug.Log("No Spores to Plan");
+                            state = State.SearchingGrowArea;
+                        }
+                    }
+                    else
+                    {
+                        state = State.SearchingGrowArea;
+                    }
+                }
+                else
+                {
+                    state = State.MovingToSafety;
+                }
+                break;
+            #endregion
+
+
+            #region State MovingToStump
+
+            case State.MovingToStump:
+                //Debug.Log("Worker Unit State: MovingToStump");
+                if (job == Job.Shroomer)
+                {                    
+                    
+                    if (util.TargetReached() == true)
+                    {
+                        Debug.Log("Stump reached");
+                        if (util.target.GetComponent<GrowShroom>().hasShrooms == true)
+                        {
+                            state = State.CollectingShrooms;
+                        }
+                        else if (util.target.GetComponent<GrowShroom>().hasShrooms == false && util.target.GetComponent<GrowShroom>().hasSpores == false)
+                        {
+                            state = State.PlantingShroomSpores;
+                        }                        
+                    }
+                }
+                else
+                {
+                    //util.SetTargetInactive();
+                    state = State.MovingToSafety;
+                }
+
+                break;
+            #endregion
+
+
+            #region State PlantingShroomSpores
+
+            case State.PlantingShroomSpores:
+                //Debug.Log("Worker Unit State: PlantingShroomSpores");
+                if (job == Job.Shroomer)
+                {                    
+                    if (util.target.GetComponent<GrowShroom>().hasSpores == false)
+                    {
+                        util.PlantShroomSpores(util.target.gameObject);
+                    }
+                    else
+                    {
+                        util.target.GetComponent<GrowShroom>().isTargeted = false;
+                        state = State.MovingToSafety;
+                    }
+                    
+                }
+                else
+                {
+                    state = State.MovingToSafety;
+                }
+
+                break;
+            #endregion
+
+
+            #region State CollectingShrooms
+
+            case State.CollectingShrooms:
+                //Debug.Log("Worker Unit State: CollectingShrooms");
+                if (job == Job.Shroomer)
+                {
+                    if (info.invShroom < info.invMax)
+                    {
+                        util.CollectShrooms();
+                    }
+                    else
+                    {
+                        state = State.SearchingStorage;
                     }
                 }
                 else
@@ -453,6 +671,31 @@ public class WorkerUnitAI : MonoBehaviour
                         }
                     }
                 }
+                else if (job == Job.Shroomer)
+                {
+                    if (util.target.GetComponent<Storage>() != null)
+                    {
+                        if (util.target.GetComponent<Storage>().isFull != true)
+                        {
+                            if (info.invShroom > 0)
+                            {
+                                util.StoreShrooms();
+                            }
+                            else
+                            {
+                                state = State.SearchingGrowArea;
+                            }
+                        }
+                        else
+                        {
+                            state = State.SearchingStorage;
+                        }
+                    }
+                    else
+                    {
+                        state = State.MovingToSafety;
+                    }
+                }
                 else
                 {
                     if (info.invWood > 0)
@@ -524,6 +767,31 @@ public class WorkerUnitAI : MonoBehaviour
                     else
                     {
                         state = State.MovingToConstruction;
+                    }
+                }
+                else if (job == Job.Shroomer)
+                {
+                    if (util.target.gameObject.GetComponent<Storage>() != null)
+                    {
+                        if (info.invSpores != info.invMax)
+                        {
+                            if (util.target.gameObject.GetComponent<Storage>().stockSpores > 0)
+                            {
+                                util.CollectSpores();
+
+                            }
+                            else
+                            {
+                                state = State.SearchingStorage;
+                            }
+                        }
+                        else
+                        {
+                            util.SearchShroomGrow("Plant");
+                            util.MoveToTarget();
+                            state = State.MovingToStump;
+                        }
+                        
                     }
                 }
                 else
@@ -613,7 +881,53 @@ public class WorkerUnitAI : MonoBehaviour
                 }
 
                 break;
+            #endregion
+
+
+            #region State TakingFire
+
+            case State.TakingFire:
+                //Debug.Log("Worker Unit State: TakingFire");
+                if (job == Job.LightWarden)
+                {
+                    if (info.invWood < 1)
+                    {
+                        util.TakeFire();
+                    }
+                    else
+                    {
+                        state = State.MovingToBurn;
+                    }
+                }
+                
+                break;
+            #endregion
+
+
+            #region State BurningObject
+
+            case State.BurningObject:
+                //Debug.Log("Worker Unit State: BurningObject");
+
+                if (job == Job.LightWarden)
+                {
+                    if (info.invWood > 0)
+                    {
+                        util.BurnObject();
+                    }
+                    else
+                    {
+                        state = State.MovingToSafety;
+                    }
+                }
+                else
+                {
+                    state = State.MovingToSafety;
+                }
+
+                break;
                 #endregion
+                
         }
     }
 }
