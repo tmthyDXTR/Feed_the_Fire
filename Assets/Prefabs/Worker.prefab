@@ -65,6 +65,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -888,6 +889,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -965,6 +967,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1033,6 +1036,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1153,6 +1157,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1274,7 +1279,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.25
+  m_Radius: 0.2
   m_Height: 1.43
   m_Direction: 1
   m_Center: {x: 0, y: 0.53, z: 0}
@@ -1306,7 +1311,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3719550282298044123}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.25
+  m_Radius: 0.3
   m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1432,6 +1437,7 @@ MonoBehaviour:
     m_Bits: 256
   target: {fileID: 0}
   constructionTarget: {fileID: 0}
+  burnTarget: {fileID: 0}
   targetReached: 0
   workSpeed: 1
   animationSpeed: 2
@@ -1470,6 +1476,8 @@ MonoBehaviour:
   invMax: 1
   invWood: 0
   invStone: 0
+  invShroom: 0
+  invSpores: 0
   isAlive: 1
   target: {fileID: 0}
 --- !u!114 &7701232066245575471
@@ -1484,6 +1492,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSelected: 0
+  infoWindow: {fileID: 0}
 --- !u!1 &3719550282298044125
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,6 +1582,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

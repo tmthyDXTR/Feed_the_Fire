@@ -178,6 +178,8 @@ MonoBehaviour:
   currentAmount: 0
   stumpPrefab: {fileID: 5504018142155277486, guid: d866de285b31bb341ac43c4b4c1295d8,
     type: 3}
+  saplingPrefab: {fileID: 1769862628412522712, guid: 3ed30c2f603a4874db6a61509a54e213,
+    type: 3}
   isMinable: 0
 --- !u!114 &-5636484585124657632
 MonoBehaviour:

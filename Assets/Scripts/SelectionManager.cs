@@ -20,6 +20,15 @@ public class SelectionManager : MonoBehaviour
         canvas = GameObject.Find("Canvas").transform;
 
         objectPlacement = Camera.main.GetComponent<ObjectPlacement>();
+
+        //ResourceBank.OnSelectionManagerDisabled += delegate (object sender, EventArgs e)
+        //{
+        //    SetActive(false);
+        //};
+        //ResourceBank.OnSelectionManagerEnabled += delegate (object sender, EventArgs e)
+        //{
+        //    SetActive(true);
+        //};
     }
 
     void Update()
@@ -44,10 +53,13 @@ public class SelectionManager : MonoBehaviour
                 Select(objectPlacement.currentObject.gameObject);
             }
         }
-        else
-        {
-            SetActive(true);
-        }
+        //else
+        //{
+        //    if (isActive != true)
+        //    {
+        //        SetActive(true);
+        //    }
+        //}
         #endregion
 
 
@@ -84,6 +96,11 @@ public class SelectionManager : MonoBehaviour
                 {
                     Debug.Log("Right Click at: " + GetWorldPoint());
                     DeselectAll();
+                    ProjectorManager projectorManager = GameObject.Find("SelectionManager").GetComponent<ProjectorManager>();
+                    foreach (GameObject projector in projectorManager.projectorList)
+                    {
+                        projector.transform.GetChild(0).GetComponent<Projector>().enabled = false;
+                    }
                 }
             }
         }
@@ -99,10 +116,12 @@ public class SelectionManager : MonoBehaviour
     {
         if (toggle == true)
         {
+            Debug.Log("SelectionManager Enabled");
             isActive = true;
         }
         else if (toggle == false)
         {
+            Debug.Log("SelectionManager Disabled");
             isActive = false;
         }
     }
@@ -114,7 +133,7 @@ public class SelectionManager : MonoBehaviour
         {
             selectableObject = obj.GetComponent<SelectableObject>();
             selectableObject.isSelected = true;
-            if (selectableObject.gameObject.layer == 17)
+            if (selectableObject.gameObject.layer == 17 && selectableObject.gameObject.tag == "Worker")
             {
                 GameObject windowWorker = Instantiate(Resources.Load("Window_Worker")) as GameObject;
                 windowWorker.transform.SetParent(canvas);
@@ -125,9 +144,9 @@ public class SelectionManager : MonoBehaviour
 
                 //selectableObject.OpenCloseInfo();
             }
-            else if (selectableObject.gameObject.layer == 15 && selectableObject.name != "FirePlace")
+            else if (selectableObject.gameObject.layer == 17 && selectableObject.gameObject.tag == "Hero")
             {
-                GameObject windowBuilding = Instantiate(Resources.Load("Window_Building")) as GameObject;
+                GameObject windowBuilding = Instantiate(Resources.Load("Window_Hero")) as GameObject;
                 windowBuilding.transform.SetParent(canvas);
                 windowBuilding.transform.localPosition = new Vector3(-200, -200, 0);
 
@@ -136,10 +155,49 @@ public class SelectionManager : MonoBehaviour
 
                 //selectableObject.OpenCloseInfo();
             }
+            else if (selectableObject.gameObject.layer == 15 && selectableObject.name != "FirePlace" && selectableObject.name != "FoodStorage" && selectableObject.tag != "UnlitBonfire")
+            {
+                GameObject windowBuilding = Instantiate(Resources.Load("Window_Building")) as GameObject;          
+                windowBuilding.transform.SetParent(canvas);
+                windowBuilding.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = windowBuilding;
+
+                //selectableObject.OpenCloseInfo();
+            }
+            else if (selectableObject.tag == "UnlitBonfire")
+            {
+                GameObject windowUnlitBonfire = Instantiate(Resources.Load("Window_Bonfire")) as GameObject;
+                windowUnlitBonfire.transform.SetParent(canvas);
+                windowUnlitBonfire.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = windowUnlitBonfire;
+
+                //selectableObject.OpenCloseInfo();
+            }
             else if (selectableObject.name == "FirePlace")
             {
                 //Debug.Log("No Window! Now Instantiating");
+                ProjectorManager projectorManager = GameObject.Find("SelectionManager").GetComponent<ProjectorManager>();
+                foreach (GameObject projector in projectorManager.projectorList)
+                {
+                    projector.transform.GetChild(0).GetComponent<Projector>().enabled = true;
+                }
+
+
                 GameObject firePlaceWindow = Instantiate(Resources.Load("Window_FirePlace")) as GameObject;
+                firePlaceWindow.transform.SetParent(canvas);
+                firePlaceWindow.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = firePlaceWindow;
+            }
+            else if (selectableObject.name == "FoodStorage")
+            {
+                //Debug.Log("No Window! Now Instantiating");
+                GameObject firePlaceWindow = Instantiate(Resources.Load("Window_FoodStorage")) as GameObject;
                 firePlaceWindow.transform.SetParent(canvas);
                 firePlaceWindow.transform.localPosition = new Vector3(-200, -200, 0);
 
@@ -154,6 +212,17 @@ public class SelectionManager : MonoBehaviour
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = stumpWindow;
+            }
+            else if (selectableObject.gameObject.layer == 19)
+            {
+                GameObject windowEnemy = Instantiate(Resources.Load("Window_Enemy")) as GameObject;
+                windowEnemy.transform.SetParent(canvas);
+                windowEnemy.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = windowEnemy;
+
+                //selectableObject.OpenCloseInfo();
             }
         }
         selection.Add(obj);

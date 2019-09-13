@@ -33,6 +33,11 @@ TagManager:
   - ShroomGrow
   - ShroomArea
   - FoodStorage
+  - LightZone
+  - UnlitBonfire
+  - ShroomScout
+  - Hero
+  - Enemy
   layers:
   - Default
   - TransparentFX

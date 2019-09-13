@@ -634,6 +634,7 @@ GameObject:
   - component: {fileID: 1110170089484269510}
   - component: {fileID: 1110170089484269509}
   - component: {fileID: 1110170089484269508}
+  - component: {fileID: 7220381887353266319}
   m_Layer: 0
   m_Name: Window_FirePlace
   m_TagString: Untagged
@@ -711,5 +712,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91b1b4074ca720c4f957c46a66579257, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7220381887353266319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110170089484269506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b83057ff629cf4f8502026dd1db6e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -56,6 +56,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -978,10 +979,12 @@ GameObject:
   - component: {fileID: 4592014445620134217}
   - component: {fileID: 4592014445620134216}
   - component: {fileID: 6299502955631171931}
-  - component: {fileID: 4592014445620134219}
+  - component: {fileID: 6475684645457772069}
+  - component: {fileID: 4512964878534422325}
+  - component: {fileID: 1223227877387852823}
   m_Layer: 19
   m_Name: DeadWoodDweller
-  m_TagString: Ghoul
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -994,7 +997,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5520271683857940618}
   m_LocalRotation: {x: -0, y: 0.98055345, z: -0, w: -0.19625233}
-  m_LocalPosition: {x: 329.59, y: 0.22, z: 267.83}
+  m_LocalPosition: {x: 0, y: 0.22, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 4709786147114838809}
@@ -1047,16 +1050,16 @@ NavMeshAgent:
   m_GameObject: {fileID: 5520271683857940618}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Radius: 0.38
+  m_Speed: 2
+  m_Acceleration: 6
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 3.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 0.66
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -1071,9 +1074,9 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4592014445620134219
+  m_Radius: 0.51
+  m_Center: {x: 0, y: 0.39, z: 0}
+--- !u!114 &6475684645457772069
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1082,13 +1085,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 5520271683857940618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07dcb69cacf52246b2a9713dee61b32, type: 3}
+  m_Script: {fileID: 11500000, guid: 160da11818f2fff4e902db3ed168fba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 50
+  radius: 0
   inRangeTargets: []
   target: {fileID: 0}
+  bonfire: {fileID: 0}
   state: 0
+--- !u!114 &4512964878534422325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5520271683857940618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSelected: 0
+  infoWindow: {fileID: 0}
+--- !u!114 &1223227877387852823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5520271683857940618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923e74f1277d0c64eb4336dcfbbde699, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Dead Wood Dweller
+  maxHealth: 10
+  currentHealth: 0
 --- !u!1 &5720863716215842868
 GameObject:
   m_ObjectHideFlags: 0

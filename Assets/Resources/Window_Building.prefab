@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7072690641894015597}
   - component: {fileID: 6305419843815154214}
   - component: {fileID: 7297108115987967492}
+  - component: {fileID: -1633930024383702125}
   m_Layer: 0
   m_Name: Window_Building
   m_TagString: Untagged
@@ -95,6 +96,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingInfo: {fileID: 0}
   selectedObject: {fileID: 0}
+--- !u!114 &-1633930024383702125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2456702555301491504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b83057ff629cf4f8502026dd1db6e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3735051529380321830
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +186,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!1 &5899786085411743914
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +265,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text New Text
+  m_Text: 
 --- !u!1 &5966402527230723478
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +344,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!1 &6387937233303801159
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,7 +423,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!1 &9210503739528119388
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,4 +502,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 

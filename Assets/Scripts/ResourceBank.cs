@@ -18,32 +18,65 @@ public static class ResourceBank
     public static int stoneStock = 0;
     public static int woodStock = 18;
     public static int foodStock = 0;
-    public static int sporesStock = 1;
+    public static int sporesStock = 0;
     public static int housingNeeded = 0;
     public static int housingCurrent = 0;
     public static float burnTime = 0.0f;
-    public static float burnSpeed = 20f; //-- Seconds to lose 1 Fire Life
+    public static float burnSpeed = 30f; //-- Seconds to lose 1 Fire Life
 
     //-- Fire --//
 
     public static void FireBurner()
     {
-        if (fireLife > 0)
+        if (fireLife >= 15)
         {
             //Debug.Log("Fire Burning");
             burnTime += Time.deltaTime;
             if (burnTime >= burnSpeed)
             {               
-                RemoveFireLife();
+                RemoveFireLife(1);
+                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
                 burnTime -= (int)burnTime;
-                Debug.Log("1 Fire Life lost");
+            }
+        }
+        else if (fireLife >= 10 && fireLife < 15)
+        {
+            //Debug.Log("Fire Burning");
+            burnTime += Time.deltaTime;
+            if (burnTime >= burnSpeed * 1.22f)
+            {
+                RemoveFireLife(1);
+                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
+                burnTime -= (int)burnTime;
+            }
+        }
+        else if (fireLife >= 5 && fireLife < 10)
+        {
+            //Debug.Log("Fire Burning");
+            burnTime += Time.deltaTime;
+            if (burnTime >= burnSpeed * 1.4f)
+            {
+                RemoveFireLife(1);
+                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
+                burnTime -= (int)burnTime;
+            }
+        }
+        else if (fireLife > 0 && fireLife < 5)
+        {
+            //Debug.Log("Fire Burning");
+            burnTime += Time.deltaTime;
+            if (burnTime >= burnSpeed * 1.6f)
+            {
+                RemoveFireLife(1);
+                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
+                burnTime -= (int)burnTime;
             }
         }
     }
 
-    private static void RemoveFireLife()
+    public static void RemoveFireLife(int amount)
     {
-        fireLife -= 1;
+        fireLife -= amount;
         if (OnFireLifeChanged != null) OnFireLifeChanged(null, EventArgs.Empty);
     }
 

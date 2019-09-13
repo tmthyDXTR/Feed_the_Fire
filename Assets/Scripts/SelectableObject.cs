@@ -7,12 +7,6 @@ public class SelectableObject : MonoBehaviour
     public bool isSelected = false;
     [SerializeField] public GameObject infoWindow;
 
-    // Info Panels and Tooltips
-    private Window_Worker window_Unit;
-    private Window_Building window_Building;
-    private Window_FirePlace window_FirePlace;
-
-    //[SerializeField] private GameObject windowBuilding;
 
     void Awake()
     {
@@ -20,17 +14,21 @@ public class SelectableObject : MonoBehaviour
         if (this.gameObject.layer == 17) // PlayerUnits Layer
         {
             infoWindow = GameObject.Find("Window_Worker");
-            //window_Unit = infoWindow.GetComponent<Window_Worker>();
         }
-        else if (this.gameObject.layer == 15 && this.gameObject.name != "FirePlace") // Buildings Layer
-        {            
-            infoWindow = GameObject.Find("Window_Building");
-            //window_Building = infoWindow.GetComponent<Window_Building>();                   
-        }
-        else if (this.gameObject.layer == 15 && this.gameObject.name == "FirePlace") 
+        else if (this.gameObject.layer == 15) // Buildings Layer
         {
-            infoWindow = GameObject.Find("Window_FirePlace");
-            //window_FirePlace = infoWindow.GetComponent<Window_FirePlace>();
+            if (this.gameObject.name == "FirePlace")
+            {
+                infoWindow = GameObject.Find("Window_FirePlace");
+            }
+            else if (this.gameObject.name == "FoodStorage")
+            {
+                infoWindow = GameObject.Find("Window_FoodStorage");
+            }            
+            else
+            {
+                infoWindow = GameObject.Find("Window_Building");
+            }
         }
         else
         {
@@ -40,30 +38,7 @@ public class SelectableObject : MonoBehaviour
 
     void Update()
     {
-        // Check if this Object is selected currently
-        if (isSelected == true)
-        {
-            // If this Object is selected open its Info Window
-            if (infoWindow != null)
-            {
-                if (this.gameObject.layer == 17) // PlayerUnits Layer
-                {
-                    //window_Unit.unitInfo = GetComponent<UnitInfo>();
-                    //window_Unit.selectedObject = this.gameObject;
-                }
-                else if (this.gameObject.layer == 15 && this.gameObject.name != "FirePlace") // Buildings Layer
-                {
-                    //window_Building.buildingInfo = GetComponent<BuildingInfo>();
-                    //window_Building.selectedObject = this.gameObject;
-                }
-            }
-
-        }
-        else
-        {
-            //infoWindow.SetActive(false);
-
-        }
+        
     }
 
     public void OpenCloseInfo()

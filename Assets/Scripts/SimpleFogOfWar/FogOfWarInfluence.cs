@@ -8,7 +8,7 @@ namespace SimpleFogOfWar
         /// <summary>
         /// Uncovered radius around the entity
         /// </summary>
-        public float ViewDistance = 150;
+        public float ViewDistance;
         public float minFlicker;
         public float maxFlicker;
         /// <summary>

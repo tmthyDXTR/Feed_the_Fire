@@ -53,7 +53,7 @@ public class Window_ResourceBank : MonoBehaviour
 
 
 
-        ResourceBank.OnFireLifeChanged -= delegate (object sender, EventArgs e)
+        ResourceBank.OnFireLifeChanged += delegate (object sender, EventArgs e)
         {            
             UpdateFireLifeTextObject();
         };
@@ -85,7 +85,7 @@ public class Window_ResourceBank : MonoBehaviour
     void Update()
     {
         ResourceBank.FireBurner();
-        UpdateFireLifeTextObject();
+        //UpdateFireLifeTextObject();
     }
 
 }

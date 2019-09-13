@@ -125,11 +125,12 @@ public class BuildingInfo : MonoBehaviour
 
     public void ConstructionComplete()
     {
-        this.gameObject.tag = originalTag;
+        //this.gameObject.tag = originalTag;
         isConstruction = false;
         construction.DeregisterConstruction(this.gameObject);
         if (this.gameObject.tag == "WoodcutterHut")
         {
+            this.gameObject.tag = originalTag;
             foreach (Transform child in transform)
             {
                 if (child.name == "WoodLogs")
@@ -138,15 +139,12 @@ public class BuildingInfo : MonoBehaviour
                 }
             }
         }
-        if (this.gameObject.tag == "Bonfire")
+        if (originalTag == "Bonfire")
         {
-            foreach (Transform child in transform)
-            {
-                if (child.name == "Point Light" || child.name == "Flame" || child.name == "Revealer")
-                {
-                    child.gameObject.SetActive(true);
-                }
-            }
+            this.gameObject.tag = "UnlitBonfire";
+            BonfireManager bonfire = GameObject.Find("BonfireManager").GetComponent<BonfireManager>();
+            bonfire.bonfireList.Add(this.gameObject);
+
         }
     }
 

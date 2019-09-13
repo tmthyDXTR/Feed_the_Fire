@@ -38,9 +38,22 @@ public class Burnable : MonoBehaviour
 
     public void AddBurnEffect()
     {
-        GameObject burnEffect = Instantiate(Resources.Load("BurnEffect")) as GameObject;
-        burnEffectObj = burnEffect;
-        burnEffect.transform.position = new Vector3(transform.position.x, transform.position.y +0.78f, transform.position.z);
-       
+        if (this.gameObject.tag == "UnlitBonfire")
+        {
+            foreach (Transform child in transform)
+            {
+                if (child.name == "Point Light" || child.name == "Flame" || child.name == "LightZone")
+                {
+                    child.gameObject.SetActive(true);
+                }
+            }
+        }
+        else
+        {
+            GameObject burnEffect = Instantiate(Resources.Load("BurnEffect")) as GameObject;
+            burnEffectObj = burnEffect;
+            burnEffect.transform.position = new Vector3(transform.position.x, transform.position.y + 0.78f, transform.position.z);
+        }
+
     }
 }

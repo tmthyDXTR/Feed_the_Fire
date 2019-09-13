@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &2059126001606018487
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,6 +92,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &2410187652832566307
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,6 +184,7 @@ GameObject:
   - component: {fileID: 1358429652649722561}
   - component: {fileID: 4930132777737427739}
   - component: {fileID: 5371663324797075166}
+  - component: {fileID: 1983604599049630612}
   m_Layer: 15
   m_Name: FoodStorage
   m_TagString: FoodStorage
@@ -257,6 +262,22 @@ MonoBehaviour:
   storageRoom: 10
   stored: 0
   stockShrooms: 0
+  stockSpores: 0
+  singleStorage: []
+--- !u!114 &1983604599049630612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2756602879506892456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd272610d52503347a7eef5890d5e554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSelected: 0
+  infoWindow: {fileID: 0}
 --- !u!1 &2939174430635722280
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,6 +401,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &4457411571703424981
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,6 +604,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &5814865331868653800
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +651,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &6173503622359618858
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,6 +932,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &6793755770471787615
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +979,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &7418217885409746259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,6 +1104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &7877049557824602818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0
 --- !u!1 &8091504317830064511
 GameObject:
   m_ObjectHideFlags: 0
@@ -1319,3 +1354,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
+  storage: {fileID: 0}
+  storedItem: 0

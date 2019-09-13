@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+//using System;
 
 public class TreeNodes : MonoBehaviour
 {
     public int woodAmount = 24;
     public int currentAmount;
     public GameObject stumpPrefab;
+    public GameObject saplingPrefab;
     public bool isMinable = false;
+    public float saplingDropRate = 0.1f;
     bool isDead;
     CapsuleCollider capsuleCollider;
 
@@ -59,10 +61,25 @@ public class TreeNodes : MonoBehaviour
     void Death()
     {
         isDead = true;
-        Instantiate(stumpPrefab, new Vector3(
-            this.transform.position.x, 
-            this.transform.position.y, 
-            this.transform.position.z), Quaternion.identity);
+        GameObject stump = Instantiate(stumpPrefab, new Vector3(
+            this.transform.position.x,
+            this.transform.position.y,
+            this.transform.position.z), Quaternion.identity) as GameObject;
+        stump.transform.SetParent(GameObject.Find("StumpNodes").transform);
+
+        // Chance to drop Tree Saplings
+        if (Random.value <= saplingDropRate)
+        {
+            GameObject sapling = Instantiate(saplingPrefab, new Vector3(
+            this.transform.position.x,
+            this.transform.position.y + 0.5f,
+            this.transform.position.z), Quaternion.identity) as GameObject;
+            sapling.transform.SetParent(stump.transform);
+            stump.GetComponent<GrowShroom>().hasSaplingDrop = true;
+            Debug.Log("A Tree left behind a sapling to regrow");
+        }
+        
+
         Destroy(gameObject);
     }
 }

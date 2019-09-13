@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Storage : MonoBehaviour
 {
@@ -12,10 +13,27 @@ public class Storage : MonoBehaviour
     public int stockShrooms = 0;
     public int stockSpores = 0;
 
+    public SingleStorage[] singleStorage; 
 
-    void Start()
+
+
+    void Awake()
     {
-        
+        //ResourceBank.OnFireLifeChanged += delegate (object sender, EventArgs e)
+        //{
+        //    UpdateFireLifeTextObject();
+        //};
+
+        //singleStorage = GetComponentsInChildren<SingleStorage>();
+        //foreach (SingleStorage store in singleStorage)
+        //{
+        //    store.OnShroomsAdded += delegate (object sender, EventArgs e)
+        //    {
+        //        Debug.Log("Shroom Added");
+        //        stockShrooms += 1;
+        //        stored += 1;
+        //    };
+        //}
     }
 
     void Update()
@@ -37,60 +55,43 @@ public class Storage : MonoBehaviour
         }
     }
 
-    public void StoreShrooms()
-    {
-        stored += 1;
-        stockShrooms += 1;
-        AddResourceInStorage("Shrooms");
-    }
 
-    public void RemoveSpores()
-    {
-        stored -= 1;
-        stockSpores -= 1;
-        RemoveResourceFromStorage("Spores");
-    }
 
-    private void AddResourceInStorage(string resource)
+    public void Store(StoredItem item)
     {
         foreach (Transform child in this.transform)
         {
-            if (child.gameObject.GetComponent<SingleStorage>().isFull == true)
+            SingleStorage storage = child.gameObject.GetComponent<SingleStorage>();
+            if (storage.isFull == true)
             {
                 continue;
             }
             else
-            {
-                if (resource == "Shrooms")
-                {
-                    GameObject shrooms = Instantiate(Resources.Load("Shrooms")) as GameObject;
-                    shrooms.transform.position = new Vector3(child.transform.position.x, child.transform.position.y - 0.8f, child.transform.position.z);
-                    shrooms.transform.SetParent(child.transform);
-                    shrooms.transform.Find("Particle System").gameObject.SetActive(false);
-                    child.GetComponent<SingleStorage>().isFull = true;
-                    break;
-                }
+            {           
+                storage.storedItem = item;
+                storage.AddItem(item);
+                break;                            
             }
         }
     }
 
-    private void RemoveResourceFromStorage(string resource)
+    public void Collect(StoredItem item)
     {
         foreach (Transform child in this.transform)
         {
-            if (child.gameObject.GetComponent<SingleStorage>().isFull = false)
+            SingleStorage storage = child.gameObject.GetComponent<SingleStorage>();
+            if (storage.isFull == false)
             {
                 continue;
             }
-            else if (resource == "Spores")
-            {                
-                if (child.GetChild(0).GetChild(0).name == "Vial_Spores")
-                {
-                    Destroy(child.GetChild(0).GetChild(0).gameObject);
-                    child.GetComponent<SingleStorage>().isFull = false;
-                    break;
-                }
+            else if (storage.storedItem == item)
+            {
+                //stored -= 1;
+                //stockSpores -= 1;
                 
+                storage.storedItem = StoredItem.Empty;
+                storage.RemoveItem(item);
+                break;
             }
         }
     }

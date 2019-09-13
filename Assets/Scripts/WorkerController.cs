@@ -183,10 +183,17 @@ public class WorkerController : MonoBehaviour
         }
     }
 
-    public Collider SearchShroomGrow(string reason) // reason: "Plant" or "Collect"
+    public Collider SearchShroomGrow(string reason) // reason: "Plant" or "CollectShrooms" or "CollectSpores"
     {
-        // Check if there is a Object to Burn
-        if (growManager.shroomGrowList.Count > 0)
+        // Check if there are Spores to collect
+        if (growManager.sporeCollectList.Count > 0 && reason == "CollectSpores")
+        {
+            target = growManager.sporeCollectList[0].GetComponent<Collider>();
+            return target;
+        }
+        
+        // Check if there is a stump to grow Shrooms on
+        else if (growManager.shroomGrowList.Count > 0)
         {
             foreach (Collider shroomGrow in growManager.shroomGrowList)
             {
@@ -194,9 +201,11 @@ public class WorkerController : MonoBehaviour
                 {
                     if (shroomGrow.gameObject.GetComponent<GrowShroom>() != null 
                         && shroomGrow.gameObject.GetComponent<GrowShroom>().hasSpores == false 
-                        && shroomGrow.gameObject.GetComponent<Burnable>().isBurning != true)
+                        && shroomGrow.gameObject.GetComponent<Burnable>().isBurning == false 
+                        && shroomGrow.gameObject.GetComponent<GrowShroom>().hasSporesDrop == false 
+                        && shroomGrow.gameObject.GetComponent<GrowShroom>().isTargeted != true)
                     {
-                        target = shroomGrow;
+                        target = shroomGrow;                        
                         return target;
                     }
                     else
@@ -204,10 +213,12 @@ public class WorkerController : MonoBehaviour
                         continue;
                     }
                 }     
-                if (reason == "Collect")
+                else if (reason == "CollectShrooms")
                 {
                     if (shroomGrow.gameObject.GetComponent<GrowShroom>() != null 
-                        && shroomGrow.gameObject.GetComponent<GrowShroom>().hasShrooms == true)
+                        && shroomGrow.gameObject.GetComponent<GrowShroom>().hasShrooms == true 
+                        && shroomGrow.gameObject.GetComponent<Burnable>().isBurning == false 
+                        && shroomGrow.gameObject.GetComponent<GrowShroom>().isTargeted != true)
                     {
                         target = shroomGrow;
                         return target;
@@ -217,6 +228,20 @@ public class WorkerController : MonoBehaviour
                         continue;
                     }
                 }
+                //else if (reason == "CollectSpores") ///////
+                //{
+                //    if (shroomGrow.gameObject.GetComponent<GrowShroom>() != null
+                //        && shroomGrow.gameObject.GetComponent<GrowShroom>().hasShrooms == true)
+                //    {
+                //        target = shroomGrow;
+                //        return target;
+                //    }
+                //    else
+                //    {
+                //        continue;
+                //    }
+                //}
+
             }            
         }        
         return null;
@@ -414,19 +439,19 @@ public class WorkerController : MonoBehaviour
 
     #region Ressource Methods
 
-    public void TakeFire()
+    public void TakeFire(int amount)
     {
         workTime += Time.deltaTime;
-        if (workTime >= 1)
+        if (workTime >= (float)amount)
         {
             if (target != null)
             {
                 UnitInfo unit = GetComponent<UnitInfo>();
                 
-                if (ResourceBank.fireLife > 0 && unit.invWood < 1)
+                if (ResourceBank.fireLife > amount + 1)
                 {
-                    ResourceBank.fireLife -= 1;
-                    unit.invWood += 1;
+                    unit.invFire += 1;
+                    ResourceBank.RemoveFireLife(amount);
                     workTime -= (int)workTime;
                 }
             }
@@ -551,7 +576,7 @@ public class WorkerController : MonoBehaviour
     public void ConstructBuilding()
     {
         BuildingInfo building = constructionTarget.GetComponent<BuildingInfo>();
-        m_NavMeshAgent.isStopped = true;
+        //m_NavMeshAgent.isStopped = true;
         m_Animator.SetBool("IsWalking", false);
         m_Animator.SetBool("IsLumbering", true);
         m_Animator.speed = 1;
@@ -623,6 +648,21 @@ public class WorkerController : MonoBehaviour
         
     }
 
+    public void IgniteBonfire()
+    {
+        UnitInfo info = GetComponent<UnitInfo>();
+        workTime += Time.deltaTime;
+        if (workTime >= 4)
+        {
+            info.invWood -= 1;
+            info.target.gameObject.GetComponent<Burnable>().AddBurnEffect();
+            workTime -= (int)workTime;
+            burnManager.DeregisterBurn(info.target.gameObject);
+            info.target.gameObject.tag = "Bonfire";
+        }
+
+    }
+
     public void PlantShroomSpores(GameObject target)
     {
         //Debug.Log("Growing Shrooms");
@@ -633,12 +673,14 @@ public class WorkerController : MonoBehaviour
         if (workTime >= workSpeed)
         {
             Debug.Log("Shroom Spore planted");
+            UnitInfo info = GetComponent<UnitInfo>();
+            info.invSpores -= 1;
             //selectionManager.selection.Remove(this.gameObject);
             GameObject shrooms = Instantiate(Resources.Load("Shrooms")) as GameObject;
             shrooms.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 0.5f, target.transform.position.z);
             shrooms.transform.localScale = new Vector3(transform.localScale.x * 0.2f, transform.localScale.y * 0.2f, transform.localScale.z * 0.2f);
             shrooms.transform.SetParent(target.transform);
-            target.transform.GetComponent<GrowShroom>().hasSpores = true;
+            target.transform.GetComponent<GrowShroom>().hasSpores = true;            
             workTime -= (int)workTime;
         }
     }
@@ -661,9 +703,9 @@ public class WorkerController : MonoBehaviour
                 if (shroom != null)
                 {
                     // ... the Node should lose resources.
-                    shroom.TakeDamage();
+                    shroom.Remove("Shrooms");
                     info.invShroom += 1;
-                    Debug.Log("Shroom collected");
+                    Debug.Log("Shrooms collected");
                     workTime -= (int)workTime;
                     m_Animator.SetBool("IsLumbering", false);
                 }
@@ -682,9 +724,8 @@ public class WorkerController : MonoBehaviour
                 Storage storage = target.GetComponent<Storage>();
                 if (storage != null && storage.isFull != true)
                 {
-                    storage.StoreShrooms();
+                    storage.Store(StoredItem.Shrooms);
                     unit.invShroom -= 1;
-                    ResourceBank.AddFoodToStock(1);
                     workTime -= (int)workTime;
                 }
             }
@@ -699,7 +740,25 @@ public class WorkerController : MonoBehaviour
         workTime += Time.deltaTime;
         if (workTime >= workSpeed / 6f)
         {
-            if (target != null)
+            // Check if target is Stump
+            if (target.gameObject.tag == "ShroomGrow")
+            {
+                // Try and find a Nodes Resource script on the gameobject hit.
+                ShroomNodes shroom = target.GetComponent<ShroomNodes>();
+                UnitInfo info = GetComponent<UnitInfo>();
+                // If the Node Resource script component exists...
+                if (shroom != null)
+                {
+                    // ... the Node should lose resources.
+                    shroom.Remove("Spores");
+                    info.invSpores += 1;
+                    Debug.Log("Spores collected");
+                    workTime -= (int)workTime;
+                    m_Animator.SetBool("IsLumbering", false);
+                }
+            }
+            // Check if target is Storage
+            else
             {
                 transform.LookAt(target.transform);
                 // Try and find a Nodes Resource script on the gameobject hit.
@@ -709,12 +768,30 @@ public class WorkerController : MonoBehaviour
                 if (storage != null)
                 {
                     // ... the Node should lose resources.
-                    ResourceBank.RemoveSporesFromStock(1);
-                    storage.RemoveSpores();
+                    storage.Collect(StoredItem.Spores);
                     info.invSpores += 1;
                     Debug.Log("Spores collected");
                     workTime -= (int)workTime;
                     //m_Animator.SetBool("IsLumbering", false);
+                }
+            }
+        }
+    }
+
+    public void StoreSpores()
+    {
+        workTime += Time.deltaTime;
+        if (workTime >= workSpeed / 6f)
+        {
+            if (target != null)
+            {
+                UnitInfo unit = GetComponent<UnitInfo>();
+                Storage storage = target.GetComponent<Storage>();
+                if (storage != null && storage.isFull != true)
+                {
+                    storage.Store(StoredItem.Spores);
+                    unit.invSpores -= 1;
+                    workTime -= (int)workTime;
                 }
             }
         }
@@ -817,6 +894,11 @@ public class WorkerController : MonoBehaviour
         {
             target.gameObject.tag = "WorkInactive";
         }
+    }
+
+    public void RemoveStumpFromSporeList()
+    {
+        growManager.sporeCollectList.Remove(target.gameObject);
     }
 
     private void AttackEnd()

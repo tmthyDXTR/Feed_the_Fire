@@ -11,6 +11,7 @@ public class UnitInfo : MonoBehaviour
     public int invStone = 0;
     public int invShroom = 0;
     public int invSpores = 0;
+    public int invFire = 0;
     public bool isAlive = true;
     public Collider target;
 

@@ -22,4 +22,12 @@ public class EnemySpawner : MonoBehaviour
     {
         
     }
+
+    public void SpawnEnemy(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
+        }
+    }
 }

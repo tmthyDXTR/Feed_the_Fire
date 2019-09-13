@@ -42,6 +42,7 @@ public class WorkerUnitAI : MonoBehaviour
         MovingToStump,
         PlantingShroomSpores,
         CollectingShrooms,
+        CollectingSpores,
 
     }
 
@@ -57,6 +58,8 @@ public class WorkerUnitAI : MonoBehaviour
 
     void Update()
     {
+        #region info update
+
         if (job == Job.Unemployed)
         {
             info.job = "Unemployed";
@@ -77,7 +80,7 @@ public class WorkerUnitAI : MonoBehaviour
         {
             info.job = "Shroomer";
         }
-
+        #endregion
 
 
         switch (state)
@@ -281,7 +284,7 @@ public class WorkerUnitAI : MonoBehaviour
             #region State MovingToBurn
 
             case State.MovingToBurn:
-                //Debug.Log("Worker Unit State: MovingToConstruction");
+                //Debug.Log("Worker Unit State: MovingToBurn");
                 if (job == Job.LightWarden)
                 {
                     util.target = util.burnTarget;
@@ -428,7 +431,7 @@ public class WorkerUnitAI : MonoBehaviour
                     }
                     else if (job == Job.Shroomer)
                     {
-                        if (info.invShroom > 0)
+                        if (info.invShroom > 0 || info.invSpores > 0)
                         {
                             state = State.StoringResources;
                         }
@@ -480,15 +483,23 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: SearchingGrowArea");
                 if (job == Job.Shroomer)
                 {
+                    // Check if there are Spores to collect
+                    if (util.SearchShroomGrow("CollectSpores") != null)
+                    {
+                        Debug.Log("Spores found to Collect");
+                        util.target.GetComponent<GrowShroom>().isTargeted = true;
+                        util.MoveToTarget();
+                        util.RemoveStumpFromSporeList();
+                        state = State.MovingToStump;
+                    }
                     // Check if there is a Shroom ready to collect
-                    if (util.SearchShroomGrow("Collect") != null)
+                    else if (util.SearchShroomGrow("CollectShrooms") != null)
                     {
                         Debug.Log("Shroom found to Collect");
                         util.target.GetComponent<GrowShroom>().isTargeted = true;
                         util.MoveToTarget();
                         state = State.MovingToStump;
                     }
-
                     // Check if there is a Stump to Plant Shroom Seed on
                     else if (util.SearchShroomGrow("Plant") != null)
                     {
@@ -536,10 +547,14 @@ public class WorkerUnitAI : MonoBehaviour
                         {
                             state = State.CollectingShrooms;
                         }
-                        else if (util.target.GetComponent<GrowShroom>().hasShrooms == false && util.target.GetComponent<GrowShroom>().hasSpores == false)
+                        else if (util.target.GetComponent<GrowShroom>().hasShrooms == false && util.target.GetComponent<GrowShroom>().hasSporesDrop == false)
                         {
                             state = State.PlantingShroomSpores;
-                        }                        
+                        }
+                        else if (util.target.GetComponent<GrowShroom>().hasShrooms == false && util.target.GetComponent<GrowShroom>().hasSporesDrop == true)
+                        {
+                            state = State.CollectingSpores;
+                        }
                     }
                 }
                 else
@@ -571,6 +586,7 @@ public class WorkerUnitAI : MonoBehaviour
                 }
                 else
                 {
+                    util.target.GetComponent<GrowShroom>().isTargeted = false;
                     state = State.MovingToSafety;
                 }
 
@@ -590,11 +606,38 @@ public class WorkerUnitAI : MonoBehaviour
                     }
                     else
                     {
+                        util.target.GetComponent<GrowShroom>().isTargeted = false;
                         state = State.SearchingStorage;
                     }
                 }
                 else
                 {
+                    util.target.GetComponent<GrowShroom>().isTargeted = false;
+                    state = State.MovingToSafety;
+                }
+                break;
+            #endregion
+
+
+            #region State CollectingSpores
+
+            case State.CollectingSpores:
+                //Debug.Log("Worker Unit State: CollectingSpores");
+                if (job == Job.Shroomer)
+                {
+                    if (info.invSpores < info.invMax && util.target.GetComponent<ShroomNodes>().sporesAmount > 0)
+                    {
+                        util.CollectSpores();
+                    }
+                    else
+                    {
+                        util.target.GetComponent<GrowShroom>().isTargeted = false;
+                        state = State.SearchingStorage;
+                    }
+                }
+                else
+                {
+                    util.target.GetComponent<GrowShroom>().isTargeted = false;
                     state = State.MovingToSafety;
                 }
                 break;
@@ -680,6 +723,10 @@ public class WorkerUnitAI : MonoBehaviour
                             if (info.invShroom > 0)
                             {
                                 util.StoreShrooms();
+                            }
+                            else if (info.invSpores > 0)
+                            {
+                                util.StoreSpores();
                             }
                             else
                             {
@@ -787,9 +834,13 @@ public class WorkerUnitAI : MonoBehaviour
                         }
                         else
                         {
-                            util.SearchShroomGrow("Plant");
-                            util.MoveToTarget();
-                            state = State.MovingToStump;
+                            if (util.SearchShroomGrow("Plant") != null)
+                            {
+                                Debug.Log("Going to Plant SHROOMS");
+                                util.MoveToTarget();
+                                util.target.GetComponent<GrowShroom>().isTargeted = true;
+                                state = State.MovingToStump;
+                            }                            
                         }
                         
                     }
@@ -808,8 +859,7 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: Constructing");
                 if (job == Job.Builder)
                 {
-                    if (util.constructionTarget != null && 
-                        util.constructionTarget.gameObject.tag == "Construction")
+                    if (util.constructionTarget != null && util.constructionTarget.GetComponent<BuildingInfo>().isConstruction == true)
                     {
                         util.ConstructBuilding();
                     }
@@ -890,14 +940,18 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: TakingFire");
                 if (job == Job.LightWarden)
                 {
-                    if (info.invWood < 1)
+                    if (util.burnTarget.gameObject.tag == "UnlitBonfire" && ResourceBank.fireLife > 3 && info.invFire < 1)
                     {
-                        util.TakeFire();
+                        util.TakeFire(3);                        
                     }
                     else
                     {
                         state = State.MovingToBurn;
                     }
+                }
+                else
+                {
+                    state = State.MovingToSafety;
                 }
                 
                 break;
@@ -911,9 +965,14 @@ public class WorkerUnitAI : MonoBehaviour
 
                 if (job == Job.LightWarden)
                 {
-                    if (info.invWood > 0)
+                    //Check if Bonfire or Stump
+                    if (info.invWood > 0 && util.target.tag != "UnlitBonfire")
                     {
                         util.BurnObject();
+                    }
+                    else if (info.invWood > 0 && util.target.tag == "UnlitBonfire")
+                    {
+                        util.IgniteBonfire();
                     }
                     else
                     {
