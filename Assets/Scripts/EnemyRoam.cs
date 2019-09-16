@@ -13,8 +13,9 @@ public class EnemyRoam : MonoBehaviour
     UnityEngine.AI.NavMeshAgent m_NavMeshAgent;
     Animator m_Animator;
 
+    private SphereCollider detectionSphere;
     private UnitInfo unit;
-
+    [SerializeField] private float detectionRadius = 7;
     [SerializeField] private State state;
     private enum State
     {
@@ -31,9 +32,10 @@ public class EnemyRoam : MonoBehaviour
         spawnPosition = transform.position;
         m_NavMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
-        m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));
-        m_Animator.SetBool("IsWalking", true);
+        detectionSphere = this.transform.Find("DetectionSphere").GetComponent<SphereCollider>();
+        detectionSphere.radius = detectionRadius;
 
+        m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));
         state = State.Roaming;
     }
 
@@ -42,55 +44,39 @@ public class EnemyRoam : MonoBehaviour
         switch (state)
         {
             case State.Idling:
-                Debug.Log("State: Idling");
+                //Debug.Log("State: Idling");
                 break;
 
             case State.Roaming:
-                Debug.Log("State: Roaming");
+                //Debug.Log("State: Roaming");
+                //Get random point in spawn position radius and go there
                 Roaming();
+                //If some unit enters collider radius add it as potential target
                 TargetCheck();
                 if (hasTarget == true)
-                {
+                {                    
                     state = State.MovingToTarget;
-                }
-                if (bonfire != null)
-                {
-                    state = State.Scared;
                 }
                 break;
 
             case State.MovingToTarget:
-                Debug.Log("State: MovingToTarget");
-                MoveToTarget(target);
+                //Debug.Log("State: MovingToTarget");
+
+                MoveToTarget();
                 // Check if Target reached
-                TargetCheck();
-                if (TargetReached() == true)
+                if (TargetReached())
                 {
                     state = State.AttackingTarget;
                 }
-                if (hasTarget == false || target == null)
+                if (!hasTarget || target == null)
                 {
                     DeRegisterTarget(target);
-                    state = State.Roaming;
-                }
-                if (bonfire != null)
-                {
-                    state = State.Scared;
-                }
-                break;
-
-            case State.Scared:
-                Debug.Log("State: Scared");
-                m_NavMeshAgent.SetDestination(spawnPosition);
-                m_Animator.SetBool("IsWalking", true);
-                if (TargetReached() == true)
-                {
                     state = State.Roaming;
                 }
                 break;
 
             case State.AttackingTarget:
-                Debug.Log("State: AttackingTarget");
+                //Debug.Log("State: AttackingTarget");
                 if (target != null)
                 {
                     m_Animator.SetBool("IsAttacking", true);
@@ -101,10 +87,6 @@ public class EnemyRoam : MonoBehaviour
                     //Check if Target is dead or null                    
                     state = State.Roaming;                    
                 }
-                if (bonfire != null)
-                {
-                    state = State.Scared;
-                }
                 break;
         }
     }
@@ -113,8 +95,10 @@ public class EnemyRoam : MonoBehaviour
     private void AttackEnd()
     {
         // Send Damange to Target
-        unit = target.transform.GetComponent<UnitInfo>();
-        unit.TakeDamage(this.gameObject, 10);
+        Debug.Log(this.gameObject.name + " attacked " + target.gameObject.name);
+
+        //unit = target.transform.GetComponent<UnitInfo>();
+        //unit.TakeDamage(this.gameObject, 10);
     }
 
     private bool TargetReached()
@@ -144,7 +128,7 @@ public class EnemyRoam : MonoBehaviour
         }
     }
 
-    void MoveToTarget(Collider target)
+    void MoveToTarget()
     {
         m_NavMeshAgent.SetDestination(target.transform.position);
         m_Animator.SetBool("IsAttacking", false);
@@ -155,22 +139,9 @@ public class EnemyRoam : MonoBehaviour
     {
         if (inRangeTargets.Count >= 1)
         {
-            Debug.Log("Unit in Range");
-            hasTarget = true;
+            Debug.Log("Unit in Range");            
             GetNearestTarget();
-            foreach (Collider possibleTarget in inRangeTargets)
-            {
-                if (possibleTarget == null)
-                {
-                    DeRegisterTarget(possibleTarget);
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("No Unit in Range");
-            hasTarget = false;
-            target = null;
+            hasTarget = true;
         }
     }
 
@@ -200,12 +171,12 @@ public class EnemyRoam : MonoBehaviour
             Debug.Log("Player unit entered collider sphere");
             RegisterTarget(other);
         }
-        if (other.gameObject.layer == 13) // Bonfires layer 
-        {
-            Debug.Log("Bonfire entered collider sphere");
-            DeRegisterTarget(target);
-            bonfire = other;
-        }
+        //if (other.gameObject.layer == 13) // Bonfires layer 
+        //{
+        //    Debug.Log("Bonfire entered collider sphere");
+        //    DeRegisterTarget(target);
+        //    bonfire = other;
+        //}
     }
 
     void OnTriggerExit(Collider other)
@@ -215,11 +186,11 @@ public class EnemyRoam : MonoBehaviour
             Debug.Log("Player unit exited collider sphere");
             DeRegisterTarget(other);
         }
-        if (other.gameObject.layer == 13) // Bonfires layer 
-        {
-            Debug.Log("Bonfire exited collider sphere");            
-            bonfire = null;
-        }
+        //if (other.gameObject.layer == 13) // Bonfires layer 
+        //{
+        //    Debug.Log("Bonfire exited collider sphere");            
+        //    bonfire = null;
+        //}
     }
 
     public void RegisterTarget(Collider other)

@@ -107,13 +107,13 @@ public class EnemyZombie : MonoBehaviour
         }
     }
 
-    // Animation Event
-    private void AttackEnd()
-    {
-        // Send Damange to Target
-        unit = target.transform.GetComponent<UnitInfo>();
-        unit.TakeDamage(this.gameObject, 10);
-    }
+    //// Animation Event
+    //private void AttackEnd()
+    //{
+    //    // Send Damange to Target
+    //    unit = target.transform.GetComponent<UnitInfo>();
+    //    unit.TakeDamage(this.gameObject, 10);
+    //}
 
     private bool TargetReached()
     {

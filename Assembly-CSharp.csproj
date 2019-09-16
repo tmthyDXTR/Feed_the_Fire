@@ -60,7 +60,9 @@
      <Compile Include="Assets\Scripts\AddRemoveShroomerButton.cs" />
      <Compile Include="Assets\Scripts\AddRemoveStonecutterButton.cs" />
      <Compile Include="Assets\Scripts\AddRemoveWoodcutterButton.cs" />
+     <Compile Include="Assets\Scripts\Attackable.cs" />
      <Compile Include="Assets\Scripts\BackgroundAudioController.cs" />
+     <Compile Include="Assets\Scripts\BigBoyController.cs" />
      <Compile Include="Assets\Scripts\BonfireManager.cs" />
      <Compile Include="Assets\Scripts\BuildingInfo.cs" />
      <Compile Include="Assets\Scripts\BuildingManager.cs" />
@@ -69,8 +71,11 @@
      <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\ChangeColour.cs" />
      <Compile Include="Assets\Scripts\CheatPanel.cs" />
+     <Compile Include="Assets\Scripts\Clickable.cs" />
      <Compile Include="Assets\Scripts\ConstructionManager.cs" />
+     <Compile Include="Assets\Scripts\ConsumeFireButton.cs" />
      <Compile Include="Assets\Scripts\CreateUnitButton.cs" />
+     <Compile Include="Assets\Scripts\Enemy.cs" />
      <Compile Include="Assets\Scripts\EnemyInfo.cs" />
      <Compile Include="Assets\Scripts\EnemyRoam.cs" />
      <Compile Include="Assets\Scripts\EnemySpawner.cs" />
@@ -85,6 +90,7 @@
      <Compile Include="Assets\Scripts\GridManager.cs" />
      <Compile Include="Assets\Scripts\GrowShroom.cs" />
      <Compile Include="Assets\Scripts\HeroController.cs" />
+     <Compile Include="Assets\Scripts\HeroInfo.cs" />
      <Compile Include="Assets\Scripts\InGameTime.cs" />
      <Compile Include="Assets\Scripts\JobManager.cs" />
      <Compile Include="Assets\Scripts\LightZoneScaler.cs" />
@@ -93,6 +99,7 @@
      <Compile Include="Assets\Scripts\ObjectPlacement.cs" />
      <Compile Include="Assets\Scripts\PlaceableObject.cs" />
      <Compile Include="Assets\Scripts\PlayerUnitWorker.cs" />
+     <Compile Include="Assets\Scripts\Projectile.cs" />
      <Compile Include="Assets\Scripts\ProjectorManager.cs" />
      <Compile Include="Assets\Scripts\ResourceBank.cs" />
      <Compile Include="Assets\Scripts\SelectableObject.cs" />
@@ -110,6 +117,8 @@
      <Compile Include="Assets\Scripts\SingleStorage.cs" />
      <Compile Include="Assets\Scripts\StoneNodes.cs" />
      <Compile Include="Assets\Scripts\Storage.cs" />
+     <Compile Include="Assets\Scripts\Tree.cs" />
+     <Compile Include="Assets\Scripts\TreeInfo.cs" />
      <Compile Include="Assets\Scripts\TreeNodes.cs" />
      <Compile Include="Assets\Scripts\UIClickHandler.cs" />
      <Compile Include="Assets\Scripts\UnitInfo.cs" />
@@ -123,6 +132,7 @@
      <Compile Include="Assets\Scripts\Window_Hero.cs" />
      <Compile Include="Assets\Scripts\Window_ResourceBank.cs" />
      <Compile Include="Assets\Scripts\Window_Stump.cs" />
+     <Compile Include="Assets\Scripts\Window_Tree.cs" />
      <Compile Include="Assets\Scripts\Window_WoodcutterHut.cs" />
      <Compile Include="Assets\Scripts\Window_Worker.cs" />
      <Compile Include="Assets\Scripts\Window_WorkerBank.cs" />

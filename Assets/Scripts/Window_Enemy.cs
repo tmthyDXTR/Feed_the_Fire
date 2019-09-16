@@ -6,7 +6,7 @@ using System;
 
 public class Window_Enemy : MonoBehaviour
 {
-    public UnitInfo unitInfo;
+    public EnemyInfo enemy;
     public GameObject selectedObject;
 
     private SelectionManager selectionManager;
@@ -14,19 +14,19 @@ public class Window_Enemy : MonoBehaviour
 
     private void UpdateInfo()
     {
-        //UpdateTargetText();
+        UpdateText();
 
     }
 
 
-    //private void UpdateTargetText()
-    //{
-    //    if (unitInfo.target != null)
-    //    {
-    //        transform.Find("Info_3").GetComponent<Text>().text =
-    //        "Going to " + unitInfo.target.gameObject.name;
-    //    }        
-    //}
+    private void UpdateText()
+    {
+        if (enemy != null)
+        {
+            transform.Find("Info_1").GetComponent<Text>().text = enemy.name;
+            transform.Find("Info_2").GetComponent<Text>().text = "Health: " + enemy.currentHealth.ToString();
+        }
+    }
 
 
 
@@ -34,11 +34,11 @@ public class Window_Enemy : MonoBehaviour
     {
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
         //buildingInfo = selectionManager.selection[0].transform.GetComponent<BuildingInfo>();
-        if (unitInfo == null)
+        if (enemy == null)
         {
             if (selectionManager.selection.Count != 0)
             {
-                unitInfo = selectionManager.selection[0].GetComponent<UnitInfo>();
+                enemy = selectionManager.selection[0].GetComponent<EnemyInfo>();
                 selectedObject = selectionManager.selection[0];
             }
         }

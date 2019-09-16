@@ -181,6 +181,7 @@ MonoBehaviour:
   saplingPrefab: {fileID: 1769862628412522712, guid: 3ed30c2f603a4874db6a61509a54e213,
     type: 3}
   isMinable: 0
+  saplingDropRate: 0.1
 --- !u!114 &-5636484585124657632
 MonoBehaviour:
   m_ObjectHideFlags: 0

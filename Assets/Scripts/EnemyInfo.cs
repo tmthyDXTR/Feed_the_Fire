@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class EnemyInfo : MonoBehaviour
 {
-    [SerializeField] private string name;
-    [SerializeField] private float maxHealth;
-    [SerializeField] private float currentHealth;
+    public Enemy enemy;
+    [SerializeField] public string name;
+    [SerializeField] public float health;
+    [SerializeField] public float currentHealth;
 
     void Awake()
     {
-        currentHealth = maxHealth;
+        health = enemy.health;
+        currentHealth = health;
+        name = enemy.name;
+
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         currentHealth -= amount;
         Debug.Log(name + " took " + amount + "Damage");
@@ -25,6 +29,12 @@ public class EnemyInfo : MonoBehaviour
     private void Death()
     {
         Debug.Log(name + " died");
+        SelectionManager selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+        if (selectionManager.selection.Contains(this.gameObject))
+        {
+            selectionManager.DeselectAll();
+            //selectionManager.selection.Clear();
+        }
         Destroy(this.gameObject);
     }
     

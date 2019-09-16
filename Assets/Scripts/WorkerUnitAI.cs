@@ -46,11 +46,15 @@ public class WorkerUnitAI : MonoBehaviour
 
     }
 
+    private SphereCollider panicSphere;
+
+
 
     void Awake()
     {
         util = GetComponent<WorkerController>();
         info = GetComponent<UnitInfo>();
+        panicSphere = this.transform.Find("PanicSphere").GetComponent<SphereCollider>();
 
         //job = Job.Unemployed;
         //state = State.MovingToSafety;
@@ -81,6 +85,7 @@ public class WorkerUnitAI : MonoBehaviour
             info.job = "Shroomer";
         }
         #endregion
+
 
 
         switch (state)
@@ -987,6 +992,14 @@ public class WorkerUnitAI : MonoBehaviour
                 break;
                 #endregion
                 
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            state = State.MovingToSafety;
         }
     }
 }

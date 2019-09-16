@@ -94,13 +94,20 @@ public class SelectionManager : MonoBehaviour
                 }
                 else if (Input.GetMouseButtonDown(1))
                 {
-                    Debug.Log("Right Click at: " + GetWorldPoint());
-                    DeselectAll();
-                    ProjectorManager projectorManager = GameObject.Find("SelectionManager").GetComponent<ProjectorManager>();
-                    foreach (GameObject projector in projectorManager.projectorList)
+                    if (selection.Count != 0 && selection[0].tag == "Hero")
                     {
-                        projector.transform.GetChild(0).GetComponent<Projector>().enabled = false;
+                        
                     }
+                    else
+                    {
+                        Debug.Log("Right Click at: " + GetWorldPoint());
+                        DeselectAll();
+                        ProjectorManager projectorManager = GameObject.Find("SelectionManager").GetComponent<ProjectorManager>();
+                        foreach (GameObject projector in projectorManager.projectorList)
+                        {
+                            projector.transform.GetChild(0).GetComponent<Projector>().enabled = false;
+                        }
+                    }                    
                 }
             }
         }
@@ -213,7 +220,7 @@ public class SelectionManager : MonoBehaviour
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = stumpWindow;
             }
-            else if (selectableObject.gameObject.layer == 19)
+            else if (selectableObject.gameObject.layer == 19 && selectableObject.tag == "Enemy")
             {
                 GameObject windowEnemy = Instantiate(Resources.Load("Window_Enemy")) as GameObject;
                 windowEnemy.transform.SetParent(canvas);
@@ -221,6 +228,17 @@ public class SelectionManager : MonoBehaviour
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowEnemy;
+
+                //selectableObject.OpenCloseInfo();
+            }
+            else if (selectableObject.gameObject.layer == 19 && selectableObject.tag == "DeadTree")
+            {
+                GameObject windowDeadTree = Instantiate(Resources.Load("Window_Tree")) as GameObject;
+                windowDeadTree.transform.SetParent(canvas);
+                windowDeadTree.transform.localPosition = new Vector3(-200, -200, 0);
+
+                //selectableObject = obj.GetComponent<SelectableObject>();
+                selectableObject.infoWindow = windowDeadTree;
 
                 //selectableObject.OpenCloseInfo();
             }

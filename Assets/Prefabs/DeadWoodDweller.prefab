@@ -873,6 +873,50 @@ Transform:
   m_Father: {fileID: 4709786147114838809}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4913347784842424199
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6412898936190594837}
+  - component: {fileID: 4066173630932482792}
+  m_Layer: 2
+  m_Name: DetectionSphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6412898936190594837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4913347784842424199}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8845254393148666521}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &4066173630932482792
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4913347784842424199}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 7
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5124774149236148383
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,6 +1026,8 @@ GameObject:
   - component: {fileID: 6475684645457772069}
   - component: {fileID: 4512964878534422325}
   - component: {fileID: 1223227877387852823}
+  - component: {fileID: -2050461142912340508}
+  - component: {fileID: 2090876364217082952}
   m_Layer: 19
   m_Name: DeadWoodDweller
   m_TagString: Enemy
@@ -1003,6 +1049,7 @@ Transform:
   - {fileID: 4709786147114838809}
   - {fileID: 2900788891166154987}
   - {fileID: 7629536526201284564}
+  - {fileID: 6412898936190594837}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 202.63599, z: 0}
@@ -1036,7 +1083,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -1051,7 +1098,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.38
-  m_Speed: 2
+  m_Speed: 1.5
   m_Acceleration: 6
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1083,7 +1130,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5520271683857940618}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 160da11818f2fff4e902db3ed168fba3, type: 3}
   m_Name: 
@@ -1119,9 +1166,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 923e74f1277d0c64eb4336dcfbbde699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 11400000, guid: 3a56d4c59e6fc8447b6a308cd27e8023, type: 2}
   name: Dead Wood Dweller
-  maxHealth: 10
+  health: 0
   currentHealth: 0
+--- !u!114 &-2050461142912340508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5520271683857940618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07dcb69cacf52246b2a9713dee61b32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 15
+  inRangeTargets: []
+  target: {fileID: 0}
+  bonfire: {fileID: 0}
+  detectionRadius: 7
+  state: 0
+--- !u!114 &2090876364217082952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5520271683857940618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0d7036bf6cae2c489e594a860c9ef71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5720863716215842868
 GameObject:
   m_ObjectHideFlags: 0

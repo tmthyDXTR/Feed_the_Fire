@@ -8,10 +8,12 @@ using UnityEngine.Events;
 
 public class CheatPanel : MonoBehaviour
 {
+    private Button fireButton;
     private Button foodButton;
     private Button sporesButton;
     private Button woodButton;
     private Button enemyButton;
+
 
     public Storage storage;
     public EnemySpawner enemySpawner;
@@ -24,6 +26,9 @@ public class CheatPanel : MonoBehaviour
     {
         storage = GameObject.Find("FoodStorage").GetComponent<Storage>();
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+
+        //fireButton = GameObject.Find("FireCheat").gameObject.GetComponent<Button>();
+        //fireButton.onClick.AddListener(AddRemoveFire);
 
         foodButton = GameObject.Find("FoodCheat").gameObject.GetComponent<Button>();
         foodButton.onClick.AddListener(AddFood);
@@ -40,6 +45,12 @@ public class CheatPanel : MonoBehaviour
         enemyButton.onClick.AddListener(AddEnemy);
 
     }
+
+    private void AddRemoveFire()
+    {
+        ResourceBank.AddWoodToFire(1);
+    }
+
     private void AddFood()
     {
         storage.Store(StoredItem.Shrooms);

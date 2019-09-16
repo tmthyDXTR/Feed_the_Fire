@@ -38,6 +38,8 @@ TagManager:
   - ShroomScout
   - Hero
   - Enemy
+  - DeadTree
+  - FireConsume
   layers:
   - Default
   - TransparentFX

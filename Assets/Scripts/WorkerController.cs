@@ -31,6 +31,7 @@ public class WorkerController : MonoBehaviour
     MinableNodes growManager;
     UnitInfo unitInfo;
 
+
     #endregion
 
 
@@ -44,6 +45,7 @@ public class WorkerController : MonoBehaviour
         m_Animator = GetComponent<Animator>();
         m_Animator.speed = animationSpeed;
         m_AudioSource = GetComponent<AudioSource>();
+
     }
 
 
@@ -907,6 +909,7 @@ public class WorkerController : MonoBehaviour
     }
 
     #endregion 
+
 
 }
 

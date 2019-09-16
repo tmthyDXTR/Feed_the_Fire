@@ -12,18 +12,20 @@ public class FireLightHero : MonoBehaviour
     public float max = 1.03f;
     private float minFlicker;
     private float maxFlicker;
-    float originalViewDistance;
+    public float originalViewDistance;
 
+    private HeroInfo hero;
 
     void Awake()
     {
         lt = GetComponent<Light>();
-        originalRange = lt.range;
+        lt.range = originalRange;
 
         fow = GetComponent<SimpleFogOfWar.FogOfWarInfluence>();
-        originalViewDistance = fow.ViewDistance;
+        fow.ViewDistance = originalViewDistance;
 
         collider = GetComponent<SphereCollider>();
+        hero = GameObject.Find("Hero").GetComponent<HeroInfo>();
     }
 
     void Update()
@@ -59,18 +61,23 @@ public class FireLightHero : MonoBehaviour
         //    lt.range = originalRange;
         //}
 
-        float newRange = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
-        lt.range = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
+        //float newRange = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
+        //lt.range = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
+
+        lt.range = (float)originalRange / 40 * hero.firePower;
         UpdateViewDistance();
     }
 
     void UpdateViewDistance()
     {
-        fow.ViewDistance = originalViewDistance * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
-        //fow.ViewDistance = lt.range;
-        if (fow.ViewDistance >= originalViewDistance)
+        fow.ViewDistance = (float)originalViewDistance / 40 * hero.firePower;
+        if (fow.ViewDistance < 40)
         {
-            fow.ViewDistance = originalViewDistance;
+            fow.ViewDistance = 40;
         }
+        //if (fow.ViewDistance >= originalViewDistance)
+        //{
+        //    fow.ViewDistance = originalViewDistance;
+        //}
     }
 }
