@@ -130,16 +130,19 @@ public class EnemyRoam : MonoBehaviour
 
     void MoveToTarget()
     {
-        m_NavMeshAgent.SetDestination(target.transform.position);
-        m_Animator.SetBool("IsAttacking", false);
-        m_Animator.SetBool("IsWalking", true);
+        if (target != null)
+        {
+            m_NavMeshAgent.SetDestination(target.transform.position);
+            m_Animator.SetBool("IsAttacking", false);
+            m_Animator.SetBool("IsWalking", true);
+        }
     }
 
     void TargetCheck()
     {
         if (inRangeTargets.Count >= 1)
         {
-            Debug.Log("Unit in Range");            
+            Debug.Log("Unit in Range");
             GetNearestTarget();
             hasTarget = true;
         }
@@ -168,7 +171,7 @@ public class EnemyRoam : MonoBehaviour
     {
         if (other.gameObject.layer == 17) // Player Unit layer
         {
-            Debug.Log("Player unit entered collider sphere");
+            //Debug.Log("Player unit entered collider sphere");
             RegisterTarget(other);
         }
         //if (other.gameObject.layer == 13) // Bonfires layer 
@@ -183,7 +186,7 @@ public class EnemyRoam : MonoBehaviour
     {
         if (other.gameObject.layer == 17) // Player Unit layer
         {
-            Debug.Log("Player unit exited collider sphere");
+            //Debug.Log("Player unit exited collider sphere");
             DeRegisterTarget(other);
         }
         //if (other.gameObject.layer == 13) // Bonfires layer 

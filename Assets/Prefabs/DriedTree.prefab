@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 2975330036589545514}
   - component: {fileID: 1046532786038031983}
   - component: {fileID: 420615665720307693}
-  m_Layer: 20
+  m_Layer: 23
   m_Name: DriedTree
   m_TagString: DeadTree
   m_Icon: {fileID: 0}
@@ -130,7 +130,10 @@ MonoBehaviour:
   unitPrefab: {fileID: 5520271683857940618, guid: 6569f6830b8dc6f44bafa1a197977cdb,
     type: 3}
   amount: 0
-  respawnTime: 15
+  timeSinceLastSpawn: 0
+  spawnTime: 180
+  darknessSpawnTime: 10
+  timer: 0
 --- !u!114 &4591891758026601944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9839d6f0d4b545c49a8e4deed2a2c504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tree: {fileID: 0}
+  tree: {fileID: 11400000, guid: 1470a80ccf0a01b4c805dfb1d323ca54, type: 2}
   name: 
   health: 0
   currentHealth: 0

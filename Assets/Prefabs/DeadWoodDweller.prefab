@@ -1028,7 +1028,7 @@ GameObject:
   - component: {fileID: 1223227877387852823}
   - component: {fileID: -2050461142912340508}
   - component: {fileID: 2090876364217082952}
-  m_Layer: 19
+  m_Layer: 23
   m_Name: DeadWoodDweller
   m_TagString: Enemy
   m_Icon: {fileID: 0}

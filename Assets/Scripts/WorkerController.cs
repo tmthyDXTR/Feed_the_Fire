@@ -15,7 +15,7 @@ public class WorkerController : MonoBehaviour
     public Collider burnTarget;
     private float distanceToTarget;
     public bool targetReached;
-
+    public bool isHit;
     private float workTime = 0.0f;
     public int workSpeed = 1;
     public int animationSpeed = 2;
@@ -906,6 +906,24 @@ public class WorkerController : MonoBehaviour
     private void AttackEnd()
     {
         m_AudioSource.Play();
+    }
+
+    public void TakeDamage(GameObject hitter, float damageAmount)
+    {
+        unitInfo.currentHealth -= damageAmount;
+        if (unitInfo.currentHealth <= 0)
+        {
+            //attacker = hitter.GetComponent<EnemyRoam>(); // Temp Fix, Get other Attack Script
+            //attacker.DeRegisterTarget(this.GetComponent<Collider>());
+            Death();
+        }
+    }
+
+    void Death()
+    {
+        Debug.Log("A Worker died");
+        unitInfo.isDead = true;
+        Destroy(this.gameObject);
     }
 
     #endregion 

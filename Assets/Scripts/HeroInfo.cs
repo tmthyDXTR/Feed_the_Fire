@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class HeroInfo : MonoBehaviour
 {
-    public int firePower = 0;
+    public int power = 0;
+    public float health;
+    public float currentHealth;
 
     void Awake()
     {

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Dead Tree
   m_EditorClassIdentifier: 
   name: Dead Tree
-  description: 
-  health: 20
+  description: Roots up
+  health: 25

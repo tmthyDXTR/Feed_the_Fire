@@ -7,24 +7,29 @@ public class HeroController : MonoBehaviour
     public LayerMask moveClickLayer;
     private UnityEngine.AI.NavMeshAgent m_NavAgent;
     private SelectableObject selectable;
-    private Animator m_Animator;
+    public Animator m_Animator;
     private SelectionManager selectionManager;
     private HeroInfo hero;
+    private Vector3 mousePos;
+    private float globalCoolDown = 1f;
 
-    public Collider target;
-    [SerializeField] private bool targetInRange = false;
-    [SerializeField] private bool targetReached = true;
-    private float distanceToTarget;
+    //public Collider target;
+    //[SerializeField] private bool targetInRange = false;
+    [SerializeField] private bool isMoving = false;
+    public bool isAttacking = false;
+    public bool isStrafing = false;
+    public bool isHit = false;
+    public bool isStunned = false;
+    public bool canConsumeFire = false;
+    public bool isDead;
 
-    [SerializeField] public bool canConsumeFire = false;
-    private SphereCollider attackRange;
-    private float attackTime = 0.00f;
-    [SerializeField] private float attackSpeed = 2f;
-    [SerializeField] private bool isAttacking = false;
-    public float autoDamage = 0.5f;
-
-    [SerializeField] private Collider enemyTarget;
-    private EnemyInfo enemyInfo;
+    private SphereCollider attackRangeSphere;
+    //private float attackTime = 0.00f;
+    //[SerializeField] private float attackRange = 15f;
+    //[SerializeField] private float attackSpeed = 2f;
+    //public float autoDamage = 0.5f;
+    public float runSpeed = 7f;
+    public float strafeSpeed = 14f;
 
     [SerializeField] private State state;
     private enum State
@@ -32,24 +37,47 @@ public class HeroController : MonoBehaviour
         Idling,
         Moving,
         Attacking,
+        Strafing,
+        Stunned,
+        Dead,
     }
-    [SerializeField] private AttackType attack;
-    private enum AttackType
+    public Slot slot;
+    public enum Slot
     {
-        RClick,
+        Slot_RClick,
+        Slot_1,
+        Slot_2,
+        Slot_3,
+        Slot_4,
     }
+    [SerializeField] private GameObject selectedAttackSkill;
 
 
+    private EnemyInfo enemyInfo;
+    public Collider targetObject;
+    [SerializeField] private float distanceToTarget;
+    [SerializeField] private Vector3 targetHit;
+    public List<Collider> inRangeTargets = new List<Collider>();
 
+
+    public float RClick_powerMultiplicator = 1.0f; // Dependent on fire power level
+
+    public float time = 0.0f;
+    public float fireConsumeTicker = 1f;
+
+    private float pendingCost;
     void Awake()
     {
         m_NavAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        m_NavAgent.speed = runSpeed;
         selectable = GetComponent<SelectableObject>();
-        m_Animator = this.transform.GetChild(0).GetComponent<Animator>();
+        //Hardcoded animator reference
+        m_Animator = this.transform.GetChild(1).GetComponent<Animator>();
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
         hero = GetComponent<HeroInfo>();
-        attackRange = this.transform.Find("AttackRange").GetComponent<SphereCollider>();
-
+        attackRangeSphere = this.transform.Find("AttackRange").GetComponent<SphereCollider>();
+        SelectAttackSlot(Slot.Slot_RClick, this.transform.Find("Skills").GetChild(0).gameObject);
+        selectedAttackSkill = this.transform.Find("Skills").GetChild(0).gameObject;
         state = State.Idling;
     }
 
@@ -57,246 +85,372 @@ public class HeroController : MonoBehaviour
     {
         if (selectable.isSelected == true)
         {
-            //if (selectionManager.isActive == true)
-            //{
-            //    selectionManager.SetActive(false);
-            //}
-
-            if (Input.GetMouseButtonDown(1))
+            // RIGHT CLICK DETECTION
+            if (Input.GetMouseButtonDown(1) && selectionManager.isActive)
             {
-                Debug.Log("Hero Right Click");
+                //Debug.Log("Hero Right Click");
                 DetectClickedObject();
+            }
+            // SPACE JUMP
+            if (Input.GetKeyUp(KeyCode.Space) && time != 0.000f)
+            {
+                time -= time;
+                GetMousePosition();
+                if (!isStrafing && !isDead && hero.power > 0)
+                {
+                    isStrafing = true;
+                    //Debug.Log("Space - Srafe to mouse position");
+                    m_Animator.Play("jump_start(stick)");
+                    m_Animator.SetBool("IsStrafing", true);
+                    m_NavAgent.speed = strafeSpeed;
+                    MoveTo(mousePos);
+                    state = State.Strafing;
+                }
+            }
+            if (Input.GetKey(KeyCode.Space))
+            {
+                if (canConsumeFire)
+                {
+                    time += Time.deltaTime;
+                    if (time >= fireConsumeTicker)
+                    {
+                        ConsumeFire(1);
+                        time -= time;
+                    }                    
+                }
+                else
+                {
+                    GetMousePosition();
+                    if (!isStrafing && !isDead && hero.power > 0)
+                    {
+                        isStrafing = true;
+                        //Debug.Log("Space - Srafe to mouse position");
+                        m_Animator.Play("jump_start(stick)");
+                        m_Animator.SetBool("IsStrafing", true);
+                        m_NavAgent.speed = strafeSpeed;
+                        MoveTo(mousePos);
+                        RemovePower(1);
+                        state = State.Strafing;
+                    }
+                }
+            }
+            // PLAY HIT ANIMATION
+            if (isHit)
+            {
+                if (!isStunned && !isDead)
+                {
+                    isStunned = true;
+                    m_NavAgent.isStopped = true;
+                    m_NavAgent.ResetPath();
+                    m_Animator.Play("hit(stick)");
+                    StartCoroutine(StunDuration(0.5f));
+                    state = State.Stunned;
+                }
+            }         
+            if (hero.currentHealth <= 0)
+            {
+                if (!isDead)
+                {
+                    isDead = true;
+                    m_NavAgent.isStopped = true;
+                    m_NavAgent.ResetPath();
+                    m_Animator.Play("death(stick)");
+                    state = State.Dead;
+                }
+                
             }
         }
 
+        // STATES
         switch (state)
         {
             case State.Idling:
-                if (target != null)
+                //If clicked on enemy 
+                if (targetObject != null)
                 {
-                    state = State.Moving;
+                    //If in range, attack instantly
+                    if (inRangeTargets.Contains(targetObject))
+                    {                                               
+                        state = State.Attacking;
+                    }
+                    //Else move towards it
+                    else
+                    {
+                        state = State.Moving;
+                    }
                 }
+                //Else Move to clicked position
+                else if (targetHit != Vector3.zero)
+                {                                       
+                    state = State.Moving;
+                }                
                 break;
 
             case State.Moving:
-                // If there is no Enemy target just move to click position
-                if (enemyTarget == null)
-                {
+                // If there is no Enemy target just move to clicked position
+                if (targetObject == null)
+                {                    
+                    MoveTo(targetHit);                                      
                     CheckTargetReached();
-                    if (targetReached == true)
+                    //If target reached
+                    if (!isMoving)
                     {
                         state = State.Idling;
                     }
                 }
-                // Else move to enemy until in attack range
+                // If there is an enemy 
                 else
                 {
-                    if (enemyTarget != null)
+                    // If Enemy in Range do this
+                    if (inRangeTargets.Contains(targetObject))
                     {
-                        CheckAttackInRange(AttackType.RClick);
-                        if (targetInRange)
-                        {
-                            m_NavAgent.isStopped = true;
-                            m_NavAgent.ResetPath();
-                            state = State.Attacking;
-                        }
+                        state = State.Attacking;
+                    }
+                    // Else move towards it
+                    else
+                    {
+                        targetHit = targetObject.transform.position;
+                        MoveTo(targetHit);
                     }
                 }                
                 break;
 
             case State.Attacking:
-                if (enemyTarget != null && targetInRange)
+                //Debug.Log("Attacking");
+                if(targetObject != null)
                 {
-                    transform.LookAt(enemyTarget.transform);
-
-                    if (!isAttacking)
-                    {
-                        StartCoroutine(Attack(AttackType.RClick));
-                    }
+                    StartCoroutine(Attack());
                 }
-                else if (enemyTarget != null && !targetInRange)
+                if (targetObject == null && targetHit != Vector3.zero)
                 {
-                    m_NavAgent.isStopped = false;
-                    MoveToTarget();
+                    isAttacking = false;
                     state = State.Moving;
                 }
-                else
+               
+                break;
+
+            case State.Strafing:
+                //Debug.Log("Strafing");
+                CheckTargetReached();
+                if (!isStrafing)
                 {
-                    targetInRange = false;
-                    targetReached = false;
-                    m_NavAgent.isStopped = false;
+                    m_NavAgent.speed = runSpeed;
                     state = State.Idling;
                 }
+
+                break;
+
+            case State.Stunned:
+                if (!isStunned)
+                {
+                    state = State.Idling;
+                }
+                break;
+
+            case State.Dead:
 
                 break;
         }      
     }
 
-    public void ConsumeFire(int amount)
+    public void SelectAttackSlot(Slot slotToSelect, GameObject skillObject)
     {
-        ResourceBank.RemoveFireLife(amount);
-        hero.firePower += amount;
+        Attack attack = skillObject.GetComponent<Attack>();
+        if (attack != null)
+        {
+            if (slot != slotToSelect)
+            {
+                slot = slotToSelect;
+                selectedAttackSkill = skillObject;
+
+                // Set Attack Parameters
+                attackRangeSphere.radius = attack.skill.range;
+
+
+                //
+
+                Debug.Log("Selected " + slotToSelect.ToString() + " - " + attack.skill.name);
+            }
+        }        
     }
 
-    private void DetectClickedObject()
+    public float PowerMultiplicator()
     {
+        RClick_powerMultiplicator = (hero.power / ((float)ResourceBank.fireLifeFull * 2)) * 10;
+        return RClick_powerMultiplicator;
+    }
+
+    public void ConsumeFire(int amount)
+    {
+        // The fire power ball moving to the hero from the fireplace
+        GameObject projectileObj = Instantiate(Resources.Load("PS_FireConsumeBall")) as GameObject;
+        projectileObj.transform.position = GameObject.Find("FirePlace").transform.position;
+        Projectile projectile = projectileObj.GetComponent<Projectile>();
+        projectile.target = this.transform.Find("HitBox").GetComponent<Collider>();
+        projectile.type = Projectile.Type.FirePower;
+
+        ResourceBank.RemoveFireLife(amount);
+        hero.power += amount;
+        hero.currentHealth += amount;
+        PowerMultiplicator();
+    }
+    public void RemovePower(int amount)
+    {
+        hero.power -= amount;
+        PowerMultiplicator();
+    }
+
+    private Vector3 GetMousePosition()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, moveClickLayer))
+        {
+            mousePos = hit.point;
+        }
+        return mousePos;
+    }
+
+    private Collider DetectClickedObject()
+    {
+        m_NavAgent.isStopped = false;
         //enemyTarget = null;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Interactable")))
         {
-            if (hit.transform.gameObject.GetComponent<Attackable>() != null )
+            if (hit.transform.gameObject.GetComponent<Attackable>() != null || hit.transform.parent.transform.gameObject.GetComponent<Attackable>())
             {
-                enemyTarget = hit.collider;
-                MoveToClickPos(hit);
-                state = State.Moving;                
-                Debug.Log("Clicked on Enemy");
+                targetObject = hit.collider;
+                targetHit = hit.point;
+                //MoveToClickPos(hit);
+                //state = State.Moving;                
+                //Debug.Log("RClicked on " + targetObject.transform.gameObject.GetComponent<EnemyInfo>().name);
+                return targetObject;
+            }
+            else
+            {
+                return null;
             }
         }
         else if (Physics.Raycast(ray, out hit, Mathf.Infinity, moveClickLayer))
         {
-            MoveToClickPos(hit);
-            targetReached = false;
+            //MoveToClickPos(hit);
+            //targetReached = false;
 
-            enemyTarget = null;
-            state = State.Moving;
-            Debug.Log("Clicked on Terrain - Moving to Position");
+            targetHit = hit.point;
+            //state = State.Moving;
+            if (targetObject != null)
+            {
+                targetObject = null;
+            }            
+            return null;
+        }
+        else
+        {
+            return null;
         }
 
     }
 
     
-    private IEnumerator Attack(AttackType attackType)
+    private IEnumerator Attack()
     {
-        isAttacking = true;
-        m_Animator.SetBool("IsRunning", false);
-        m_Animator.Play("spell2(stick)");
-
-        yield return new WaitForSeconds(1.25f);
-        if (enemyTarget != null)
+        Attack attack = selectedAttackSkill.GetComponent<Attack>();
+        //Check if enough power for skill
+        if (hero.power >= attack.skill.cost)
         {
-            Debug.Log("Attack");
-            GameObject fireball = Instantiate(Resources.Load("PS_Fireball")) as GameObject;
-            fireball.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1f, this.transform.position.z);
-            fireball.GetComponent<Projectile>().target = enemyTarget;
-            fireball.GetComponent<Projectile>().damage = autoDamage;
+            //Check if hero needs to stand still for the skill
+            if (attack.skill.mustStayForCast)
+            {
+                StopMoving();
+                if (!isAttacking && inRangeTargets.Contains(targetObject))
+                {                    
+                    isAttacking = true;
+                    //Look at target
+                    transform.LookAt(targetObject.transform);
+                    //Initiate casting
+                    m_Animator.Play("spell2(stick)");
+                    //Cast time
+                    yield return new WaitForSeconds(attack.skill.castTime);
+                    //Cast Skill
+                    attack.CastAttack(slot);
+                    //Reset to RClick Attack
+                    if (slot != Slot.Slot_RClick)
+                    {
+                        SelectAttackSlot(Slot.Slot_RClick, this.transform.Find("Skills").GetChild(0).gameObject);
+                    }
+                    //Cooldown time
+                    yield return new WaitForSeconds(globalCoolDown);
+                    isAttacking = false;                    
+                }
+            }           
         }
-        yield return new WaitForSeconds(1f); // Cooldown
-        isAttacking = false;
-
-
-
-        //attackTime += Time.deltaTime;
-        //if (attackTime >= attackSpeed)
-        //{
-        //    if (enemyTarget != null)
-        //    {
-        //        // Try and find a Enemy Info script on the gameobject hit.
-        //        //EnemyInfo enemy = enemyTarget.GetComponent<EnemyInfo>();
-        //        //HeroInfo info = GetComponent<HeroInfo>();
-        //        // If the Node Resource script component exists...
-
-        //        // Cast Attack
-        //        Debug.Log("Attack");
-        //        attackTime -= (int)attackTime;
-
-        //    }
-        //}
     }
 
-    private void MoveToTarget()
+    private void MoveTo(Vector3 position)
     {
-        if (enemyTarget != null)
+        //Debug.Log("Moving to: " + position);
+        if (!isMoving)
+        {
+            isMoving = true;
+        }
+        if (m_NavAgent.isStopped != false)
         {
             m_NavAgent.isStopped = false;
-            m_NavAgent.SetDestination(enemyTarget.transform.position);
-            m_Animator.SetBool("IsRunning", true);
-        }
+        }        
+        m_NavAgent.SetDestination(position);
+        //m_Animator.SetBool("IsAttacking", false);
+        m_Animator.SetBool("IsRunning", true);        
     }
 
-
-    private bool CheckAttackInRange(AttackType attackType)
+    private void StopMoving()
     {
-        if (attackType == AttackType.RClick) // Standard Attack
-        {
-            attackRange.radius = 15;
-            if (enemyTarget != null)
-            {
-                if (targetInRange == true)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public void MoveToClickPos(RaycastHit hit)
-    {
-        targetReached = false;
-        
-        m_NavAgent.SetDestination(hit.point);
-        target = hit.transform.gameObject.GetComponent<Collider>();
-        m_Animator.SetBool("IsRunning", true);
-        Debug.Log("Hero - Click: Moving to: " + hit.transform.gameObject.GetComponent<Collider>() + " " + Input.mousePosition);
-                     
+        if (isMoving)
+        {            
+            m_Animator.SetBool("IsRunning", false);
+            m_NavAgent.ResetPath();
+            m_NavAgent.isStopped = true;
+            isMoving = false;
+        }        
     }
 
     private void CheckTargetReached()
     {
         if (m_NavAgent.pathPending)
         {
-            distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+            distanceToTarget = Vector3.Distance(transform.position, targetHit);
         }
         else
         {
             distanceToTarget = m_NavAgent.remainingDistance;
         }
-        if (distanceToTarget <= m_NavAgent.stoppingDistance || targetInRange == true)
+        if (distanceToTarget <= m_NavAgent.stoppingDistance)
         {
             Debug.Log("Hero - Target reached");
-            //m_NavAgent.isStopped = true;
             m_Animator.SetBool("IsRunning", false);
-            targetReached = true;
-            target = null;
+            m_Animator.SetBool("IsStrafing", false);
+            isStrafing = false;
+            isMoving = false;
+            m_NavAgent.isStopped = true;
+            targetHit = Vector3.zero;
+            //target = null;
         }
     }
 
+    IEnumerator StunDuration(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        isStunned = false;
+        m_NavAgent.isStopped = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other == enemyTarget)
-        {
-            //Debug.Log("Enemy Target in Range");
-            targetInRange = true;
-        }
-        if (other.tag == "FireConsume")
-        {
-            canConsumeFire = true;
-        }
     }
+
     private void OnTriggerExit(Collider other)
     {
-        if (other == enemyTarget)
-        {
-            //Debug.Log("Enemy Target not longer in Range");
-            targetInRange = false;
-        }
-        if (other.tag == "FireConsume")
-        {
-            canConsumeFire = false;
-        }
     }
 
 }

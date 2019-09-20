@@ -53,7 +53,7 @@ public class FireSizeHero : MonoBehaviour
         //    main.startSize = new ParticleSystem.MinMaxCurve((pSize * 0.01f), (pSize * 0.02f));
         //}
         var main = ps.main;
-        main.startSize = new ParticleSystem.MinMaxCurve((pSize/40 * hero.firePower), (pSize / 40 * hero.firePower));
+        main.startSize = new ParticleSystem.MinMaxCurve((pSize/40 * hero.power), (pSize / 40 * hero.power));
 
     }
 }

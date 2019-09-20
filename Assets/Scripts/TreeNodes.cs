@@ -8,6 +8,7 @@ public class TreeNodes : MonoBehaviour
     public int woodAmount = 24;
     public int currentAmount;
     public GameObject stumpPrefab;
+    public GameObject treeFallPrefab;
     public GameObject saplingPrefab;
     public bool isMinable = false;
     public float saplingDropRate = 0.1f;
@@ -66,6 +67,13 @@ public class TreeNodes : MonoBehaviour
             this.transform.position.y,
             this.transform.position.z), Quaternion.identity) as GameObject;
         stump.transform.SetParent(GameObject.Find("StumpNodes").transform);
+        Vector3 rotationVector = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        GameObject treeFall = Instantiate(treeFallPrefab, new Vector3(
+            this.transform.position.x,
+            this.transform.position.y+2f,
+            this.transform.position.z), Quaternion.Euler(rotationVector)) as GameObject;
+        treeFall.transform.SetParent(GameObject.Find("StumpNodes").transform);
+
 
         // Chance to drop Tree Saplings
         if (Random.value <= saplingDropRate)
@@ -81,5 +89,20 @@ public class TreeNodes : MonoBehaviour
         
 
         Destroy(gameObject);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<EnemyInfo>() != null)
+        {
+            if (other.gameObject.name == "BigBoy")
+            {
+                Death();
+            }
+            if (other.tag == "Corpse")
+            {
+                Death();
+            }
+        }
     }
 }

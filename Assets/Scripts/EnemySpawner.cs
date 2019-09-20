@@ -6,9 +6,12 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject unitPrefab;
     public int amount;
-    private float timeSinceLastSpawn = 0f;
-    public float respawnTime = 15f;
+    public float timeSinceLastSpawn = 0f;
+    public float spawnTime = 180f;
+    public float darknessSpawnTime = 30f;
     private Vector3 spawnPosition;
+
+    public float timer;
 
     void Awake()
     {
@@ -22,10 +25,19 @@ public class EnemySpawner : MonoBehaviour
     void Update()
     {
         timeSinceLastSpawn += Time.deltaTime;
-        if (timeSinceLastSpawn >= respawnTime)
+        if (timeSinceLastSpawn >= spawnTime)
         {
             SpawnEnemy(1);
             timeSinceLastSpawn -= timeSinceLastSpawn;
+        }
+        if (ResourceBank.fireLife < 5)
+        {
+            timer += Time.deltaTime;
+            if (timer >= darknessSpawnTime)
+            {
+                timeSinceLastSpawn = spawnTime;
+                timer -= timer;
+            }
         }
     }
 
@@ -33,7 +45,7 @@ public class EnemySpawner : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            Debug.Log("Enemy spawned with timer: " + respawnTime);
+            Debug.Log("Enemy spawned with timer: " + spawnTime);
             Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
         }
     }

@@ -40,6 +40,11 @@ TagManager:
   - Enemy
   - DeadTree
   - FireConsume
+  - DamageBox
+  - FxTemporaire
+  - Corpse
+  - Debuff_Slow
+  - Explosive
   layers:
   - Default
   - TransparentFX
@@ -63,8 +68,8 @@ TagManager:
   - Enemy
   - EnemySpawn
   - StumpNodes
-  - 
-  - 
+  - Item
+  - Interactable
   - 
   - 
   - 

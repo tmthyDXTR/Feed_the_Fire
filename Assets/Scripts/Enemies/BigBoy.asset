@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Big Boy
   description: He's just hanging out
-  health: 50
+  health: 75

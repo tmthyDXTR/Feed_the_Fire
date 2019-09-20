@@ -35,6 +35,8 @@ public class EnemyInfo : MonoBehaviour
             selectionManager.DeselectAll();
             //selectionManager.selection.Clear();
         }
+        GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
+        bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
         Destroy(this.gameObject);
     }
     

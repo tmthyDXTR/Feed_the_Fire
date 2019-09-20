@@ -88,6 +88,12 @@ public class SelectionManager : MonoBehaviour
                                 Select(rayHit.collider.gameObject);
                                                             
                             }
+                            //HERO SELECTION FIX -----
+                            else if (rayHit.collider.gameObject.GetComponent<HitBox>() != null)
+                            {
+                                DeselectAll();
+                                Select(rayHit.collider.gameObject.transform.parent.gameObject);
+                            }
                         }
                     }
                                                          
@@ -144,7 +150,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowWorker = Instantiate(Resources.Load("Window_Worker")) as GameObject;
                 windowWorker.transform.SetParent(canvas);
-                windowWorker.transform.localPosition = new Vector3(-200, -200, 0);
+                windowWorker.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowWorker;
@@ -153,12 +159,12 @@ public class SelectionManager : MonoBehaviour
             }
             else if (selectableObject.gameObject.layer == 17 && selectableObject.gameObject.tag == "Hero")
             {
-                GameObject windowBuilding = Instantiate(Resources.Load("Window_Hero")) as GameObject;
-                windowBuilding.transform.SetParent(canvas);
-                windowBuilding.transform.localPosition = new Vector3(-200, -200, 0);
+                GameObject windowHero = Instantiate(Resources.Load("Window_Hero")) as GameObject;
+                windowHero.transform.SetParent(canvas);
+                windowHero.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
-                selectableObject.infoWindow = windowBuilding;
+                selectableObject.infoWindow = windowHero;
 
                 //selectableObject.OpenCloseInfo();
             }
@@ -166,7 +172,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowBuilding = Instantiate(Resources.Load("Window_Building")) as GameObject;          
                 windowBuilding.transform.SetParent(canvas);
-                windowBuilding.transform.localPosition = new Vector3(-200, -200, 0);
+                windowBuilding.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowBuilding;
@@ -177,7 +183,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowUnlitBonfire = Instantiate(Resources.Load("Window_Bonfire")) as GameObject;
                 windowUnlitBonfire.transform.SetParent(canvas);
-                windowUnlitBonfire.transform.localPosition = new Vector3(-200, -200, 0);
+                windowUnlitBonfire.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowUnlitBonfire;
@@ -196,7 +202,7 @@ public class SelectionManager : MonoBehaviour
 
                 GameObject firePlaceWindow = Instantiate(Resources.Load("Window_FirePlace")) as GameObject;
                 firePlaceWindow.transform.SetParent(canvas);
-                firePlaceWindow.transform.localPosition = new Vector3(-200, -200, 0);
+                firePlaceWindow.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = firePlaceWindow;
@@ -206,7 +212,7 @@ public class SelectionManager : MonoBehaviour
                 //Debug.Log("No Window! Now Instantiating");
                 GameObject firePlaceWindow = Instantiate(Resources.Load("Window_FoodStorage")) as GameObject;
                 firePlaceWindow.transform.SetParent(canvas);
-                firePlaceWindow.transform.localPosition = new Vector3(-200, -200, 0);
+                firePlaceWindow.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = firePlaceWindow;
@@ -215,27 +221,27 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject stumpWindow = Instantiate(Resources.Load("Window_Stump")) as GameObject;
                 stumpWindow.transform.SetParent(canvas);
-                stumpWindow.transform.localPosition = new Vector3(-200, -200, 0);
+                stumpWindow.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = stumpWindow;
             }
-            else if (selectableObject.gameObject.layer == 19 && selectableObject.tag == "Enemy")
+            else if (selectableObject.gameObject.layer == 23 && selectableObject.tag == "Enemy")
             {
                 GameObject windowEnemy = Instantiate(Resources.Load("Window_Enemy")) as GameObject;
                 windowEnemy.transform.SetParent(canvas);
-                windowEnemy.transform.localPosition = new Vector3(-200, -200, 0);
+                windowEnemy.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowEnemy;
 
                 //selectableObject.OpenCloseInfo();
             }
-            else if (selectableObject.gameObject.layer == 19 && selectableObject.tag == "DeadTree")
+            else if (selectableObject.gameObject.layer == 23 && selectableObject.tag == "DeadTree")
             {
                 GameObject windowDeadTree = Instantiate(Resources.Load("Window_Tree")) as GameObject;
                 windowDeadTree.transform.SetParent(canvas);
-                windowDeadTree.transform.localPosition = new Vector3(-200, -200, 0);
+                windowDeadTree.transform.localPosition = new Vector3(-200, -250, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowDeadTree;

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class UnitInfo : MonoBehaviour
 {
-    public int health = 10;
+    public float health;
+    public float currentHealth;
     public string job;
     public int invMax = 1;
     public int invWood = 0;
@@ -12,7 +13,7 @@ public class UnitInfo : MonoBehaviour
     public int invShroom = 0;
     public int invSpores = 0;
     public int invFire = 0;
-    public bool isAlive = true;
+    public bool isDead = false;
     public Collider target;
 
 
@@ -22,7 +23,6 @@ public class UnitInfo : MonoBehaviour
     void Awake()
     {
         unitAI = GetComponent<WorkerUnitAI>();
-        isAlive = true;
     }
 
     void Update()
@@ -30,20 +30,5 @@ public class UnitInfo : MonoBehaviour
 
     }
 
-    public void TakeDamage(GameObject hitter, int damageAmount)
-    {
-        health -= damageAmount;
-        if (health <= 0)
-        {
-            attacker = hitter.GetComponent<EnemyRoam>(); // Temp Fix, Get other Attack Script
-            attacker.DeRegisterTarget(this.GetComponent<Collider>());
-            Death();
-        }
-    }
-
-    void Death()
-    {      
-        isAlive = false;
-        Destroy(this.gameObject);        
-    }
+    
 }

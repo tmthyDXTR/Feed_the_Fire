@@ -64,16 +64,20 @@ public class FireLightHero : MonoBehaviour
         //float newRange = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
         //lt.range = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
 
-        lt.range = (float)originalRange / 40 * hero.firePower;
+        lt.range = (float)originalRange / 40 * hero.power;
         UpdateViewDistance();
     }
 
     void UpdateViewDistance()
     {
-        fow.ViewDistance = (float)originalViewDistance / 40 * hero.firePower;
+        fow.ViewDistance = (float)originalViewDistance / 40 * hero.power;
         if (fow.ViewDistance < 40)
         {
             fow.ViewDistance = 40;
+        }
+        if (fow.ViewDistance > 150)
+        {
+            fow.ViewDistance = 150;
         }
         //if (fow.ViewDistance >= originalViewDistance)
         //{
