@@ -28,15 +28,15 @@ public class BuildingInfo : MonoBehaviour
         if (this.gameObject.CompareTag("ResidentialHouse"))
         {
             originalTag = this.gameObject.tag;
-            maxHealth = 15;
-            costWood = 15;
+            maxHealth = 10;
+            costWood = 10;
             costStone = 0;
         }
         if (this.gameObject.CompareTag("WoodcutterHut"))
         {
             originalTag = this.gameObject.tag;
             maxHealth = 10;
-            costWood = 10;
+            costWood = 8;
             costStone = 0;
         }
         if (this.gameObject.CompareTag("Tavern"))
@@ -50,8 +50,8 @@ public class BuildingInfo : MonoBehaviour
         if (this.gameObject.CompareTag("Bonfire"))
         {
             originalTag = this.gameObject.tag;
-            maxHealth = 10;
-            costWood = 10;
+            maxHealth = 5;
+            costWood = 5;
             costStone = 0;
         }
 
@@ -128,7 +128,7 @@ public class BuildingInfo : MonoBehaviour
         //this.gameObject.tag = originalTag;
         isConstruction = false;
         construction.DeregisterConstruction(this.gameObject);
-        if (this.gameObject.tag == "WoodcutterHut")
+        if (originalTag == "WoodcutterHut")
         {
             this.gameObject.tag = originalTag;
             foreach (Transform child in transform)
@@ -139,11 +139,18 @@ public class BuildingInfo : MonoBehaviour
                 }
             }
         }
+        if (originalTag == "ResidentialHouse")
+        {
+            this.gameObject.tag = originalTag;
+            ResourceBank.AddHousing(2);
+        }
+
         if (originalTag == "Bonfire")
         {
             this.gameObject.tag = "UnlitBonfire";
             BonfireManager bonfire = GameObject.Find("BonfireManager").GetComponent<BonfireManager>();
-            bonfire.bonfireList.Add(this.gameObject);
+            bonfire.AddBonfire(this.gameObject);
+
 
         }
     }

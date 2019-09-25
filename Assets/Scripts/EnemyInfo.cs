@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,11 +22,28 @@ public class EnemyInfo : MonoBehaviour
     {
         currentHealth -= amount;
         Debug.Log(name + " took " + amount + "Damage");
+
+        CreateDamagePopUp(amount, this.transform.position);
         if (currentHealth <= 0)
         {
             Death();
         }
     }
+
+    private void CreateDamagePopUp(float amount, Vector3 position)
+    {
+        Transform popUpCanvas = GameObject.Find("PopUpCanvas").transform;
+        GameObject damagePopUp = Instantiate(Resources.Load("DamagePopUp")) as GameObject;
+        damagePopUp.transform.SetParent(popUpCanvas);
+        if (damagePopUp.GetComponent<PopUp>() != null)
+        {
+            Debug.Log("PopUp Script found");
+            damagePopUp.GetComponent<PopUp>().text = amount.ToString();
+            damagePopUp.transform.position = position + new Vector3(0, 4f, 0); ;
+        }
+
+    }
+
     private void Death()
     {
         Debug.Log(name + " died");
@@ -35,9 +53,21 @@ public class EnemyInfo : MonoBehaviour
             selectionManager.DeselectAll();
             //selectionManager.selection.Clear();
         }
-        GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
-        bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
-        Destroy(this.gameObject);
+        if (this.gameObject.name == "DeadWoodDweller(Clone)")
+        {
+            ResourceBank.AddKillCounter(1);
+            GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
+            bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
+            Destroy(this.gameObject);
+        }
+        if (this.gameObject.name == "BigBoy")
+        {
+            ResourceBank.AddKillCounter(1);
+
+            GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
+            bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
+
+        }
     }
     
 }

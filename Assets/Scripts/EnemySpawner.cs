@@ -16,6 +16,7 @@ public class EnemySpawner : MonoBehaviour
     void Awake()
     {
         spawnPosition = transform.position + new Vector3(1, 0, 0);
+        timeSinceLastSpawn = Random.Range(0, 120);
         for (int i = 0; i < amount; i++)
         {
             Instantiate(unitPrefab, spawnPosition, Quaternion.identity);

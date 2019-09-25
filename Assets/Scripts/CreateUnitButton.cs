@@ -7,12 +7,20 @@ using UnityEngine.Events;
 
 public class CreateUnitButton : MonoBehaviour, IPointerClickHandler
 {
-    public Window_WorkerBank window_WorkerBank;
+    private Window_WorkerBank window_WorkerBank;
+    private JobManager jobManager;
+    private SelectionManager selection;
     public GameObject unitPrefab;
     public UnityEvent leftClick;
     public UnityEvent middleClick;
     public UnityEvent rightClick;
 
+    void Awake()
+    {
+        jobManager = GameObject.Find("Workers").GetComponent<JobManager>();
+        selection = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+        window_WorkerBank = GameObject.Find("Window_WorkerBank").GetComponent<Window_WorkerBank>();
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -20,8 +28,18 @@ public class CreateUnitButton : MonoBehaviour, IPointerClickHandler
         {
             Debug.Log("Left click");
             leftClick.Invoke();
-            Instantiate(unitPrefab, this.transform.position, Quaternion.identity);
-            window_WorkerBank.UpdateJobsCounter();
+            if (ResourceBank.housingCurrent < ResourceBank.housingMax)
+            {
+                if (ResourceBank.foodStock >= ResourceBank.workerFoodCost)
+                {
+                    GameObject worker = Instantiate(unitPrefab, selection.selection[0].transform.position, Quaternion.identity) as GameObject;
+                    worker.transform.SetParent(GameObject.Find("Workers").transform);
+                    ResourceBank.AddResident(1);
+                    ResourceBank.RemoveFoodFromStock(1);
+                    jobManager.GetWorkerCounts();
+                }             
+            }
+            
         }
 
         else if (eventData.button == PointerEventData.InputButton.Middle)

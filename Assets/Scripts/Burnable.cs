@@ -11,7 +11,7 @@ public class Burnable : MonoBehaviour
     public static float burnSpeed = 20f; //-- Seconds to lose 1 Life
     [SerializeField] private GameObject burnEffectObj;
     private SelectionManager selectionManager;
-
+    private MinableNodes minableNodes;
 
     public EventHandler OnBurning;
 
@@ -19,19 +19,35 @@ public class Burnable : MonoBehaviour
     {
         isBurning = false;
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
-
+        minableNodes = GameObject.Find("MinableNodes").GetComponent<MinableNodes>();
     }
 
     void Update()
     {
         if (isBurning == true)
         {
+            if (minableNodes.minableNodesList.Contains(this.gameObject.GetComponent<Collider>()))
+            {
+                minableNodes.minableNodesList.Remove(this.gameObject.GetComponent<Collider>());
+            }
             burnTime += Time.deltaTime;
             if (burnTime >= burnSpeed)
             {
-                selectionManager.selection.Remove(this.gameObject);
-                Destroy(gameObject);
-                Destroy(burnEffectObj);
+                //Tree stuff
+                if (this.gameObject.layer == 9)
+                {
+                    TreeNodes tree = GetComponent<TreeNodes>();
+                    selectionManager.selection.Remove(this.gameObject);
+                    tree.Death();
+                    Destroy(gameObject);
+                    Destroy(burnEffectObj);
+                }
+                else
+                {
+                    selectionManager.selection.Remove(this.gameObject);
+                    Destroy(gameObject);
+                    Destroy(burnEffectObj);
+                }                
             }
         }
     }
@@ -47,6 +63,13 @@ public class Burnable : MonoBehaviour
                     child.gameObject.SetActive(true);
                 }
             }
+        }
+        if(this.gameObject.layer == 9)
+        {
+            GameObject burnEffect = Instantiate(Resources.Load("TreeBurnEffect")) as GameObject;
+            burnEffectObj = burnEffect;
+            burnEffect.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
         }
         else
         {

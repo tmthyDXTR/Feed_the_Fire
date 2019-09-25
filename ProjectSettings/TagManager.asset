@@ -45,6 +45,7 @@ TagManager:
   - Corpse
   - Debuff_Slow
   - Explosive
+  - Tree
   layers:
   - Default
   - TransparentFX

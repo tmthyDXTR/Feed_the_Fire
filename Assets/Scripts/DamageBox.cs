@@ -6,15 +6,24 @@ public class DamageBox : MonoBehaviour
 {
     public float damage;
     public float radius;
+    public bool heroImmune = false;
+
+    public enum Type
+    {
+        PhysDamage,
+        FireAOE,
+    }
+    public Type type;
     public SphereCollider damageCollider;
 
     public List<Collider> inRangeTargets = new List<Collider>();
 
-    void Awake()
+    void Start()
     {
         damageCollider = GetComponent<SphereCollider>();
         damageCollider.isTrigger = true;
         damageCollider.radius = radius;
+        
         StartCoroutine(WaitAndDestroy(0.02f));
     }
 
@@ -29,9 +38,22 @@ public class DamageBox : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hero" || other.tag == "Enemy")
+        // Tree burning stuff
+        if (other.tag == "Tree")
         {
-            inRangeTargets.Add(other);
+            if (type == Type.FireAOE)
+            {
+                Debug.Log("Tree HIT Fire AOE DamageBox");
+                Burnable burnable = other.transform.parent.gameObject.GetComponent<Burnable>();
+                burnable.isBurning = true;
+                burnable.AddBurnEffect();
+            }
+            else
+            {
+                Debug.Log("Tree HIT Fire AOE DamageBox");
+                TreeNodes tree = other.transform.parent.gameObject.GetComponent<TreeNodes>();
+                tree.Death();                
+            }
         }
     }
 

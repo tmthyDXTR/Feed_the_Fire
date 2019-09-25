@@ -6,9 +6,9 @@ public class EnemyRoam : MonoBehaviour
 {
     public float radius;
     public List<Collider> inRangeTargets = new List<Collider>();
-    public Collider target;
+    public GameObject target;
     public Collider bonfire;
-    private bool hasTarget;
+    public bool hasTarget;
     private Vector3 spawnPosition; // Roaming center
     UnityEngine.AI.NavMeshAgent m_NavMeshAgent;
     Animator m_Animator;
@@ -17,13 +17,16 @@ public class EnemyRoam : MonoBehaviour
     private UnitInfo unit;
     [SerializeField] private float detectionRadius = 7;
     [SerializeField] private State state;
+
+    public List<Collider> targetList = new List<Collider>();
+
     private enum State
     {
         Idling,
         Roaming,
         Scared,
         MovingToTarget,
-        AttackingTarget        
+        AttackingTarget
     }
 
 
@@ -36,7 +39,7 @@ public class EnemyRoam : MonoBehaviour
         detectionSphere.radius = detectionRadius;
 
         m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));
-        state = State.Roaming;
+        state = State.Idling;
     }
 
     void Update()
@@ -45,16 +48,21 @@ public class EnemyRoam : MonoBehaviour
         {
             case State.Idling:
                 //Debug.Log("State: Idling");
+                if (target != null)
+                {
+                    m_Animator.SetBool("IsWalking", true);
+                    m_Animator.SetBool("IsAttacking", false);
+                    //Get random point in spawn position radius and go there
+                    Roaming();
+                    state = State.Roaming;
+                }
                 break;
 
             case State.Roaming:
-                //Debug.Log("State: Roaming");
-                //Get random point in spawn position radius and go there
-                Roaming();
+                //Debug.Log("State: Roaming");                                
                 //If some unit enters collider radius add it as potential target
-                TargetCheck();
-                if (hasTarget == true)
-                {                    
+                if (target != null)
+                {
                     state = State.MovingToTarget;
                 }
                 break;
@@ -63,29 +71,49 @@ public class EnemyRoam : MonoBehaviour
                 //Debug.Log("State: MovingToTarget");
 
                 MoveToTarget();
-                // Check if Target reached
-                if (TargetReached())
+                // Check if Target reached                
+                if (inRangeTargets.Contains(target.GetComponent<Collider>()))
                 {
+                    m_Animator.SetBool("IsWalking", false);
+                    m_Animator.SetBool("IsAttacking", true);
                     state = State.AttackingTarget;
                 }
-                if (!hasTarget || target == null)
+                else if (targetList.Count > 0)
                 {
-                    DeRegisterTarget(target);
+                    m_Animator.SetBool("IsWalking", true);
+                    m_Animator.SetBool("IsAttacking", false);
+                    state = State.MovingToTarget;
+                }
+                
+                else
+                {
                     state = State.Roaming;
                 }
                 break;
 
             case State.AttackingTarget:
                 //Debug.Log("State: AttackingTarget");
-                if (target != null)
+                if (target != null && inRangeTargets.Contains(target.GetComponent<Collider>()))
                 {
-                    m_Animator.SetBool("IsAttacking", true);
                     transform.LookAt(target.transform.position);
                 }
-                else if (target == null)
+                else if (targetList.Count > 0)
+                {
+                    
+                    for (int i = targetList.Count - 1; i > -1; i--)
+                    {
+                        if (targetList[i] == null)
+                            targetList.RemoveAt(i);
+                    }
+                    target = targetList[0].gameObject;
+                    m_Animator.SetBool("IsWalking", true);
+                    m_Animator.SetBool("IsAttacking", false);
+                    state = State.MovingToTarget;
+                }
+                else
                 {
                     //Check if Target is dead or null                    
-                    state = State.Roaming;                    
+                    state = State.Roaming;
                 }
                 break;
         }
@@ -96,9 +124,16 @@ public class EnemyRoam : MonoBehaviour
     {
         // Send Damange to Target
         Debug.Log(this.gameObject.name + " attacked " + target.gameObject.name);
-
-        //unit = target.transform.GetComponent<UnitInfo>();
-        //unit.TakeDamage(this.gameObject, 10);
+        unit = target.transform.GetComponent<UnitInfo>();
+        HeroInfo hero = target.transform.parent.GetComponent<HeroInfo>();
+        if (unit != null)
+        {
+            unit.TakeDamage(5f);
+        }
+        if (hero != null)
+        {
+            hero.TakeDamage(5f);
+        }
     }
 
     private bool TargetReached()
@@ -132,80 +167,10 @@ public class EnemyRoam : MonoBehaviour
     {
         if (target != null)
         {
-            m_NavMeshAgent.SetDestination(target.transform.position);
-            m_Animator.SetBool("IsAttacking", false);
-            m_Animator.SetBool("IsWalking", true);
+            m_NavMeshAgent.SetDestination(target.transform.position); 
         }
     }
-
-    void TargetCheck()
-    {
-        if (inRangeTargets.Count >= 1)
-        {
-            Debug.Log("Unit in Range");
-            GetNearestTarget();
-            hasTarget = true;
-        }
-    }
-
-    private Collider GetNearestTarget()
-    {
-        float bestDistance = 999999.0f;        
-        foreach (Collider possibleTarget in inRangeTargets)
-        {
-            if (possibleTarget == null)
-            {
-                DeRegisterTarget(possibleTarget);
-            }
-            float distance = Vector3.Distance(possibleTarget.ClosestPoint(possibleTarget.transform.position), transform.position);
-            if (distance < bestDistance)
-            {
-                bestDistance = distance;
-                target = possibleTarget;
-            }
-        }
-        return target;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 17) // Player Unit layer
-        {
-            //Debug.Log("Player unit entered collider sphere");
-            RegisterTarget(other);
-        }
-        //if (other.gameObject.layer == 13) // Bonfires layer 
-        //{
-        //    Debug.Log("Bonfire entered collider sphere");
-        //    DeRegisterTarget(target);
-        //    bonfire = other;
-        //}
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.layer == 17) // Player Unit layer
-        {
-            //Debug.Log("Player unit exited collider sphere");
-            DeRegisterTarget(other);
-        }
-        //if (other.gameObject.layer == 13) // Bonfires layer 
-        //{
-        //    Debug.Log("Bonfire exited collider sphere");            
-        //    bonfire = null;
-        //}
-    }
-
-    public void RegisterTarget(Collider other)
-    {
-        inRangeTargets.Add(other);
-    }
-
-    public void DeRegisterTarget(Collider other)
-    {
-        inRangeTargets.Remove(other);
-    }
-
+        
     void Roaming()
     {
         if (!m_NavMeshAgent.pathPending)
@@ -214,9 +179,7 @@ public class EnemyRoam : MonoBehaviour
             {
                 if (!m_NavMeshAgent.hasPath || m_NavMeshAgent.velocity.sqrMagnitude == 0f)
                 {
-                    m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));
-                    m_Animator.SetBool("IsWalking", true);
-                    m_Animator.SetBool("IsAttacking", false);
+                    m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));                    
                 }
             }
         }
@@ -234,4 +197,6 @@ public class EnemyRoam : MonoBehaviour
         }
         return finalPosition;
     }
+
+    
 }

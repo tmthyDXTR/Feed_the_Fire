@@ -22,10 +22,10 @@ public class Window_ResourceBank : MonoBehaviour
             "Wood: " + ResourceBank.GetWoodStock();
     }
 
-    private void UpdateStoneResourceTextObject()
+    private void UpdateHousingTextObject()
     {
-        transform.Find("StoneStock").GetComponent<Text>().text =
-            "Stone: " + ResourceBank.GetStoneStock();
+        transform.Find("Housing").GetComponent<Text>().text =
+            "House: " + ResourceBank.housingCurrent + " / " + ResourceBank.housingMax;
     }
 
     private void UpdateFoodStockTextObject()
@@ -46,7 +46,7 @@ public class Window_ResourceBank : MonoBehaviour
 
         //-- Test Stock Init for Job Debugging --//
         UpdateWoodResourceTextObject();
-        UpdateStoneResourceTextObject();
+        UpdateHousingTextObject();
         UpdateFireLifeTextObject();
         UpdateFoodStockTextObject();
         UpdateSporesStockTextObject();
@@ -63,9 +63,9 @@ public class Window_ResourceBank : MonoBehaviour
             UpdateWoodResourceTextObject();
         };
 
-        ResourceBank.OnStoneStockChanged += delegate (object sender, EventArgs e)
+        ResourceBank.OnHousingChanged += delegate (object sender, EventArgs e)
         {
-            UpdateStoneResourceTextObject();
+            UpdateHousingTextObject();
         };
 
         ResourceBank.OnFoodStockChanged += delegate (object sender, EventArgs e)

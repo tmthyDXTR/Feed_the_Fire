@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class HeroController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class HeroController : MonoBehaviour
     private SelectableObject selectable;
     public Animator m_Animator;
     private SelectionManager selectionManager;
+    private BonfireManager bonfireManager;
     private HeroInfo hero;
     private Vector3 mousePos;
     private float globalCoolDown = 1f;
@@ -52,6 +54,7 @@ public class HeroController : MonoBehaviour
     }
     [SerializeField] private GameObject selectedAttackSkill;
 
+    public Collider consumeFire;
 
     private EnemyInfo enemyInfo;
     public Collider targetObject;
@@ -74,16 +77,52 @@ public class HeroController : MonoBehaviour
         //Hardcoded animator reference
         m_Animator = this.transform.GetChild(1).GetComponent<Animator>();
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+        bonfireManager = GameObject.Find("BonfireManager").GetComponent<BonfireManager>();
         hero = GetComponent<HeroInfo>();
         attackRangeSphere = this.transform.Find("AttackRange").GetComponent<SphereCollider>();
         SelectAttackSlot(Slot.Slot_RClick, this.transform.Find("Skills").GetChild(0).gameObject);
         selectedAttackSkill = this.transform.Find("Skills").GetChild(0).gameObject;
         state = State.Idling;
+
+        BonfireManager.OnBonfireAmountChanged += delegate (object sender, EventArgs e)
+        {
+            UpdateBonfireBuffs();
+        };
     }
+
+    
 
     void Update()
     {
-        if (selectable.isSelected == true)
+        // PLAY HIT ANIMATION
+        if (isHit)
+        {
+            if (!isStunned && !isDead)
+            {
+                isStunned = true;
+                m_NavAgent.isStopped = true;
+                m_NavAgent.ResetPath();
+                m_Animator.Play("hit(stick)");
+                StartCoroutine(StunDuration(0.5f));
+                state = State.Stunned;
+            }
+        }
+        if (hero.currentHealth <= 0)
+        {
+            if (!isDead)
+            {
+                isDead = true;
+                m_NavAgent.isStopped = true;
+                m_NavAgent.ResetPath();
+                m_Animator.Play("death(stick)");
+                Destroy(this.transform.Find("HitBox").gameObject, 0.1f);
+
+                state = State.Dead;
+            }
+
+        }
+
+        else if (selectable.isSelected == true)
         {
             // RIGHT CLICK DETECTION
             if (Input.GetMouseButtonDown(1) && selectionManager.isActive)
@@ -134,31 +173,7 @@ public class HeroController : MonoBehaviour
                     }
                 }
             }
-            // PLAY HIT ANIMATION
-            if (isHit)
-            {
-                if (!isStunned && !isDead)
-                {
-                    isStunned = true;
-                    m_NavAgent.isStopped = true;
-                    m_NavAgent.ResetPath();
-                    m_Animator.Play("hit(stick)");
-                    StartCoroutine(StunDuration(0.5f));
-                    state = State.Stunned;
-                }
-            }         
-            if (hero.currentHealth <= 0)
-            {
-                if (!isDead)
-                {
-                    isDead = true;
-                    m_NavAgent.isStopped = true;
-                    m_NavAgent.ResetPath();
-                    m_Animator.Play("death(stick)");
-                    state = State.Dead;
-                }
-                
-            }
+            
         }
 
         // STATES
@@ -183,7 +198,11 @@ public class HeroController : MonoBehaviour
                 else if (targetHit != Vector3.zero)
                 {                                       
                     state = State.Moving;
-                }                
+                }  
+                if (slot == Slot.Slot_2)
+                {
+                    state = State.Attacking;
+                }
                 break;
 
             case State.Moving:
@@ -197,7 +216,11 @@ public class HeroController : MonoBehaviour
                     {
                         state = State.Idling;
                     }
-                }
+                    if (slot == Slot.Slot_2)
+                    {
+                        state = State.Attacking;
+                    }
+                }                
                 // If there is an enemy 
                 else
                 {
@@ -221,12 +244,25 @@ public class HeroController : MonoBehaviour
                 {
                     StartCoroutine(Attack());
                 }
-                if (targetObject == null && targetHit != Vector3.zero)
+                
+                if (slot == Slot.Slot_2)
+                {
+                    StartCoroutine(Attack());
+                    if(targetHit != Vector3.zero)
+                    {
+                        state = State.Moving;
+                    }
+                    else
+                    {
+                        state = State.Idling;
+                    }
+                }
+                else if (targetObject == null && targetHit != Vector3.zero && slot != Slot.Slot_2)
                 {
                     isAttacking = false;
                     state = State.Moving;
                 }
-               
+
                 break;
 
             case State.Strafing:
@@ -258,7 +294,7 @@ public class HeroController : MonoBehaviour
         Attack attack = skillObject.GetComponent<Attack>();
         if (attack != null)
         {
-            if (slot != slotToSelect)
+            if (slot != slotToSelect && attack.skill.cost <= hero.power)
             {
                 slot = slotToSelect;
                 selectedAttackSkill = skillObject;
@@ -277,21 +313,41 @@ public class HeroController : MonoBehaviour
     public float PowerMultiplicator()
     {
         RClick_powerMultiplicator = (hero.power / ((float)ResourceBank.fireLifeFull * 2)) * 10;
+        if (RClick_powerMultiplicator < 1)
+        {
+            RClick_powerMultiplicator = 1;
+        }
         return RClick_powerMultiplicator;
+    }
+
+    private void UpdateBonfireBuffs()
+    {
+        runSpeed += 0.5f;
+        m_NavAgent.speed = runSpeed;
+        hero.health += 5f;
     }
 
     public void ConsumeFire(int amount)
     {
         // The fire power ball moving to the hero from the fireplace
         GameObject projectileObj = Instantiate(Resources.Load("PS_FireConsumeBall")) as GameObject;
-        projectileObj.transform.position = GameObject.Find("FirePlace").transform.position;
+        projectileObj.transform.position = consumeFire.transform.position;
         Projectile projectile = projectileObj.GetComponent<Projectile>();
         projectile.target = this.transform.Find("HitBox").GetComponent<Collider>();
         projectile.type = Projectile.Type.FirePower;
 
         ResourceBank.RemoveFireLife(amount);
+        if (hero.currentHealth < hero.health)
+        {
+            hero.currentHealth += amount;
+        }
+        AddPower(amount);
+
+
+    }
+    public void AddPower(int amount)
+    {
         hero.power += amount;
-        hero.currentHealth += amount;
         PowerMultiplicator();
     }
     public void RemovePower(int amount)
@@ -364,6 +420,10 @@ public class HeroController : MonoBehaviour
             if (attack.skill.mustStayForCast)
             {
                 StopMoving();
+                //If attack is area effect
+                
+
+                //If attack is projectile
                 if (!isAttacking && inRangeTargets.Contains(targetObject))
                 {                    
                     isAttacking = true;
@@ -384,7 +444,29 @@ public class HeroController : MonoBehaviour
                     yield return new WaitForSeconds(globalCoolDown);
                     isAttacking = false;                    
                 }
-            }           
+            } 
+            //If hero does not have to stand still attack instantly
+            else
+            {
+                if (!isAttacking && slot == Slot.Slot_2)
+                {
+                    isAttacking = true;
+                    //Initiate casting
+                    m_Animator.Play("spell1(stick)");
+                    //Cast time
+                    yield return new WaitForSeconds(attack.skill.castTime);
+                    //Cast Skill
+                    attack.CastAttack(slot);
+                    //Reset to RClick Attack
+                    if (slot != Slot.Slot_RClick)
+                    {
+                        SelectAttackSlot(Slot.Slot_RClick, this.transform.Find("Skills").GetChild(0).gameObject);
+                    }
+                    //Cooldown time
+                    yield return new WaitForSeconds(globalCoolDown);
+                    isAttacking = false;
+                }
+            }
         }
     }
 

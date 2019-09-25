@@ -17,11 +17,15 @@ public class Storage : MonoBehaviour
 
 
 
-    void Awake()
+    void Start()
     {
-        //ResourceBank.OnFireLifeChanged += delegate (object sender, EventArgs e)
+        Store(StoredItem.Spores);
+        Store(StoredItem.Spores);
+
+
+        //ResourceBank.OnFoodStockChanged += delegate (object sender, EventArgs e)
         //{
-        //    UpdateFireLifeTextObject();
+        //    Collect();
         //};
 
         //singleStorage = GetComponentsInChildren<SingleStorage>();

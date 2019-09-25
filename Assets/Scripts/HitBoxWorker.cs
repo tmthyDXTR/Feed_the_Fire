@@ -22,8 +22,8 @@ public class HitBoxWorker : MonoBehaviour
             if (!workerController.isHit)
             {
                 float damage = other.transform.gameObject.GetComponent<DamageBox>().damage;
-                workerController.TakeDamage(other.transform.gameObject, damage);
-                Debug.Log("Worker SMASHED");
+                info.TakeDamage(damage);
+                //Debug.Log("Worker exploded");
                 workerController.isHit = true;
                 StartCoroutine(WaitHit());
             }

@@ -43,7 +43,6 @@ public class CheatPanel : MonoBehaviour
         enemySpawner = enemySpawner.GetComponent<EnemySpawner>();
         enemyButton = GameObject.Find("SpawnEnemy").gameObject.GetComponent<Button>();
         enemyButton.onClick.AddListener(AddEnemy);
-
     }
 
     private void AddRemoveFire()

@@ -59,7 +59,7 @@ public class TreeNodes : MonoBehaviour
         }
     }
 
-    void Death()
+    public void Death()
     {
         isDead = true;
         GameObject stump = Instantiate(stumpPrefab, new Vector3(
@@ -104,5 +104,12 @@ public class TreeNodes : MonoBehaviour
                 Death();
             }
         }
+        //if (other.tag == "DamageBox")
+        //{
+        //    Debug.Log("Tree HIT Damage Box");
+        //    Burnable burnable = GetComponent<Burnable>();
+        //    burnable.isBurning = true;
+        //    burnable.AddBurnEffect();
+        //}
     }
 }

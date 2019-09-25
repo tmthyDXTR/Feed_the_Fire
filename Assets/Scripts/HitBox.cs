@@ -19,18 +19,27 @@ public class HitBox : MonoBehaviour
     {
         if (other.tag == "DamageBox")
         {
-            if (!heroController.isHit)
+            if (other.gameObject.GetComponent<DamageBox>().heroImmune)
             {
-                float damage = other.transform.gameObject.GetComponent<DamageBox>().damage;
-                heroInfo.currentHealth -= damage;
-                Debug.Log("Hero SMASHED");
-                heroController.isHit = true;
-                StartCoroutine(WaitHit());
+
             }
+            else
+            {
+                if (!heroController.isHit)
+                {
+                    float damage = other.transform.gameObject.GetComponent<DamageBox>().damage;
+                    heroInfo.currentHealth -= damage;
+                    Debug.Log("Hero SMASHED");
+                    heroController.isHit = true;
+                    StartCoroutine(WaitHit());
+                }
+            }            
         }
+
         if (other.tag == "FireConsume")
         {
             heroController.canConsumeFire = true;
+            heroController.consumeFire = other;
         }
         if (other.tag == "Debuff_Slow")
         {

@@ -84,7 +84,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 9195713975528670980}
   - component: {fileID: 2734247712950553900}
   m_Layer: 0
-  m_Name: PS_FireConsumBall
+  m_Name: PS_FireConsumeBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,6 +141,7 @@ MonoBehaviour:
   target: {fileID: 0}
   speed: 10
   damage: 0
+  type: 0
 --- !u!65 &2734247712950553900
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -483,6 +484,11 @@ PrefabInstance:
       propertyPath: ShapeModule.radiusThickness
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7966132937151475577, guid: 9cad9f370a44e4e42acb01f9ea5df6ec,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7966598679053775967, guid: 9cad9f370a44e4e42acb01f9ea5df6ec,
         type: 3}
       propertyPath: InitialModule.startSize.scalar
@@ -532,6 +538,11 @@ PrefabInstance:
         type: 3}
       propertyPath: ShapeModule.radiusThickness
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7966724570073955459, guid: 9cad9f370a44e4e42acb01f9ea5df6ec,
+        type: 3}
+      propertyPath: ForceModule.enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7966689796748413345, guid: 9cad9f370a44e4e42acb01f9ea5df6ec,
         type: 3}

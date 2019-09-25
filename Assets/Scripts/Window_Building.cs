@@ -9,6 +9,8 @@ public class Window_Building : MonoBehaviour
     public BuildingInfo buildingInfo;
     public GameObject selectedObject;
 
+    private GameObject workerButton;
+
     private SelectionManager selectionManager;
 
     private Building building;
@@ -32,6 +34,11 @@ public class Window_Building : MonoBehaviour
             {
                 buildingInfo = selectionManager.selection[0].GetComponent<BuildingInfo>();
                 selectedObject = selectionManager.selection[0];
+                if (selectedObject.tag == "ResidentialHouse")
+                {
+                    workerButton = this.transform.Find("WorkerButton").gameObject;
+                    workerButton.SetActive(true);
+                }
             }
         }
     }

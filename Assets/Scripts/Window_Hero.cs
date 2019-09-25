@@ -26,8 +26,8 @@ public class Window_Hero : MonoBehaviour
         if (hero != null)
         {
             transform.Find("Info_2").GetComponent<Text>().text = hero.power.ToString();
-            transform.Find("Info_3").GetComponent<Text>().text = hero.currentHealth.ToString() + " / " + hero.health.ToString();
-            transform.Find("Info_4").GetComponent<Text>().text = heroController.RClick_powerMultiplicator.ToString();
+            transform.Find("Info_3").GetComponent<Text>().text = "Health: " + hero.currentHealth.ToString() + " / " + hero.health.ToString();
+            transform.Find("Info_4").GetComponent<Text>().text = "Dmg Multi: " + heroController.RClick_powerMultiplicator.ToString();
 
         }
     }
@@ -57,20 +57,14 @@ public class Window_Hero : MonoBehaviour
         {                    
             UpdateInfo();
 
-            if (consumeFireButton.interactable == true)
+            if (heroController.canConsumeFire)
             {
-                if (heroController.canConsumeFire == false)
-                {
-                    consumeFireButton.interactable = false;
-                }
+                consumeFireButton.interactable = true;
             }
-            if (consumeFireButton.interactable == false)
+            else
             {
-                if (heroController.canConsumeFire == true)
-                {
-                    consumeFireButton.interactable = true;
-                }
-            }
+                consumeFireButton.interactable = false;
+            }            
         }                                        
     }
 }

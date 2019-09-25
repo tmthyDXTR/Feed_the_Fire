@@ -5034,6 +5034,6 @@ MonoBehaviour:
     type: 3}
   damageBoxPrefab: {fileID: 4865381661396404360, guid: 54f900a1d0d46cd4cabb3aad2ad6fe9c,
     type: 3}
-  damage: 10
-  radius: 6
+  damage: 30
+  radius: 15
   isActive: 0

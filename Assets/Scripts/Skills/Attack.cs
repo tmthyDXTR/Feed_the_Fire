@@ -28,12 +28,29 @@ public class Attack : MonoBehaviour
                 hero.RemovePower(skill.cost);
             }            
         }
+        if (skill.type == Skill.SkillType.Area)
+        {
+            //Check if hero is still attacking or moving again
+            if (hero.isAttacking)
+            {
+                if (slot == HeroController.Slot.Slot_2)
+                {
+                    //Instantiate Explosion
+                    GameObject explosion = Instantiate(skill.explosionPrefab) as GameObject;
+                    explosion.transform.position = this.transform.position;
+
+                    CreateDamageBox();
+                    hero.RemovePower(skill.cost);
+                }
+                    
+            }
+        }
     }
 
     void CreateProjectile(HeroController.Slot slot)
     {
         GameObject projectileObj = Instantiate(skill.projectilePrefab) as GameObject;
-        projectileObj.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1f, this.transform.position.z);
+        projectileObj.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 3f, this.transform.position.z);
         Projectile projectile = projectileObj.GetComponent<Projectile>();
         projectile.target = hero.targetObject;        
         projectile.speed = skill.speed;
@@ -45,7 +62,7 @@ public class Attack : MonoBehaviour
         }
         else
         {
-            projectile.damage = skill.baseDamage;
+            projectile.damage = skill.baseDamage + (21 - ResourceBank.fireLife);
         }
     }
 
@@ -53,7 +70,13 @@ public class Attack : MonoBehaviour
 
     void CreateDamageBox()
     {
-
+        GameObject damageBox = Instantiate(skill.damageBoxPrefab) as GameObject;
+        damageBox.transform.position = this.transform.position;
+        DamageBox damage = damageBox.GetComponent<DamageBox>();
+        damage.heroImmune = skill.heroImmune;
+        damage.type = DamageBox.Type.FireAOE;
+        damage.radius = skill.effectRadius;
+        damage.damage = skill.baseDamage;
     }
 
     //public void PlayCastAnimation(string animation)

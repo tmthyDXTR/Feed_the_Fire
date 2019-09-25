@@ -164,31 +164,36 @@ public class JobManager : MonoBehaviour
         foreach (Transform unit in transform)
         {
             WorkerUnitAI worker = unit.GetComponent<WorkerUnitAI>();
-            if (worker.job == WorkerUnitAI.Job.Unemployed)
+            UnitInfo info = unit.GetComponent<UnitInfo>();
+            if (!info.isDead)
             {
-                unemployedCount += 1;
-            }
+                if (worker.job == WorkerUnitAI.Job.Unemployed)
+                {
+                    unemployedCount += 1;
+                }
 
-            if (worker.job == WorkerUnitAI.Job.LightWarden)
-            {
-                lighWardenCount += 1;
-            }
+                if (worker.job == WorkerUnitAI.Job.LightWarden)
+                {
+                    lighWardenCount += 1;
+                }
 
-            if (worker.job == WorkerUnitAI.Job.Woodcutter)
-            {
-                woodcutterCount += 1;
-            }
+                if (worker.job == WorkerUnitAI.Job.Woodcutter)
+                {
+                    woodcutterCount += 1;
+                }
 
-            if (worker.job == WorkerUnitAI.Job.Builder)
-            {
-                builderCount += 1;
-            }
-            if (worker.job == WorkerUnitAI.Job.Shroomer)
-            {
-                shroomerCount += 1;
-            }
+                if (worker.job == WorkerUnitAI.Job.Builder)
+                {
+                    builderCount += 1;
+                }
+                if (worker.job == WorkerUnitAI.Job.Shroomer)
+                {
+                    shroomerCount += 1;
+                }
 
-            workerTotalCount += 1;
+                workerTotalCount += 1;
+            }
+            
         }
     }
 }

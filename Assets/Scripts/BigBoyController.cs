@@ -149,7 +149,8 @@ public class BigBoyController : MonoBehaviour
         damageCol.radius = damageRadius;
         Vector3 damageBoxPos = damageBox.transform.position;
         DamageBox box = damageBox.GetComponent<DamageBox>();
-        box.damage = damage;       
+        box.damage = damage;
+        box.radius = damageRadius;
         
 
         GameObject impactEffect = Instantiate(Resources.Load("ImpactEffect"), damageBoxPos, Quaternion.identity) as GameObject;
@@ -175,7 +176,18 @@ public class BigBoyController : MonoBehaviour
     {
         animator.Play("Shout");
         yield return new WaitForSeconds(2.25f);
-        state = State.Moving;
+        if(!isDead)
+        {
+            state = State.Moving;
+        }
+        else
+        {
+            animator.SetBool("IsWalking", false);
+            navAgent.isStopped = true;
+            navAgent.ResetPath();
+            StartCoroutine(WaitAndDie());
+            state = State.Dead;
+        }
     }
 
     void CheckTargetReached()
@@ -222,6 +234,9 @@ public class BigBoyController : MonoBehaviour
         //Get main Impact Collider
         BoxCollider torso = transform.Find("DeadBox").GetChild(0).GetComponent<BoxCollider>();
         impactEffect.transform.position = torso.transform.TransformPoint(torso.center);
+
+        GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
+        bloodSplatter.transform.position = impactEffect.transform.position;
     }
 
     private IEnumerator WaitAndDie()

@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour
 
         //if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness)
 
-        if (Input.GetKey("w"))
+        if (Input.GetKey("w") )
         {
             pos.z += panSpeed * Time.deltaTime;
         }

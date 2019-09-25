@@ -16,10 +16,11 @@ MonoBehaviour:
   name: Aimos Botor
   description: How do you aim a fire ball that well
   type: 0
+  explosionPrefab: {fileID: 0}
   projectilePrefab: {fileID: 6082702626419628557, guid: c65d02e69879ae14991f9f3d7f45e2c1,
     type: 3}
   damageBoxPrefab: {fileID: 0}
-  baseDamage: 2
+  baseDamage: 10
   range: 20
   speed: 20
   effectRadius: 0
@@ -28,3 +29,4 @@ MonoBehaviour:
   duration: 0
   cost: 1
   mustStayForCast: 1
+  heroImmune: 1

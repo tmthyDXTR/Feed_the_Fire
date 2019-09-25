@@ -188,7 +188,7 @@ public class WorkerUnitAI : MonoBehaviour
                     }
                     else if (util.SearchBurn() != null)
                     {
-                        
+                        util.burnTarget.GetComponent<Burnable>().isTargeted = true;
                         state = State.TakingFire;
                     }
                     
@@ -262,20 +262,29 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: MovingToConstruction");
                 if (job == Job.Builder)
                 {
-                    util.target = util.constructionTarget;
-                    util.MoveToTarget();
-                    if (util.TargetReached() == true)
+                    ConstructionManager construction = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
+                    if (construction.constructionList.Count > 0)
                     {
-                        // Check if Construction needs more Ressources
-                        if (util.CheckConstruction("Store") == true && info.invWood > 0)
+                        util.target = util.constructionTarget;
+                        util.MoveToTarget();
+                        if (util.TargetReached() == true)
                         {
-                            state = State.StoringResources;
-                        }
-                        else
-                        {
-                            state = State.Constructing;
+                            // Check if Construction needs more Ressources
+                            if (util.CheckConstruction("Store") == true && info.invWood > 0)
+                            {
+                                state = State.StoringResources;
+                            }
+                            else
+                            {
+                                state = State.Constructing;
+                            }
                         }
                     }
+                    else
+                    {
+                        state = State.MovingToSafety;
+                    }
+                    
                 }
                 else
                 {
@@ -292,8 +301,7 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: MovingToBurn");
                 if (job == Job.LightWarden)
                 {
-                    util.target = util.burnTarget;
-                    util.MoveToTarget();
+                    
                     if (util.TargetReached() == true)
                     {
                         state = State.BurningObject;
@@ -350,7 +358,11 @@ public class WorkerUnitAI : MonoBehaviour
                         if (util.SearchStorage("Store", LayerMask.GetMask("Buildings")) != null)
                         {
                             state = State.MovingToStorage;
-                        }                        
+                        }     
+                        else
+                        {
+                            state = State.MovingToSafety;
+                        }
                     }
                     else
                     {
@@ -673,28 +685,28 @@ public class WorkerUnitAI : MonoBehaviour
                 }
                 else if (job == Job.Builder)
                 {
-                    // Check if Storing to Construction or Storage
+                    // Check if storing target is construction
                     if (util.target.gameObject.tag == "Construction")
                     {
-                        // Check Inventory
-                        if (info.invWood > 0)
+                        //Check if construction needs more ressources
+                        if (util.CheckConstruction("Store"))
                         {
-                            // Check if Construction needs more Ressources
-                            if (util.CheckConstruction("Store") == true)
+                            //Check if ressource in inventory
+                            if (info.invWood > 0)
                             {
-                            
                                 util.StoreWoodForConstruction();
                             }
+                            //Check if other builders bring remaining ressources and this worker can wait
+                            else if (info.invWood == 0 && !util.CheckConstruction("Collect"))
+                            {
+                                Debug.Log("Waiting for remaining ressources on the way");
+                            }
+                            //If inventory empty and not enough ressources on the way to this construction
                             else
                             {
                                 state = State.SearchingStorage;
                             }
                         }
-                        // Check if Construction needs more Ressources
-                        else if (util.CheckConstruction("Collect") == true)
-                        {
-                            state = State.SearchingStorage;
-                        }    
                         else
                         {
                             state = State.Constructing;
@@ -702,21 +714,7 @@ public class WorkerUnitAI : MonoBehaviour
                     }
                     else
                     {
-                        if (info.invWood > 0)
-                        {
-                            if (util.CheckStorage("Store") == true)
-                            {
-                                util.StoreWood();
-                            }
-                            else
-                            {
-                                state = State.SearchingStorage;
-                            }
-                        }
-                        else
-                        {
-                            state = State.MovingToSafety;
-                        }
+                        state = State.MovingToSafety;
                     }
                 }
                 else if (job == Job.Shroomer)
@@ -945,12 +943,19 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: TakingFire");
                 if (job == Job.LightWarden)
                 {
-                    if (util.burnTarget.gameObject.tag == "UnlitBonfire" && ResourceBank.fireLife > 3 && info.invFire < 1)
+                    if (util.burnTarget.gameObject.tag == "UnlitBonfire" && ResourceBank.fireLife > 2 && info.invFire < 1)
                     {
-                        util.TakeFire(3);                        
+                        util.TakeFire(1);                        
+                    }
+                    else if (util.burnTarget.gameObject.tag == "Stump" && ResourceBank.fireLife > 2 && info.invFire < 1)
+                    {
+                        util.TakeFire(1);
                     }
                     else
                     {
+                        util.target = util.burnTarget;
+                        util.MoveToTarget();
+                        
                         state = State.MovingToBurn;
                     }
                 }
@@ -971,11 +976,11 @@ public class WorkerUnitAI : MonoBehaviour
                 if (job == Job.LightWarden)
                 {
                     //Check if Bonfire or Stump
-                    if (info.invWood > 0 && util.target.tag != "UnlitBonfire")
+                    if (info.invFire > 0 && util.target.tag == "Stump")
                     {
                         util.BurnObject();
                     }
-                    else if (info.invWood > 0 && util.target.tag == "UnlitBonfire")
+                    else if (info.invFire > 0 && util.target.tag == "UnlitBonfire")
                     {
                         util.IgniteBonfire();
                     }
@@ -995,11 +1000,11 @@ public class WorkerUnitAI : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Enemy")
-        {
-            state = State.MovingToSafety;
-        }
-    }
+    //void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.tag == "Enemy")
+    //    {
+    //        state = State.MovingToSafety;
+    //    }
+    //}
 }

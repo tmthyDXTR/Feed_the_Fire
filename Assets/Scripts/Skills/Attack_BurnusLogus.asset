@@ -16,10 +16,11 @@ MonoBehaviour:
   name: Burnus Logus
   description: Some of the villagers gossip it's just a flying burning log
   type: 0
+  explosionPrefab: {fileID: 0}
   projectilePrefab: {fileID: 6082702626419628557, guid: d32da9701fc517e4183dd223567de1de,
     type: 3}
   damageBoxPrefab: {fileID: 0}
-  baseDamage: 1
+  baseDamage: 0
   range: 10
   speed: 10
   effectRadius: 0
@@ -28,3 +29,4 @@ MonoBehaviour:
   duration: 0
   cost: 0
   mustStayForCast: 1
+  heroImmune: 1

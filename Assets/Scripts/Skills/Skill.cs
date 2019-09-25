@@ -15,6 +15,7 @@ public class Skill : ScriptableObject
         Area,
         Effect,
     }
+    public GameObject explosionPrefab;
     public GameObject projectilePrefab;
     public GameObject damageBoxPrefab;
     public float baseDamage;
@@ -26,4 +27,5 @@ public class Skill : ScriptableObject
     public float duration;
     public int cost;
     public bool mustStayForCast = true;
+    public bool heroImmune = false;
 }

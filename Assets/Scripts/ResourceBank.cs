@@ -12,17 +12,42 @@ public static class ResourceBank
     public static EventHandler OnFoodStockChanged;
     public static EventHandler OnSporesStockChanged;
     public static EventHandler OnHousingChanged;
+    public static EventHandler OnEnemyKilled;
+    public static EventHandler OnWorkerKilled;
+
+
     public static int fireLifeFull = 20;
     public static int fireLifeMax = 20; //-- Slider Control
-    public static int fireLife = 20;
+    public static int fireLife = 12;
     public static int stoneStock = 0;
     public static int woodStock = 18;
     public static int foodStock = 0;
+    public static int workerFoodCost = 1;
     public static int sporesStock = 0;
-    public static int housingNeeded = 0;
+    public static int housingMax = 0;
     public static int housingCurrent = 0;
     public static float burnTime = 0.0f;
     public static float burnSpeed = 30f; //-- Seconds to lose 1 Fire Life
+
+    public static int enemiesKilled = 0;
+    public static int workerLost = 0;
+
+    public static void AddKillCounter(int amount)
+    {
+
+        enemiesKilled += amount;
+        if (OnEnemyKilled != null) OnEnemyKilled(null, EventArgs.Empty);
+    }
+    public static void AddWorkerKillCounter(int amount)
+    {
+
+        workerLost += amount;
+        if (OnWorkerKilled != null) OnWorkerKilled(null, EventArgs.Empty);
+    }
+
+
+
+
 
     //-- Fire --//
 
@@ -174,13 +199,19 @@ public static class ResourceBank
 
     public static void AddHousing(int amount)
     {
+        housingMax += amount;
+        if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
+    }
+
+    public static void AddResident(int amount)
+    {
         housingCurrent += amount;
         if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
     }
 
     public static void RemoveHousing(int amount)
     {
-        housingCurrent -= amount;
+        housingMax -= amount;
         if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
     }
 

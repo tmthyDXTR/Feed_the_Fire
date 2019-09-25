@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,5 +17,19 @@ public class HeroInfo : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TakeDamage(float amount)
+    {
+        currentHealth -= amount;
+        //if (currentHealth <= 0f)
+        //{
+        //    Death();
+        //}
+    }
+
+    private void Death()
+    {
+        //Destroy(this.transform.Find("HitBox").gameObject);
     }
 }

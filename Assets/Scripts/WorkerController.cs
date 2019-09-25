@@ -62,12 +62,32 @@ public class WorkerController : MonoBehaviour
             float distance = Vector3.Distance(collider.transform.position, transform.position);
             if (collider.gameObject.CompareTag(targetTag))
             {
-                targets.Add(collider);
-                if (distance < bestDistance)
+                if (collider.gameObject.GetComponent<Burnable>() != null)
                 {
-                    bestDistance = distance;
-                    target = collider;
+                    if (collider.gameObject.GetComponent<Burnable>().isBurning)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        targets.Add(collider);
+                        if (distance < bestDistance)
+                        {
+                            bestDistance = distance;
+                            target = collider;
+                        }
+                    }
                 }
+                else
+                {
+                    targets.Add(collider);
+                    if (distance < bestDistance)
+                    {
+                        bestDistance = distance;
+                        target = collider;
+                    }
+                }
+                
             }                
         }
         if (targets.Count > 0)
@@ -161,23 +181,27 @@ public class WorkerController : MonoBehaviour
                 if (obj.GetComponent<Burnable>().isTargeted == false)
                 {
                     burnTarget = obj.GetComponent<Collider>();
-                    
+                    //burnTarget.GetComponent<Burnable>().isTargeted = true;
+                    //return burnTarget;
+                    break;
                 }
                 else
                 {
                     continue;
+                    //return null;
                 }
             }
             if (burnTarget != null)
             {
-                burnTarget.GetComponent<Burnable>().isTargeted = true;
+                //burnTarget.GetComponent<Burnable>().isTargeted = true;
                 return burnTarget;
             }
             else
             {
                 return null;
             }
-            
+            //return burnTarget;
+
         }
         else
         {
@@ -641,7 +665,8 @@ public class WorkerController : MonoBehaviour
         workTime += Time.deltaTime;
         if (workTime >= 4)
         {
-            info.invWood -= 1;
+            //info.invWood -= 1;
+            info.invFire -= 1;
             info.target.gameObject.GetComponent<Burnable>().isBurning = true;
             info.target.gameObject.GetComponent<Burnable>().AddBurnEffect();
             workTime -= (int)workTime;
@@ -656,7 +681,8 @@ public class WorkerController : MonoBehaviour
         workTime += Time.deltaTime;
         if (workTime >= 4)
         {
-            info.invWood -= 1;
+            //info.invWood -= 1;
+            info.invFire -= 1;
             info.target.gameObject.GetComponent<Burnable>().AddBurnEffect();
             workTime -= (int)workTime;
             burnManager.DeregisterBurn(info.target.gameObject);
@@ -708,6 +734,7 @@ public class WorkerController : MonoBehaviour
                     shroom.Remove("Shrooms");
                     info.invShroom += 1;
                     Debug.Log("Shrooms collected");
+                    growManager.shroomGrowList.Remove(target); 
                     workTime -= (int)workTime;
                     m_Animator.SetBool("IsLumbering", false);
                 }
@@ -863,7 +890,7 @@ public class WorkerController : MonoBehaviour
             {
                 return false;
             }
-        }
+        }              
         else
         {
             return false;

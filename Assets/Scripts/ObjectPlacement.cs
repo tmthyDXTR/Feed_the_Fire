@@ -296,6 +296,7 @@ public class ObjectPlacement : MonoBehaviour
         currentObject = null;
         hasPlaced = true;
         Cursor.visible = true;
+        selectionManager.isActive = true;
     }
 
     private void DeleteObject()
@@ -305,6 +306,8 @@ public class ObjectPlacement : MonoBehaviour
         Destroy(currentObject.gameObject);
         currentObject = null;
         Cursor.visible = true;
+        selectionManager.isActive = true;
+
     }
 
     Vector3 GetWorldPoint()

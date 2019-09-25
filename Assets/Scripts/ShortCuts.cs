@@ -5,10 +5,14 @@ using UnityEngine;
 public class ShortCuts : MonoBehaviour
 {
     private SelectionManager selection;
+    public GameObject cheatPanel;
 
-    void Awake()
+    void Start()
     {
         selection = GetComponent<SelectionManager>();
+        cheatPanel = GameObject.Find("CheatPanel");
+        cheatPanel.SetActive(false);
+
     }
 
     void Update()
@@ -27,6 +31,17 @@ public class ShortCuts : MonoBehaviour
                     }
                 }
             }            
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (cheatPanel.activeSelf == false)
+            {
+                cheatPanel.SetActive(true);
+            }
+            else
+            {
+                cheatPanel.SetActive(false);
+            }
         }
     }
 }
