@@ -5,10 +5,14 @@ using UnityEngine.EventSystems;
 public class ConsumeFireButton : MonoBehaviour, IPointerClickHandler
 {
     private HeroController heroController;
+    GameHandler gameHandler;
+
 
     void Awake()
     {
         heroController = GameObject.Find("Hero").GetComponent<HeroController>();
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -22,7 +26,12 @@ public class ConsumeFireButton : MonoBehaviour, IPointerClickHandler
         }
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            ResourceBank.RemoveFireLife(1);
+            gameHandler.RemoveFireLife(1);
         }
+    }
+    private void OnDestroy()
+    {
+        //Destroy(GetComponent<EventTrigger>());
+
     }
 }

@@ -105,6 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill: {fileID: 11400000, guid: 928ba03f8e6fea44d961489bc6603ad9, type: 2}
   hero: {fileID: 0}
+  onCoolDown: 0
 --- !u!1 &506156848
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,6 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill: {fileID: 11400000, guid: 792c53ae5daee9e44bacef6f26860a15, type: 2}
   hero: {fileID: 0}
+  onCoolDown: 0
 --- !u!1 &1553479162
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,6 +301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill: {fileID: 0}
   hero: {fileID: 0}
+  onCoolDown: 0
 --- !u!1 &377299409035397297
 GameObject:
   m_ObjectHideFlags: 0
@@ -6744,6 +6747,7 @@ GameObject:
   - component: {fileID: 2187373848559769734}
   - component: {fileID: 4963156032160275523}
   - component: {fileID: 8784181505407465116}
+  - component: {fileID: 8999610929135131603}
   m_Layer: 17
   m_Name: Hero
   m_TagString: Hero
@@ -6833,11 +6837,12 @@ MonoBehaviour:
   state: 0
   slot: 0
   selectedAttackSkill: {fileID: 0}
+  consumeFire: {fileID: 0}
   targetObject: {fileID: 0}
   distanceToTarget: 0
   targetHit: {x: 0, y: 0, z: 0}
   inRangeTargets: []
-  RClick_powerMultiplicator: 1
+  PowerMultiply: 1
   time: 0
   fireConsumeTicker: 1
 --- !u!114 &4963156032160275523
@@ -6869,6 +6874,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedChanged: 0
   originalRunSpeed: 0
+--- !u!95 &8999610929135131603
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213731663087199728}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 52868b66dd16ad14b9cf8f3e81b14a1e, type: 3}
+  m_Controller: {fileID: 9100000, guid: ddaf051b45caa1d41837551e180059e6, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1213731663166974731
 GameObject:
   m_ObjectHideFlags: 0
@@ -26570,7 +26594,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1213731663652816291}
-  - component: {fileID: 1213731663652816288}
   m_Layer: 17
   m_Name: boy
   m_TagString: Hero
@@ -26593,25 +26616,6 @@ Transform:
   m_Father: {fileID: 1213731663087199729}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1213731663652816288
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1213731663652816290}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 52868b66dd16ad14b9cf8f3e81b14a1e, type: 3}
-  m_Controller: {fileID: 9100000, guid: ddaf051b45caa1d41837551e180059e6, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1213731663724085845
 GameObject:
   m_ObjectHideFlags: 0

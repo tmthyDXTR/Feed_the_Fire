@@ -39,7 +39,7 @@ public class EnemyRoam : MonoBehaviour
         detectionSphere.radius = detectionRadius;
 
         m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));
-        state = State.Idling;
+        state = State.Roaming;
     }
 
     void Update()
@@ -61,6 +61,8 @@ public class EnemyRoam : MonoBehaviour
             case State.Roaming:
                 //Debug.Log("State: Roaming");                                
                 //If some unit enters collider radius add it as potential target
+                GetNearestTarget();
+
                 if (target != null)
                 {
                     state = State.MovingToTarget;
@@ -69,6 +71,7 @@ public class EnemyRoam : MonoBehaviour
 
             case State.MovingToTarget:
                 //Debug.Log("State: MovingToTarget");
+                GetNearestTarget();
 
                 MoveToTarget();
                 // Check if Target reached                
@@ -179,9 +182,33 @@ public class EnemyRoam : MonoBehaviour
             {
                 if (!m_NavMeshAgent.hasPath || m_NavMeshAgent.velocity.sqrMagnitude == 0f)
                 {
-                    m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));                    
+                    m_NavMeshAgent.SetDestination(RandomNavmeshLocation(radius));
                 }
             }
+        }        
+    }
+
+    private void GetNearestTarget()
+    {
+        if (targetList.Count > 0)
+        {
+            Collider nearestTarget = null;
+            float minDist = Mathf.Infinity;
+            Vector3 currentPos = transform.position;
+            foreach (Collider target in targetList)
+            {
+                if (target == null)
+                {
+                    targetList.Remove(target);
+                }
+                float dist = Vector3.Distance(target.transform.position, currentPos);
+                if (dist < minDist)
+                {
+                    nearestTarget = target;
+                    minDist = dist;
+                }
+            }
+            target = nearestTarget.gameObject;
         }
     }
 

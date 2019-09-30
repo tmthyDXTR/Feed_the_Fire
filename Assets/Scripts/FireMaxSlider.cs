@@ -11,12 +11,12 @@ public class FireMaxSlider : MonoBehaviour
     {
         fireSlider.wholeNumbers = true;
         fireSlider.minValue = 0;
-        fireSlider.maxValue = ResourceBank.fireLifeFull;
-        fireSlider.value = ResourceBank.fireLifeFull;
+        fireSlider.maxValue = gameHandler.fireLifeFull;
+        fireSlider.value = gameHandler.fireLifeFull;
     }
 
     void Update()
     {
-        ResourceBank.fireLifeMax = (int)fireSlider.value;
+        gameHandler.fireLifeMax = (int)fireSlider.value;
     }
 }

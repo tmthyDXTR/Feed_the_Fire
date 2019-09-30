@@ -7,42 +7,16 @@ using System;
 
 public class Window_ResourceBank : MonoBehaviour
 {
- 
+
+    public GameStats gameStats;
+    GameHandler gameHandler;
 
 
-    private void UpdateFireLifeTextObject()
+    void Start()
     {
-        transform.Find("FireLife").GetComponent<Text>().text =
-            "Fire Life: " + ResourceBank.GetFireLife() + " / " + ResourceBank.fireLifeFull;
-    }
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
 
-    private void UpdateWoodResourceTextObject()
-    {
-        transform.Find("WoodStock").GetComponent<Text>().text =
-            "Wood: " + ResourceBank.GetWoodStock();
-    }
-
-    private void UpdateHousingTextObject()
-    {
-        transform.Find("Housing").GetComponent<Text>().text =
-            "House: " + ResourceBank.housingCurrent + " / " + ResourceBank.housingMax;
-    }
-
-    private void UpdateFoodStockTextObject()
-    {
-        transform.Find("FoodStock").GetComponent<Text>().text =
-            "Food: " + ResourceBank.foodStock;
-    }
-
-    private void UpdateSporesStockTextObject()
-    {
-        transform.Find("SporesStock").GetComponent<Text>().text =
-            "Spores: " + ResourceBank.sporesStock;
-    }
-
-
-    private void Awake()
-    {
 
         //-- Test Stock Init for Job Debugging --//
         UpdateWoodResourceTextObject();
@@ -53,38 +27,99 @@ public class Window_ResourceBank : MonoBehaviour
 
 
 
-        ResourceBank.OnFireLifeChanged += delegate (object sender, EventArgs e)
-        {            
+        gameHandler.OnFireLifeChanged += delegate (object sender, EventArgs e)
+        {
             UpdateFireLifeTextObject();
         };
 
-        ResourceBank.OnWoodStockChanged += delegate (object sender, EventArgs e)
+        gameHandler.OnWoodStockChanged += delegate (object sender, EventArgs e)
         {
             UpdateWoodResourceTextObject();
         };
 
-        ResourceBank.OnHousingChanged += delegate (object sender, EventArgs e)
+        gameHandler.OnHousingChanged += delegate (object sender, EventArgs e)
         {
             UpdateHousingTextObject();
         };
 
-        ResourceBank.OnFoodStockChanged += delegate (object sender, EventArgs e)
+        gameHandler.OnFoodStockChanged += delegate (object sender, EventArgs e)
         {
             UpdateFoodStockTextObject();
         };
 
-        ResourceBank.OnSporesStockChanged += delegate (object sender, EventArgs e)
+        gameHandler.OnSporesStockChanged += delegate (object sender, EventArgs e)
+        {
+            UpdateSporesStockTextObject();
+        };
+
+    }
+    private void UpdateFireLifeTextObject()
+    {
+        transform.GetChild(0).Find("FireLife").GetComponent<Text>().text =
+            "Fire Life: " + gameStats.fireLife + " / " + gameStats.fireLifeFull;
+    }
+
+    private void UpdateWoodResourceTextObject()
+    {
+        transform.GetChild(0).Find("WoodStock").GetComponent<Text>().text =
+            "Wood: " + gameStats.woodStock;
+    }
+
+    private void UpdateHousingTextObject()
+    {
+        transform.GetChild(0).Find("Housing").GetComponent<Text>().text =
+            "House: " + gameStats.housingCurrent + " / " + gameStats.housingMax;
+    }
+
+    private void UpdateFoodStockTextObject()
+    {
+        transform.GetChild(0).Find("FoodStock").GetComponent<Text>().text =
+            "Food: " + gameStats.foodStock;
+    }
+
+    private void UpdateSporesStockTextObject()
+    {
+        transform.GetChild(0).Find("SporesStock").GetComponent<Text>().text =
+            "Spores: " + gameStats.sporesStock;
+    }
+
+
+    
+
+    private void OnDestroy()
+    {
+        Debug.Log("window dead");
+        gameHandler.OnFireLifeChanged -= delegate (object sender, EventArgs e)
+        {
+            UpdateFireLifeTextObject();
+        };
+        gameHandler.OnWoodStockChanged -= delegate (object sender, EventArgs e)
+        {
+            UpdateWoodResourceTextObject();
+        };
+
+        gameHandler.OnHousingChanged -= delegate (object sender, EventArgs e)
+        {
+            UpdateHousingTextObject();
+        };
+
+        gameHandler.OnFoodStockChanged -= delegate (object sender, EventArgs e)
+        {
+            UpdateFoodStockTextObject();
+        };
+
+        gameHandler.OnSporesStockChanged -= delegate (object sender, EventArgs e)
         {
             UpdateSporesStockTextObject();
         };
 
     }
 
-        
+
 
     void Update()
     {
-        ResourceBank.FireBurner();
+        
         //UpdateFireLifeTextObject();
     }
 

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e2428ad9ec041547a7438a58a7cc3e0, type: 3}
+  m_Name: Bonfire
+  m_EditorClassIdentifier: 
+  name: Bonfire
+  icon: {fileID: 21300000, guid: 899658524edd8504d8d840a84e217054, type: 3}
+  prefab: {fileID: 7094860209684509626, guid: 22745870a4271964d8c2428f338cddc2, type: 3}
+  type: 0
+  woodCost: 5
+  description: 

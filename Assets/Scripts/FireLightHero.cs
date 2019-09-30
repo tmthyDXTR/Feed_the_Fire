@@ -70,14 +70,14 @@ public class FireLightHero : MonoBehaviour
 
     void UpdateViewDistance()
     {
-        fow.ViewDistance = (float)originalViewDistance / 40 * hero.power;
-        if (fow.ViewDistance < 40)
+        fow.ViewDistance = (float)originalViewDistance / 30 * hero.power;
+        if (fow.ViewDistance < 25)
         {
-            fow.ViewDistance = 40;
+            fow.ViewDistance = 25;
         }
-        if (fow.ViewDistance > 150)
+        if (fow.ViewDistance > 100)
         {
-            fow.ViewDistance = 150;
+            fow.ViewDistance = 100;
         }
         //if (fow.ViewDistance >= originalViewDistance)
         //{

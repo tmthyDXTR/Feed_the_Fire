@@ -10,17 +10,24 @@ public class EnemySpawner : MonoBehaviour
     public float spawnTime = 180f;
     public float darknessSpawnTime = 30f;
     private Vector3 spawnPosition;
-
     public float timer;
+    private Vector3 randomPos;
 
-    void Awake()
+
+
+    void Start()
     {
         spawnPosition = transform.position + new Vector3(1, 0, 0);
         timeSinceLastSpawn = Random.Range(0, 120);
         for (int i = 0; i < amount; i++)
         {
-            Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
+            randomPos = transform.position + new Vector3(Random.Range(-10f, 10f), 0, Random.Range(-10f, 10f));
+            GameObject enemy = Instantiate(unitPrefab, randomPos, Quaternion.identity) as GameObject;
+            enemy.transform.SetParent(GameObject.Find("Level").transform);
         }
+
+        
+
     }
 
     void Update()
@@ -31,7 +38,7 @@ public class EnemySpawner : MonoBehaviour
             SpawnEnemy(1);
             timeSinceLastSpawn -= timeSinceLastSpawn;
         }
-        if (ResourceBank.fireLife < 5)
+        if (gameHandler.fireLife < 5)
         {
             timer += Time.deltaTime;
             if (timer >= darknessSpawnTime)
@@ -46,8 +53,10 @@ public class EnemySpawner : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            Debug.Log("Enemy spawned with timer: " + spawnTime);
-            Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
+            //Debug.Log("Enemy spawned with timer: " + spawnTime);
+            randomPos = transform.position + new Vector3(Random.Range(-10f, 10f), 0, Random.Range(-10f, 10f));
+            GameObject enemy = Instantiate(unitPrefab, randomPos, Quaternion.identity) as GameObject;
+            enemy.transform.SetParent(GameObject.Find("Level").transform);
         }
     }
 }

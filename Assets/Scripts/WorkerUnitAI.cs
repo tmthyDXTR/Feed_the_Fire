@@ -6,6 +6,7 @@ public class WorkerUnitAI : MonoBehaviour
 {
     private WorkerController util;
     private UnitInfo info;
+    private GameStats gameStats;
     
 
     [SerializeField] public Job job;
@@ -56,6 +57,7 @@ public class WorkerUnitAI : MonoBehaviour
         info = GetComponent<UnitInfo>();
         panicSphere = this.transform.Find("PanicSphere").GetComponent<SphereCollider>();
 
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
         //job = Job.Unemployed;
         //state = State.MovingToSafety;
     }
@@ -176,7 +178,7 @@ public class WorkerUnitAI : MonoBehaviour
                         //If Inventory full Search for Fire
                         if (info.invWood != 0)
                         {
-                            if (ResourceBank.fireLife < ResourceBank.fireLifeMax)
+                            if (gameHandler.fireLife < gameHandler.fireLifeMax)
                             {
                                 state = State.GrowingFire;
                             }
@@ -520,7 +522,7 @@ public class WorkerUnitAI : MonoBehaviour
                     // Check if there is a Stump to Plant Shroom Seed on
                     else if (util.SearchShroomGrow("Plant") != null)
                     {
-                        if (ResourceBank.sporesStock > 0)
+                        if (gameStats.sporesStock > 0)
                         {
                             Debug.Log("There are Spores to plant");
                             util.SearchSporesStorage("Collect", LayerMask.GetMask("Buildings"));
@@ -885,11 +887,11 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: GrowingFire");
                 if (job == Job.Woodcutter)
                 {
-                    if (info.invWood > 0 && ResourceBank.fireLife < ResourceBank.fireLifeMax)
+                    if (info.invWood > 0 && gameHandler.fireLife < gameHandler.fireLifeMax)
                     {                        
                         util.GrowFire();                      
                     }
-                    else if (info.invWood > 0 && ResourceBank.fireLife == ResourceBank.fireLifeMax)
+                    else if (info.invWood > 0 && gameHandler.fireLife == gameHandler.fireLifeMax)
                     {
                         state = State.Idling;
                     }
@@ -900,26 +902,22 @@ public class WorkerUnitAI : MonoBehaviour
                 }
                 else if (job == Job.Unemployed)
                 {
-                    if (info.invWood > 0 && ResourceBank.fireLife < ResourceBank.fireLifeMax)
+                    if (info.invWood > 0 && gameHandler.fireLife < gameHandler.fireLifeMax)
                     {
                         util.GrowFire();
                     }
-                    else if (info.invWood > 0 && ResourceBank.fireLife == ResourceBank.fireLifeMax)
+                    else if (info.invWood > 0 && gameHandler.fireLife == gameHandler.fireLifeMax)
                     {
                         state = State.Idling;
                     }
                 }
                 else if (job == Job.LightWarden)
                 {
-                    if (info.invWood > 0 && ResourceBank.fireLife < ResourceBank.fireLifeMax)
+                    if (info.invWood > 0 && gameHandler.fireLife < gameHandler.fireLifeMax)
                     {
                         util.GrowFire();
                     }
-                    else if (info.invWood > 0 && ResourceBank.fireLife == ResourceBank.fireLifeMax)
-                    {
-                        state = State.Idling;
-                    }
-                    else if (info.invWood > 0 && ResourceBank.fireLife > ResourceBank.fireLifeMax)
+                    else if (info.invWood > 0 && gameHandler.fireLife >= gameHandler.fireLifeMax)
                     {
                         state = State.Idling;
                     }
@@ -943,11 +941,11 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: TakingFire");
                 if (job == Job.LightWarden)
                 {
-                    if (util.burnTarget.gameObject.tag == "UnlitBonfire" && ResourceBank.fireLife > 2 && info.invFire < 1)
+                    if (util.burnTarget.gameObject.tag == "UnlitBonfire" && gameHandler.fireLife > 2 && info.invFire < 1)
                     {
                         util.TakeFire(1);                        
                     }
-                    else if (util.burnTarget.gameObject.tag == "Stump" && ResourceBank.fireLife > 2 && info.invFire < 1)
+                    else if (util.burnTarget.gameObject.tag == "Stump" && gameHandler.fireLife > 2 && info.invFire < 1)
                     {
                         util.TakeFire(1);
                     }

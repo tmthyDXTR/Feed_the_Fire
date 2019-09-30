@@ -1,11 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
     [SerializeField] public Skill skill;
     [SerializeField] private HeroController hero;
+    public bool onCoolDown = false;
     
 
     void Awake()
@@ -19,19 +19,16 @@ public class Attack : MonoBehaviour
 
     public void CastAttack(HeroController.Slot slot)
     {
-        if (skill.type == Skill.SkillType.Projectile)
+        //Check if hero is still attacking or moving again
+        if (hero.isAttacking)
         {
-            //Check if hero is still attacking or moving again
-            if (hero.isAttacking)
+            if (skill.type == Skill.SkillType.Projectile)
             {
                 CreateProjectile(slot);
                 hero.RemovePower(skill.cost);
-            }            
-        }
-        if (skill.type == Skill.SkillType.Area)
-        {
-            //Check if hero is still attacking or moving again
-            if (hero.isAttacking)
+                StartCoroutine(StartCoolDownTimer(skill.cooldown));
+            }
+            if (skill.type == Skill.SkillType.Area)
             {
                 if (slot == HeroController.Slot.Slot_2)
                 {
@@ -41,10 +38,24 @@ public class Attack : MonoBehaviour
 
                     CreateDamageBox();
                     hero.RemovePower(skill.cost);
+                    StartCoroutine(StartCoolDownTimer(skill.cooldown));
+
                 }
-                    
             }
         }
+    }
+
+    private IEnumerator StartCoolDownTimer(float cooldown)
+    {
+        Debug.Log(this.gameObject.name + " - " + skill.cooldown + " sec CoolDown started");
+        if (!onCoolDown)
+        {
+            onCoolDown = true;            
+        }
+        yield return new WaitForSeconds(cooldown);
+        onCoolDown = false;
+        Debug.Log(this.gameObject.name + " - " + skill.cooldown + " sec CoolDown ended");
+
     }
 
     void CreateProjectile(HeroController.Slot slot)
@@ -59,10 +70,12 @@ public class Attack : MonoBehaviour
         if (slot == HeroController.Slot.Slot_1)
         {
             projectile.damage = skill.baseDamage * hero.PowerMultiplicator();
+            //projectile.damage = Mathf.RoundToInt((skill.baseDamage + hero.PowerMultiplicator()) + (float)(Random.Range(0f, (float)(ResourceBank.fireLifeFull - ResourceBank.fireLife))));
+
         }
         else
         {
-            projectile.damage = skill.baseDamage + (21 - ResourceBank.fireLife);
+            projectile.damage = Mathf.RoundToInt(((float)skill.baseDamage + (float)gameHandler.fireLife) + (float)(Random.Range(0f, (float)(gameHandler.fireLifeFull - gameHandler.fireLife))));
         }
     }
 

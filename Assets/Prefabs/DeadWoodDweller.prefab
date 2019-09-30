@@ -1246,7 +1246,7 @@ MonoBehaviour:
   target: {fileID: 0}
   bonfire: {fileID: 0}
   hasTarget: 0
-  detectionRadius: 25
+  detectionRadius: 40
   state: 0
   targetList: []
 --- !u!114 &2090876364217082952

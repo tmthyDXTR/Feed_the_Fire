@@ -6,7 +6,7 @@ public class FireProjector : MonoBehaviour
 {
     private ProjectorManager projectorManager;
 
-    void Awake()
+    void Start()
     {
         projectorManager = GameObject.Find("SelectionManager").GetComponent<ProjectorManager>();
         if (projectorManager.projectorList.Contains(this.gameObject) )

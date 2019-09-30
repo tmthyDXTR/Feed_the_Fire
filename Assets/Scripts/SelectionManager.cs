@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,17 +9,30 @@ public class SelectionManager : MonoBehaviour
     public bool objectSelected = false;
     public bool isActive = true;
 
+    public GameObject hoveredOverObj;
     public List<GameObject> selection = new List<GameObject>();
 
     private ObjectPlacement objectPlacement;
     private SelectableObject selectableObject;
+    private ProjectorManager projectorManager;
 
-    private Transform canvas;
+    public Transform canvas;
 
     void Awake()
-    {
-        canvas = GameObject.Find("Canvas").transform;
+    {        
+        gameHandler.OnNewGameStarted += delegate (object sender, EventArgs e)
+        {
+            ResetSelection();          
+        };
+        gameHandler.OnGameStart += delegate (object sender, EventArgs e)
 
+        {
+            ResetSelection();
+            StartCoroutine(WaitFor());
+        };
+
+        canvas = GameObject.Find("Canvas").transform;
+        projectorManager = GetComponent<ProjectorManager>();
         objectPlacement = Camera.main.GetComponent<ObjectPlacement>();
 
         //ResourceBank.OnSelectionManagerDisabled += delegate (object sender, EventArgs e)
@@ -29,6 +43,18 @@ public class SelectionManager : MonoBehaviour
         //{
         //    SetActive(true);
         //};
+    }
+    IEnumerator WaitFor()
+    {
+        yield return new WaitForSeconds(0.1f);
+        canvas = GameObject.Find("Canvas").transform;
+    }
+
+    private void ResetSelection()
+    {
+        DeselectAll();
+        selection.Clear();
+        projectorManager.Reset();
     }
 
     void Update()
@@ -150,7 +176,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowWorker = Instantiate(Resources.Load("Window_Worker")) as GameObject;
                 windowWorker.transform.SetParent(canvas);
-                windowWorker.transform.localPosition = new Vector3(-200, -250, 0);
+                windowWorker.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowWorker;
@@ -161,7 +187,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowHero = Instantiate(Resources.Load("Window_Hero")) as GameObject;
                 windowHero.transform.SetParent(canvas);
-                windowHero.transform.localPosition = new Vector3(-200, -250, 0);
+                windowHero.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowHero;
@@ -172,7 +198,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowBuilding = Instantiate(Resources.Load("Window_Building")) as GameObject;          
                 windowBuilding.transform.SetParent(canvas);
-                windowBuilding.transform.localPosition = new Vector3(-200, -250, 0);
+                windowBuilding.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowBuilding;
@@ -183,7 +209,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowUnlitBonfire = Instantiate(Resources.Load("Window_Bonfire")) as GameObject;
                 windowUnlitBonfire.transform.SetParent(canvas);
-                windowUnlitBonfire.transform.localPosition = new Vector3(-200, -250, 0);
+                windowUnlitBonfire.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowUnlitBonfire;
@@ -193,7 +219,10 @@ public class SelectionManager : MonoBehaviour
             else if (selectableObject.name == "FirePlace")
             {
                 //Debug.Log("No Window! Now Instantiating");
-                ProjectorManager projectorManager = GameObject.Find("SelectionManager").GetComponent<ProjectorManager>();
+                if (projectorManager == null)
+                {
+                    projectorManager = GameObject.Find("SelectionManager").GetComponent<ProjectorManager>();
+                }                
                 foreach (GameObject projector in projectorManager.projectorList)
                 {
                     projector.transform.GetChild(0).GetComponent<Projector>().enabled = true;
@@ -202,7 +231,7 @@ public class SelectionManager : MonoBehaviour
 
                 GameObject firePlaceWindow = Instantiate(Resources.Load("Window_FirePlace")) as GameObject;
                 firePlaceWindow.transform.SetParent(canvas);
-                firePlaceWindow.transform.localPosition = new Vector3(-200, -250, 0);
+                firePlaceWindow.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = firePlaceWindow;
@@ -212,7 +241,7 @@ public class SelectionManager : MonoBehaviour
                 //Debug.Log("No Window! Now Instantiating");
                 GameObject firePlaceWindow = Instantiate(Resources.Load("Window_FoodStorage")) as GameObject;
                 firePlaceWindow.transform.SetParent(canvas);
-                firePlaceWindow.transform.localPosition = new Vector3(-200, -250, 0);
+                firePlaceWindow.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = firePlaceWindow;
@@ -221,7 +250,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject stumpWindow = Instantiate(Resources.Load("Window_Stump")) as GameObject;
                 stumpWindow.transform.SetParent(canvas);
-                stumpWindow.transform.localPosition = new Vector3(-200, -250, 0);
+                stumpWindow.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = stumpWindow;
@@ -230,7 +259,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowEnemy = Instantiate(Resources.Load("Window_Enemy")) as GameObject;
                 windowEnemy.transform.SetParent(canvas);
-                windowEnemy.transform.localPosition = new Vector3(-200, -250, 0);
+                windowEnemy.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowEnemy;
@@ -241,7 +270,7 @@ public class SelectionManager : MonoBehaviour
             {
                 GameObject windowDeadTree = Instantiate(Resources.Load("Window_Tree")) as GameObject;
                 windowDeadTree.transform.SetParent(canvas);
-                windowDeadTree.transform.localPosition = new Vector3(-200, -250, 0);
+                windowDeadTree.transform.localPosition = new Vector3(-600, -380, 0);
 
                 //selectableObject = obj.GetComponent<SelectableObject>();
                 selectableObject.infoWindow = windowDeadTree;
@@ -270,15 +299,18 @@ public class SelectionManager : MonoBehaviour
 
     public void DeselectAll()
     {
-        foreach (GameObject obj in selection)
+        if (selection.Count > 0)
         {
-            if (obj.GetComponent<SelectableObject>() != null)
+            foreach (GameObject obj in selection)
             {
-                selectableObject = obj.GetComponent<SelectableObject>();
-                selectableObject.isSelected = false;
-                selectableObject.OpenCloseInfo();
+                if (obj.GetComponent<SelectableObject>() != null)
+                {
+                    selectableObject = obj.GetComponent<SelectableObject>();
+                    selectableObject.isSelected = false;
+                    selectableObject.OpenCloseInfo();
+                }
             }
-        }
+        }        
         selection.Clear();
         objectSelected = false;
     }

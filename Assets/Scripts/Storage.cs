@@ -22,22 +22,6 @@ public class Storage : MonoBehaviour
         Store(StoredItem.Spores);
         Store(StoredItem.Spores);
 
-
-        //ResourceBank.OnFoodStockChanged += delegate (object sender, EventArgs e)
-        //{
-        //    Collect();
-        //};
-
-        //singleStorage = GetComponentsInChildren<SingleStorage>();
-        //foreach (SingleStorage store in singleStorage)
-        //{
-        //    store.OnShroomsAdded += delegate (object sender, EventArgs e)
-        //    {
-        //        Debug.Log("Shroom Added");
-        //        stockShrooms += 1;
-        //        stored += 1;
-        //    };
-        //}
     }
 
     void Update()

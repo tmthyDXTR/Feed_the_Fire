@@ -19,10 +19,13 @@ public class BuildingInfo : MonoBehaviour
     CapsuleCollider capsuleCollider;
     ConstructionManager construction;
 
+    GameHandler gameHandler;
+
 
     void Awake()
     {
         construction = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
 
         // Create According Building Stats
         if (this.gameObject.CompareTag("ResidentialHouse"))
@@ -142,7 +145,7 @@ public class BuildingInfo : MonoBehaviour
         if (originalTag == "ResidentialHouse")
         {
             this.gameObject.tag = originalTag;
-            ResourceBank.AddHousing(2);
+            gameHandler.AddHousing(2);
         }
 
         if (originalTag == "Bonfire")

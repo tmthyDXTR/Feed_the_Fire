@@ -22,10 +22,10 @@ MonoBehaviour:
   damageBoxPrefab: {fileID: 0}
   baseDamage: 0
   range: 10
-  speed: 10
+  speed: 12
   effectRadius: 0
   castTime: 1
-  cooldown: 0
+  cooldown: 1
   duration: 0
   cost: 0
   mustStayForCast: 1

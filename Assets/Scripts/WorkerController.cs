@@ -31,12 +31,18 @@ public class WorkerController : MonoBehaviour
     MinableNodes growManager;
     UnitInfo unitInfo;
 
+    GameHandler gameHandler;
+    GameStats gameStats;
+
 
     #endregion
 
 
     void Awake()
     {
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
+
         unitInfo = GetComponent<UnitInfo>();
         construction = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
         burnManager = GameObject.Find("BurnManager").GetComponent<BurnManager>();
@@ -212,6 +218,10 @@ public class WorkerController : MonoBehaviour
     public Collider SearchShroomGrow(string reason) // reason: "Plant" or "CollectShrooms" or "CollectSpores"
     {
         // Check if there are Spores to collect
+        if (growManager == null)
+        {
+            growManager = GameObject.Find("MinableNodes").GetComponent<MinableNodes>();
+        }
         if (growManager.sporeCollectList.Count > 0 && reason == "CollectSpores")
         {
             target = growManager.sporeCollectList[0].GetComponent<Collider>();
@@ -474,10 +484,10 @@ public class WorkerController : MonoBehaviour
             {
                 UnitInfo unit = GetComponent<UnitInfo>();
                 
-                if (ResourceBank.fireLife > amount + 1)
+                if (gameStats.fireLife > amount + 1)
                 {
                     unit.invFire += 1;
-                    ResourceBank.RemoveFireLife(amount);
+                    gameHandler.RemoveFireLife(amount);
                     workTime -= (int)workTime;
                 }
             }
@@ -497,7 +507,7 @@ public class WorkerController : MonoBehaviour
                 {
                     storage.StoreWood();
                     unit.invWood -= 1;
-                    ResourceBank.AddWoodToStock(1);
+                    gameHandler.AddWoodToStock(1);
                     workTime -= (int)workTime;
                 }
             }
@@ -517,7 +527,7 @@ public class WorkerController : MonoBehaviour
                 {
                     storage.CollectWood();
                     unit.invWood += 1;
-                    ResourceBank.RemoveWoodFromStock(1);
+                    gameHandler.RemoveWoodFromStock(1);
                     workTime -= (int)workTime;
                 }
             }
@@ -559,7 +569,7 @@ public class WorkerController : MonoBehaviour
                         storage.CollectWood();
                         unit.invWood += 1;
                         building.reqWood -= 1;
-                        ResourceBank.RemoveWoodFromStock(1);
+                        gameHandler.RemoveWoodFromStock(1);
                         workTime -= (int)workTime;
                     }
                 }
@@ -648,12 +658,12 @@ public class WorkerController : MonoBehaviour
     {
         UnitInfo info = GetComponent<UnitInfo>();
         workTime += Time.deltaTime;
-        if (ResourceBank.fireLife < ResourceBank.fireLifeMax)
+        if (gameStats.fireLife < gameStats.fireLifeMax)
         {
             if (workTime >= 1)
             {
                 info.invWood -= 1;
-                ResourceBank.AddWoodToFire(1);
+                gameHandler.AddFireLife(1);
                 workTime -= (int)workTime;
             }
         }

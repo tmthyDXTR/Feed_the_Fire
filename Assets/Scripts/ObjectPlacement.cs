@@ -7,9 +7,9 @@ public class ObjectPlacement : MonoBehaviour
     private BuildingInfo buildingInfo;
     private PlaceableObject placeableObject;
     private SelectableObject selectableObject;
-    private MiningArea miningArea;
-    private ShroomGrowingArea shroomGrowingArea;
-    private ConstructionManager constructionManager;
+    [SerializeField] private MiningArea miningArea;
+    [SerializeField] private ShroomGrowingArea shroomGrowingArea;
+    [SerializeField] private ConstructionManager constructionManager;
     private SelectionManager selectionManager;
     private GridManager grid;
 
@@ -37,7 +37,7 @@ public class ObjectPlacement : MonoBehaviour
     {
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
         constructionManager = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
-        grid = FindObjectOfType<GridManager>();
+        grid = GameObject.Find("GridManager").GetComponent<GridManager>();
     }
 
     void Update()
@@ -276,6 +276,7 @@ public class ObjectPlacement : MonoBehaviour
         currentObject = ((GameObject)Instantiate(objectToBuild, mousePos, Quaternion.identity)).transform;
         if (currentObject != null)
         {
+            currentObject.transform.SetParent(GameObject.Find("Level").transform);
             placeableObject = currentObject.GetComponent<PlaceableObject>();
             selectionManager.Select(currentObject.gameObject);
         }
@@ -292,7 +293,15 @@ public class ObjectPlacement : MonoBehaviour
     {
         buildingInfo.SetBuildingModel(0);
         currentObject.tag = "Construction";
-        constructionManager.RegisterConstruction(currentObject.gameObject);
+        if (constructionManager != null)
+        {
+            constructionManager.RegisterConstruction(currentObject.gameObject);
+        }
+        else
+        {
+            constructionManager = GameObject.Find("ConstructionManager").GetComponent<ConstructionManager>();
+            constructionManager.RegisterConstruction(currentObject.gameObject);
+        }
         currentObject = null;
         hasPlaced = true;
         Cursor.visible = true;

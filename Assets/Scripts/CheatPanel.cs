@@ -14,6 +14,7 @@ public class CheatPanel : MonoBehaviour
     private Button woodButton;
     private Button enemyButton;
 
+    GameHandler gameHandler;
 
     public Storage storage;
     public EnemySpawner enemySpawner;
@@ -24,6 +25,7 @@ public class CheatPanel : MonoBehaviour
 
     void Awake()
     {
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
         storage = GameObject.Find("FoodStorage").GetComponent<Storage>();
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
 
@@ -40,14 +42,14 @@ public class CheatPanel : MonoBehaviour
         woodButton = GameObject.Find("WoodCheat").gameObject.GetComponent<Button>();
         woodButton.onClick.AddListener(AddWood);
 
-        enemySpawner = enemySpawner.GetComponent<EnemySpawner>();
+        enemySpawner = enemySpawner.gameObject.GetComponent<EnemySpawner>();
         enemyButton = GameObject.Find("SpawnEnemy").gameObject.GetComponent<Button>();
         enemyButton.onClick.AddListener(AddEnemy);
     }
 
     private void AddRemoveFire()
     {
-        ResourceBank.AddWoodToFire(1);
+        gameHandler.AddFireLife(1);
     }
 
     private void AddFood()
@@ -67,7 +69,7 @@ public class CheatPanel : MonoBehaviour
             if (storage.currentAmount < storage.woodCapacity)
             {
                 storage.currentAmount += 1;
-                ResourceBank.AddWoodToStock(1);
+                gameHandler.AddWoodToStock(1);
                 break;
             }
         }

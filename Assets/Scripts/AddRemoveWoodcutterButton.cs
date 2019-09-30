@@ -13,6 +13,11 @@ public class AddRemoveWoodcutterButton : MonoBehaviour, IPointerClickHandler
     public UnityEvent middleClick;
     public UnityEvent rightClick;
 
+    void Awake()
+    {
+        jobManager = GameObject.Find("Workers").GetComponent<JobManager>();
+    }
+
 
     public void OnPointerClick(PointerEventData eventData)
     {

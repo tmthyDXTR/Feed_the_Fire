@@ -45,8 +45,12 @@ public class DamageBox : MonoBehaviour
             {
                 Debug.Log("Tree HIT Fire AOE DamageBox");
                 Burnable burnable = other.transform.parent.gameObject.GetComponent<Burnable>();
-                burnable.isBurning = true;
-                burnable.AddBurnEffect();
+                if (!burnable.isBurning)
+                {
+                    burnable.isBurning = true;
+                    burnable.AddBurnEffect();
+                }
+                
             }
             else
             {

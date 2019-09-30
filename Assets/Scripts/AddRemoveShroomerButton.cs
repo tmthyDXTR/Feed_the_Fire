@@ -13,7 +13,10 @@ public class AddRemoveShroomerButton : MonoBehaviour, IPointerClickHandler
     public UnityEvent middleClick;
     public UnityEvent rightClick;
 
-
+    void Awake()
+    {
+        jobManager = GameObject.Find("Workers").GetComponent<JobManager>();
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)

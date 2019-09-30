@@ -7,6 +7,8 @@ public class LightZoneScaler : MonoBehaviour
 {
     [SerializeField] private CapsuleCollider collider;
     [SerializeField] private Projector projector;
+    GameHandler gameHandler;
+    GameStats gameStats;
 
     float col_1 = 4.5f;
     float col_2 = 6.33f;
@@ -25,10 +27,13 @@ public class LightZoneScaler : MonoBehaviour
 
     void Awake()
     {
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+
         collider = GetComponent<CapsuleCollider>();
         projector = transform.Find("Projector").transform.GetChild(0).GetComponent<Projector>();
 
-        ResourceBank.OnFireLifeChanged += delegate (object sender, EventArgs e)
+        gameHandler.OnFireLifeChanged += delegate (object sender, EventArgs e)
         {
             CheckLightLevel();
         };
@@ -36,9 +41,17 @@ public class LightZoneScaler : MonoBehaviour
         CheckLightLevel();
     }
 
+    private void OnDestroy()
+    {
+        gameHandler.OnFireLifeChanged -= delegate (object sender, EventArgs e)
+        {
+            CheckLightLevel();
+        };
+    }
+
     private void CheckLightLevel()
     {
-        fireLifePercent = (float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull;
+        fireLifePercent = (float)gameStats.fireLife / (float)gameStats.fireLifeFull;
         //if (fireLifePercent >= 0.75f)
         //{
         //    UpdateLightZone();
@@ -67,26 +80,52 @@ public class LightZoneScaler : MonoBehaviour
 
     private void UpdateLightZone(int lightLevel)
     {
+        collider = GetComponent<CapsuleCollider>();
+        projector = transform.Find("Projector").transform.GetChild(0).GetComponent<Projector>();
         if (lightLevel == 4)
         {
-            collider.radius = col_4;
-            projector.fieldOfView = proj_4;
+            if (collider != null)
+            {
+                collider.radius = col_4;
+            }
+            if (projector != null)
+            {
+                projector.fieldOfView = proj_4;
+            }
         }
         else if (lightLevel == 3)
         {
-            collider.radius = col_3;
-            projector.fieldOfView = proj_3;
+            if (collider != null)
+            {
+                collider.radius = col_3;
+            }
+            if (projector != null)
+            {
+                projector.fieldOfView = proj_3;
+            }
         }
         else if (lightLevel == 2)
         {
-            collider.radius = col_2;
-            projector.fieldOfView = proj_2;
+            if (collider != null)
+            {
+                collider.radius = col_2;
+            }
+            if (projector != null)
+            {
+                projector.fieldOfView = proj_2;
+            }
         }
         else if (lightLevel == 1)
         {
-            collider.radius = col_1;
-            projector.fieldOfView = proj_1;
+            if (collider != null)
+            {
+                collider.radius = col_1;
+            }
+            if (projector != null)
+            {
+                projector.fieldOfView = proj_1;
+            }
         }
-        Debug.Log("Fire: " + ResourceBank.fireLife + "-" + "Light Level: " + lightLevel);
+        Debug.Log("Fire: " + gameStats.fireLife + "-" + "Light Level: " + lightLevel);
     }
 }

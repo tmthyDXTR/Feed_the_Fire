@@ -15,12 +15,12 @@ public class Window_FirePlace : MonoBehaviour
 
     void Awake()
     {
-        sliderMax = ResourceBank.fireLifeFull;
+        sliderMax = gameHandler.fireLifeFull;
         sliderNewMax = sliderMax;
 
         slider = transform.Find("Slider").GetComponent<Slider>();
-        slider.maxValue = ResourceBank.fireLifeFull;
-        slider.value = ResourceBank.fireLifeMax;
+        slider.maxValue = gameHandler.fireLifeFull;
+        slider.value = gameHandler.fireLifeMax;
 
         slider.onValueChanged.AddListener(delegate { UpdateSliderText(); });
 
@@ -38,7 +38,7 @@ public class Window_FirePlace : MonoBehaviour
     {
         //Debug.Log("SliderValue Changed");
         sliderText.text = slider.value.ToString();
-        ResourceBank.fireLifeMax = (int)slider.value;
+        gameHandler.fireLifeMax = (int)slider.value;
     }
 
 

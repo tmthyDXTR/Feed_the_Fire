@@ -12,6 +12,8 @@ public class FireLight : MonoBehaviour
     public float max = 1.03f;
     private float minFlicker;
     private float maxFlicker;
+    GameStats gameStats;
+
 
     void Awake()
     {
@@ -21,6 +23,9 @@ public class FireLight : MonoBehaviour
         fow = GetComponent<SimpleFogOfWar.FogOfWarInfluence>();
 
         collider = GetComponent<SphereCollider>();
+
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
+
     }
 
     void Update()
@@ -56,8 +61,8 @@ public class FireLight : MonoBehaviour
         //    lt.range = originalRange;
         //}
 
-        float newRange = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
-        lt.range = (float)originalRange * ((float)ResourceBank.fireLife / (float)ResourceBank.fireLifeFull);
+        float newRange = (float)originalRange * ((float)gameStats.fireLife / (float)gameStats.fireLifeFull);
+        lt.range = (float)originalRange * ((float)gameStats.fireLife / (float)gameStats.fireLifeFull);
         UpdateViewDistance();
     }
 

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class BigBoyController : MonoBehaviour
 {
+    private Transform damageBoxes;
+    private Transform closeDamageBox1;
+    private Transform closeDamageBox2;
+
+
     private EnemyInfo info;
     private SphereCollider detectionSphere;
     private UnityEngine.AI.NavMeshAgent navAgent;
@@ -11,15 +16,19 @@ public class BigBoyController : MonoBehaviour
     [SerializeField] private GameObject target;
     [SerializeField] private bool isAggro = false;
     [SerializeField] private bool isAttacking = false;
+    public bool isTooClose = false;
     public bool isHit = false;
     public bool isDead = false;
     [SerializeField] private float damage;
     [SerializeField] private float damageRadius;
+    [SerializeField] private float rotationSpeed = 1.25f;
+    public bool isRotating = false;
 
 
     private bool targetReached = false;
 
     public List<Collider> inRangeTargets = new List<Collider>();
+    public List<Collider> tooCloseTargets = new List<Collider>();
 
     public State state;
     [SerializeField] public enum State
@@ -30,14 +39,22 @@ public class BigBoyController : MonoBehaviour
         Dead,
     }
 
-    [SerializeField] private AttackType attack;
-    private enum AttackType
+    public AttackType attack;
+    public enum AttackType
     {
-        Kick_BothArms,        
+        Kick_BothArms,
+        Kick_Close,
+        Kick_Foot,
     }
 
     void Awake()
     {
+        // DamageBoxes
+        damageBoxes = this.transform.Find("DamageBoxes");
+        closeDamageBox1 = damageBoxes.Find("CloseDamageBox1");
+        closeDamageBox1 = damageBoxes.Find("CloseDamageBox2");
+
+        //
         detectionSphere = this.transform.Find("DetectionSphere").GetComponent<SphereCollider>();
         navAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -50,10 +67,17 @@ public class BigBoyController : MonoBehaviour
 
     void Update()
     {
-        //if (target != null)
-        //{
-        //    transform.LookAt(target.transform.position);            
-        //}
+        if (isRotating)
+        {
+            Vector3 targetDir = target.transform.position - transform.position;
+
+            // The step size is equal to speed times frame time.
+            float step = rotationSpeed * Time.deltaTime;
+
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
+
+            transform.rotation = Quaternion.LookRotation(newDir);
+        }
 
         if (info.currentHealth <= 0)
         {
@@ -93,8 +117,16 @@ public class BigBoyController : MonoBehaviour
 
             case State.Attacking:
                 if (!isAttacking)
-                {                    
-                    StartCoroutine(Attack(attack));
+                {
+                    if (!isTooClose)
+                    {
+                        StartCoroutine(Attack(attack));
+                    }
+                    else
+                    {
+                        StartCoroutine(Attack(AttackType.Kick_Close));
+                    }
+
                 }
                 else if (!inRangeTargets.Contains(target.GetComponent<Collider>()))
                 {
@@ -111,21 +143,91 @@ public class BigBoyController : MonoBehaviour
     private IEnumerator Attack(AttackType attack)
     {
         isAttacking = true;
-        transform.LookAt(target.transform);
         // INSERT TYPES HERE -----
-        //Debug.Log("Kick_BothArms");
-        animator.SetBool("IsWalking", false);
-        navAgent.isStopped = true;
-        navAgent.ResetPath();
-        animator.Play("Kick_BothArms");
-        yield return new WaitForSeconds(1f);
-        //GameObject fireball = Instantiate(Resources.Load("PS_Fireball")) as GameObject;
-        //fireball.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1f, this.transform.position.z);
-        //fireball.GetComponent<Projectile>().target = targetObject;
-        //fireball.GetComponent<Projectile>().damage = autoDamage;
+        if (attack == AttackType.Kick_BothArms)
+        {
+            StartCoroutine(RotateToTarget(0.33f));
 
-        yield return new WaitForSeconds(1f); // Cooldown
-        isAttacking = false;
+            animator.SetBool("IsWalking", false);
+            navAgent.isStopped = true;
+            navAgent.ResetPath();
+            animator.Play("Kick_BothArms");
+            
+            yield return new WaitForSeconds(2f); // Cooldown            
+            isAttacking = false;
+
+            //yield return new WaitForSeconds(1f);
+            //isRotating = true;
+        }
+        if (attack == AttackType.Kick_Close)
+        {
+            animator.SetBool("IsWalking", false);
+            navAgent.isStopped = true;
+            navAgent.ResetPath();
+            animator.Play("Kick_Close");
+            yield return new WaitForSeconds(1f);
+            //GameObject fireball = Instantiate(Resources.Load("PS_Fireball")) as GameObject;
+            //fireball.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1f, this.transform.position.z);
+            //fireball.GetComponent<Projectile>().target = targetObject;
+            //fireball.GetComponent<Projectile>().damage = autoDamage;
+
+            yield return new WaitForSeconds(1f); // Cooldown
+            isAttacking = false;
+        }
+        //Debug.Log("Kick_BothArms");
+        
+    }
+
+    private void AttackClose1()
+    {
+        StartCoroutine(RotateToTarget(0.33f));
+
+        Debug.Log(info.name + " dealt Damage now");
+        GameObject damageBox = Instantiate(Resources.Load("DamageBox"), damageBoxes) as GameObject;
+        SphereCollider damageCol = damageBox.GetComponent<SphereCollider>();
+        damageCol.center = new Vector3(-0.25f, 0, 1.8f);
+        damageCol.radius = damageRadius;
+        Vector3 damageBoxPos = damageBox.transform.position;
+        DamageBox box = damageBox.GetComponent<DamageBox>();
+        box.damage = damage;
+        box.radius = damageRadius;
+
+        GameObject impactEffect = Instantiate(Resources.Load("ImpactEffect"), damageBoxPos, Quaternion.identity) as GameObject;
+        impactEffect.transform.position = damageBox.transform.TransformPoint(damageCol.center);
+        GameObject DebuffSlow = Instantiate(Resources.Load("Debuff_Slow"), damageBoxes) as GameObject;
+        //GameObject DebuffSlow = Instantiate(Resources.Load("Debuff_Slow")) as GameObject;
+
+        SphereCollider col = DebuffSlow.GetComponent<SphereCollider>();
+        col.center = new Vector3(-0.25f, 0, 1.8f);
+        col.radius = damageRadius;
+    }
+    private void AttackClose2()
+    {
+        Debug.Log(info.name + " dealt Damage now");
+        GameObject damageBox = Instantiate(Resources.Load("DamageBox"), damageBoxes) as GameObject;
+        SphereCollider damageCol = damageBox.GetComponent<SphereCollider>();
+        damageCol.center = new Vector3(-0.15f, 0, 1f);
+        damageCol.radius = damageRadius;
+        Vector3 damageBoxPos = damageBox.transform.position;
+        DamageBox box = damageBox.GetComponent<DamageBox>();
+        box.damage = damage;
+        box.radius = damageRadius;
+
+        GameObject impactEffect = Instantiate(Resources.Load("ImpactEffect"), damageBoxPos, Quaternion.identity) as GameObject;
+        impactEffect.transform.position = damageBox.transform.TransformPoint(damageCol.center);
+        GameObject DebuffSlow = Instantiate(Resources.Load("Debuff_Slow"), damageBoxes) as GameObject;
+        //GameObject DebuffSlow = Instantiate(Resources.Load("Debuff_Slow")) as GameObject;
+
+        SphereCollider col = DebuffSlow.GetComponent<SphereCollider>();
+        col.center = new Vector3(-0.15f, 0, 1f);
+        col.radius = damageRadius;
+    }
+
+    private IEnumerator RotateToTarget(float time) 
+    {
+        isRotating = true;
+        yield return new WaitForSeconds(time);
+        isRotating = false;
     }
 
     private void AttackDamage()
@@ -141,7 +243,6 @@ public class BigBoyController : MonoBehaviour
         //damageBox.center = new Vector3(0, 0, 1.6f);
         //hitBox.gameObject.GetComponent<DamageBox>().damage = 20f;
 
-        Transform damageBoxes = this.transform.Find("DamageBoxes");
         GameObject damageBox = Instantiate(Resources.Load("DamageBox"), damageBoxes) as GameObject;
         SphereCollider damageCol = damageBox.GetComponent<SphereCollider>();
         
@@ -161,6 +262,7 @@ public class BigBoyController : MonoBehaviour
         SphereCollider col = DebuffSlow.GetComponent<SphereCollider>();
         col.center = new Vector3(0, 0, 1.6f);
         col.radius = damageRadius;
+        
 
         //GameObject damageBox = Instantiate(Resources.Load("DamageBox"), hitBox.position, 
         //Quaternion.identity,

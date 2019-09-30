@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class JobManager : MonoBehaviour
 {
-
+    public EventHandler OnJobChanged;
     public int workerTotalCount = 0;
     public int unemployedCount = 0;
     public int lighWardenCount = 0;
@@ -14,11 +15,18 @@ public class JobManager : MonoBehaviour
     public int shroomerCount = 0;
 
     public WorkerUnitAI worker;
+    GameHandler gameHandler;
 
     void Awake()
     {
-        GetWorkerCounts();
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
 
+        GetWorkerCounts();
+        gameHandler.OnHousingChanged += delegate (object sender, EventArgs e)
+        {
+            //Debug.Log("OnHousingChanged event");
+            GetWorkerCounts();
+        };
     }
 
     void Update()
@@ -54,6 +62,8 @@ public class JobManager : MonoBehaviour
             worker.job = WorkerUnitAI.Job.Shroomer;
         }
         GetWorkerCounts();
+        if (OnJobChanged != null) OnJobChanged(null, EventArgs.Empty);
+
     }
 
     public void MoveWorkerToJob(string job, string newJob)
@@ -74,6 +84,7 @@ public class JobManager : MonoBehaviour
             if (newJob == "LightWarden")
             {
                 worker.job = WorkerUnitAI.Job.LightWarden;
+
             }
             if (newJob == "Builder")
             {
@@ -89,6 +100,8 @@ public class JobManager : MonoBehaviour
             }
         }
         GetWorkerCounts();
+        if (OnJobChanged != null) OnJobChanged(null, EventArgs.Empty);
+
     }
 
     private List<GameObject> GetWorkerList(string job)
@@ -195,5 +208,6 @@ public class JobManager : MonoBehaviour
             }
             
         }
+        if (OnJobChanged != null) OnJobChanged(null, EventArgs.Empty);
     }
 }

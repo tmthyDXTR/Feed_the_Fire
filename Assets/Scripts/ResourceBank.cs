@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public static class ResourceBank
+public static class gameHandler
 {
 
-    public static EventHandler OnFireLifeChanged;
-    public static EventHandler OnWoodStockChanged;
+    //public static EventHandler OnFireLifeChanged;
+
+    //public static EventHandler OnWoodStockChanged;
     public static EventHandler OnStoneStockChanged;
-    public static EventHandler OnFoodStockChanged;
-    public static EventHandler OnSporesStockChanged;
-    public static EventHandler OnHousingChanged;
+    //public static EventHandler OnFoodStockChanged;
+    //public static EventHandler OnSporesStockChanged;
+    //public static EventHandler OnHousingChanged;
     public static EventHandler OnEnemyKilled;
     public static EventHandler OnWorkerKilled;
 
+    public static EventHandler OnNewGameStarted;
+    public static EventHandler OnGameStart;
 
     public static int fireLifeFull = 20;
     public static int fireLifeMax = 20; //-- Slider Control
@@ -32,6 +35,36 @@ public static class ResourceBank
     public static int enemiesKilled = 0;
     public static int workerLost = 0;
 
+    public static void ResetGame()
+    {
+        fireLifeFull = 20;
+        fireLifeMax = 20; //-- Slider Control
+        fireLife = 12;
+        stoneStock = 0;
+        woodStock = 18;
+        foodStock = 0;
+        workerFoodCost = 1;
+        sporesStock = 0;
+        housingMax = 0;
+        housingCurrent = 0;
+        burnTime = 0.0f;
+        burnSpeed = 30f; //-- Seconds to lose 1 Fire Life
+
+        enemiesKilled = 0;
+        workerLost = 0;        
+        if (OnNewGameStarted != null) OnNewGameStarted(null, EventArgs.Empty);
+
+    }
+   
+    public static void GameStart()
+    {
+        fireLife = 12;
+        burnTime = 0.0f;
+        Debug.Log("GameStart");
+        if (OnGameStart != null) OnGameStart(null, EventArgs.Empty);
+
+    }
+
     public static void AddKillCounter(int amount)
     {
 
@@ -48,102 +81,6 @@ public static class ResourceBank
 
 
 
-
-    //-- Fire --//
-
-    public static void FireBurner()
-    {
-        if (fireLife >= 15)
-        {
-            //Debug.Log("Fire Burning");
-            burnTime += Time.deltaTime;
-            if (burnTime >= burnSpeed)
-            {               
-                RemoveFireLife(1);
-                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
-                burnTime -= (int)burnTime;
-            }
-        }
-        else if (fireLife >= 10 && fireLife < 15)
-        {
-            //Debug.Log("Fire Burning");
-            burnTime += Time.deltaTime;
-            if (burnTime >= burnSpeed * 1.22f)
-            {
-                RemoveFireLife(1);
-                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
-                burnTime -= (int)burnTime;
-            }
-        }
-        else if (fireLife >= 5 && fireLife < 10)
-        {
-            //Debug.Log("Fire Burning");
-            burnTime += Time.deltaTime;
-            if (burnTime >= burnSpeed * 1.4f)
-            {
-                RemoveFireLife(1);
-                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
-                burnTime -= (int)burnTime;
-            }
-        }
-        else if (fireLife > 0 && fireLife < 5)
-        {
-            //Debug.Log("Fire Burning");
-            burnTime += Time.deltaTime;
-            if (burnTime >= burnSpeed * 1.6f)
-            {
-                RemoveFireLife(1);
-                Debug.Log("1 Fire Life lost - Burn Time: " + (int)burnTime);
-                burnTime -= (int)burnTime;
-            }
-        }
-    }
-
-    public static void RemoveFireLife(int amount)
-    {
-        if (fireLife >= amount)
-        {
-            fireLife -= amount;
-            if (OnFireLifeChanged != null) OnFireLifeChanged(null, EventArgs.Empty);
-        }        
-    }
-
-    public static int GetFireLife()
-    {
-        return fireLife;
-    }
-
-    public static int GetFireLifeMax()
-    {
-        return fireLifeMax;
-    }
-
-    public static void AddWoodToFire(int amount)
-    {
-        
-        fireLife += amount;
-        if (OnFireLifeChanged != null) OnFireLifeChanged(null, EventArgs.Empty);
-    }
-
-
-    //-- Wood --//
-
-    public static void AddWoodToStock(int amount)
-    {
-        woodStock += amount;
-        if (OnWoodStockChanged != null) OnWoodStockChanged(null, EventArgs.Empty);
-    }
-
-    public static void RemoveWoodFromStock(int amount)
-    {
-        woodStock -= amount;
-        if (OnWoodStockChanged != null) OnWoodStockChanged(null, EventArgs.Empty);
-    }    
-
-    public static int GetWoodStock()
-    {
-        return woodStock;
-    }
 
 
     //-- Stone --//
@@ -163,71 +100,6 @@ public static class ResourceBank
     public static int GetStoneStock()
     {
         return stoneStock;
-    }
-
-    //-- Food --//
-
-    public static void AddFoodToStock(int amount)
-    {
-        foodStock += amount;
-        if (OnFoodStockChanged != null) OnFoodStockChanged(null, EventArgs.Empty);
-    }
-
-    public static void RemoveFoodFromStock(int amount)
-    {
-        foodStock -= amount;
-        if (OnFoodStockChanged != null) OnFoodStockChanged(null, EventArgs.Empty);
-    }
-
-
-    public static void AddSporesToStock(int amount)
-    {
-        sporesStock += amount;
-        if (OnSporesStockChanged != null) OnSporesStockChanged(null, EventArgs.Empty);
-    }
-
-    public static void RemoveSporesFromStock(int amount)
-    {
-        sporesStock -= amount;
-        if (OnSporesStockChanged != null) OnSporesStockChanged(null, EventArgs.Empty);
-    }
-
-
-
-
-    //-- Housing --//
-
-    public static void AddHousing(int amount)
-    {
-        housingMax += amount;
-        if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
-    }
-
-    public static void AddResident(int amount)
-    {
-        housingCurrent += amount;
-        if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
-    }
-
-    public static void RemoveHousing(int amount)
-    {
-        housingMax -= amount;
-        if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
-    }
-
-    public static int GetHousing()
-    {
-        return housingCurrent;
-    }
-
-    public static int GetHousingNeeded()
-    {
-        //foreach (Transform child in transform)
-        //{
-        //    Something(child.gameObject);
-        //}
-
-        return housingCurrent;
     }
 
 }

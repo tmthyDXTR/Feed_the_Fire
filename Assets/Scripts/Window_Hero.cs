@@ -27,7 +27,7 @@ public class Window_Hero : MonoBehaviour
         {
             transform.Find("Info_2").GetComponent<Text>().text = hero.power.ToString();
             transform.Find("Info_3").GetComponent<Text>().text = "Health: " + hero.currentHealth.ToString() + " / " + hero.health.ToString();
-            transform.Find("Info_4").GetComponent<Text>().text = "Dmg Multi: " + heroController.RClick_powerMultiplicator.ToString();
+            transform.Find("Info_4").GetComponent<Text>().text = "1 DmgMult: " + heroController.PowerMultiplicator().ToString();
 
         }
     }

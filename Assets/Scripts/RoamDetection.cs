@@ -15,10 +15,8 @@ public class RoamDetection : MonoBehaviour
         if (other.gameObject.layer == 17)
         {
             enemyRoam.targetList.Add(other);
-            if(enemyRoam.target == null)
-            {
-                enemyRoam.target = other.gameObject;
-            }
+            
+            
         }
     }
 
@@ -28,9 +26,6 @@ public class RoamDetection : MonoBehaviour
         {
             enemyRoam.targetList.Remove(other);
         }
-        if (other.gameObject == enemyRoam.target)
-        {
-            enemyRoam.target = null;
-        }
+        
     }
 }

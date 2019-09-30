@@ -20,12 +20,12 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6082702626419628557, guid: c65d02e69879ae14991f9f3d7f45e2c1,
     type: 3}
   damageBoxPrefab: {fileID: 0}
-  baseDamage: 10
+  baseDamage: 20
   range: 20
   speed: 20
   effectRadius: 0
   castTime: 1
-  cooldown: 4
+  cooldown: 1
   duration: 0
   cost: 1
   mustStayForCast: 1

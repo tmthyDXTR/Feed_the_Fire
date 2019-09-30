@@ -21,7 +21,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 0}
   damageBoxPrefab: {fileID: 4865381661396404360, guid: 54f900a1d0d46cd4cabb3aad2ad6fe9c,
     type: 3}
-  baseDamage: 10
+  baseDamage: 20
   range: 0
   speed: 0
   effectRadius: 15

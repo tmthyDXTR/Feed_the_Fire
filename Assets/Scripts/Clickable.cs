@@ -4,19 +4,24 @@ using UnityEngine.EventSystems;
 
 public class Clickable : MonoBehaviour, IPointerClickHandler
 {
+    GameHandler gameHandler;
 
+    void Awake()
+    {
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            ResourceBank.AddWoodToFire(1);
+            gameHandler.AddFireLife(1);
         }
         else if (eventData.button == PointerEventData.InputButton.Middle)
         {
         }
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            ResourceBank.RemoveFireLife(1);
+            gameHandler.RemoveFireLife(1);
         }
     }
 }
