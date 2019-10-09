@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InGameTime : MonoBehaviour
 {
-    private Text timeText;
+    private TextMeshProUGUI timeText;
     private float startTime;
 
     void Awake()
     {
         startTime = Time.time;
-        timeText = transform.Find("TimeText").GetComponent<Text>();
+        timeText = transform.Find("TimeText").GetComponent<TextMeshProUGUI>();
     }
 
     void Update()
     {
+        if (timeText == null)
+        {
+            timeText = transform.Find("TimeText").GetComponent<TextMeshProUGUI>();
+
+        }
         float t = Time.time - startTime;
 
         string minutes = ((int)t / 60).ToString();

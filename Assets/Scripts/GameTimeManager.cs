@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameTimeManager : MonoBehaviour
 {
-    [SerializeField] private float gameSpeed = 1f;
+    [SerializeField] public float gameSpeed = 1f;
 
     void Awake()
     {

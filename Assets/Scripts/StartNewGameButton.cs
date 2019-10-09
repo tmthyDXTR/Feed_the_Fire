@@ -30,7 +30,7 @@ public class StartNewGameButton : MonoBehaviour
             //SceneManager.LoadScene(0, LoadSceneMode.Single);
             GameObject newGame = Instantiate(Resources.Load("Level")) as GameObject;
             newGame.name = "Level";
-            gameHandler.GameStart();
+            gameStats.GameStart();
             isStarted = true;
             Destroy(this.transform.parent.parent.gameObject);
 

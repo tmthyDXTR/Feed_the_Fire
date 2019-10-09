@@ -86,8 +86,12 @@ public class TreeNodes : MonoBehaviour
             stump.GetComponent<GrowShroom>().hasSaplingDrop = true;
             Debug.Log("A Tree left behind a sapling to regrow");
         }
-        
 
+        MinableNodes minableNodes = this.transform.parent.parent.GetComponent<MinableNodes>();
+        if (minableNodes.minableNodesList.Contains(this.capsuleCollider))
+        {
+            minableNodes.minableNodesList.Remove(this.capsuleCollider);
+        }
         Destroy(gameObject);
     }
 

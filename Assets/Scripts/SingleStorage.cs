@@ -60,6 +60,14 @@ public class SingleStorage : MonoBehaviour
             gameHandler.RemoveSporesFromStock(1);
             Destroy(this.transform.GetChild(1).gameObject);
         }
+        if (item == StoredItem.Shrooms)
+        {
+            storage.stockShrooms -= 1;
+            storage.stored -= 1;
+            isFull = false;
+            //gameHandler.RemoveFoodFromStock(1);
+            Destroy(this.transform.GetChild(1).gameObject);
+        }
     }
 }
 

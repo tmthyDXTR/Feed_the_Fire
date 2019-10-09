@@ -16,7 +16,7 @@ public class AttackRangeHandler : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy" || other.tag == "Explosive" || other.tag == "DeadTree")
+        if (other.tag == "Enemy" || other.tag == "Explosive" || other.tag == "DeadTree" || other.tag == "UnlitBonfire")
         {
             util.inRangeTargets.Add(other);
         }
@@ -24,7 +24,7 @@ public class AttackRangeHandler : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Enemy" || other.tag == "Explosive" || other.tag == "DeadTree")
+        if (other.tag == "Enemy" || other.tag == "Explosive" || other.tag == "DeadTree" || other.tag == "UnlitBonfire")
         {
             util.inRangeTargets.Remove(other);
         }

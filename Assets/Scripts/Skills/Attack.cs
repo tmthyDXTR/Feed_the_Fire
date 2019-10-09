@@ -5,12 +5,17 @@ public class Attack : MonoBehaviour
 {
     [SerializeField] public Skill skill;
     [SerializeField] private HeroController hero;
+    private HeroInfo heroInfo;
+    private GameStats gameStats;
     public bool onCoolDown = false;
     
 
     void Awake()
     {
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
         hero = this.transform.parent.parent.gameObject.GetComponent<HeroController>();
+        heroInfo = this.transform.parent.parent.gameObject.GetComponent<HeroInfo>();
+
         //if (skill != null)
         //{
         //    this.gameObject.name = skill.name;            
@@ -63,19 +68,23 @@ public class Attack : MonoBehaviour
         GameObject projectileObj = Instantiate(skill.projectilePrefab) as GameObject;
         projectileObj.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 3f, this.transform.position.z);
         Projectile projectile = projectileObj.GetComponent<Projectile>();
-        projectile.target = hero.targetObject;        
+        //projectile.target = hero.targetObject;        
         projectile.speed = skill.speed;
 
         //Damage Adjustments
         if (slot == HeroController.Slot.Slot_1)
         {
-            projectile.damage = skill.baseDamage * hero.PowerMultiplicator();
+            projectile.damage = skill.baseDamage * hero.PowerMultiplicator() + heroInfo.currentHealth;
+            //projectile.targetVector = Input.mousePosition;
+            projectile.target = hero.targetObject;
+
             //projectile.damage = Mathf.RoundToInt((skill.baseDamage + hero.PowerMultiplicator()) + (float)(Random.Range(0f, (float)(ResourceBank.fireLifeFull - ResourceBank.fireLife))));
 
         }
         else
         {
-            projectile.damage = Mathf.RoundToInt(((float)skill.baseDamage + (float)gameHandler.fireLife) + (float)(Random.Range(0f, (float)(gameHandler.fireLifeFull - gameHandler.fireLife))));
+            projectile.target = hero.targetObject;
+            projectile.damage = Mathf.RoundToInt(((float)skill.baseDamage + (float)gameStats.fireLife) + (Random.Range(0f, ((float)gameStats.fireLifeFull - (float)gameStats.fireLife))));
         }
     }
 

@@ -20,10 +20,13 @@ public class UnitInfo : MonoBehaviour
 
     private WorkerUnitAI unitAI;
     private EnemyRoam attacker; // Temp Fix
+    private GameHandler gameHandler;
 
     void Awake()
     {
         unitAI = GetComponent<WorkerUnitAI>();
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+
     }
 
     void Update()
@@ -58,6 +61,11 @@ public class UnitInfo : MonoBehaviour
 
     private void Death()
     {
+        if (gameHandler == null)
+        {
+            gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+
+        }
         GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
         bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
         bloodSplatter.transform.GetChild(0).localScale = new Vector3(0.25f, 0.25f, 0.25f);
@@ -68,5 +76,6 @@ public class UnitInfo : MonoBehaviour
             jobManager.GetWorkerCounts();
         }
         Destroy(this.gameObject);
+        gameHandler.RemoveResident(1);
     }
 }

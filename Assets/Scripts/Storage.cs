@@ -68,11 +68,11 @@ public class Storage : MonoBehaviour
         foreach (Transform child in this.transform)
         {
             SingleStorage storage = child.gameObject.GetComponent<SingleStorage>();
-            if (storage.isFull == false)
-            {
-                continue;
-            }
-            else if (storage.storedItem == item)
+            //if (storage.isFull == false)
+            //{
+            //    continue;
+            //}
+            if (storage.storedItem == item)
             {
                 //stored -= 1;
                 //stockSpores -= 1;

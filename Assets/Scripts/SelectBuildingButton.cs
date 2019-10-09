@@ -43,7 +43,7 @@ public class SelectBuildingButton : MonoBehaviour, IPointerClickHandler, IPointe
         {
             hovered = true;
             Debug.Log("OnPointerEnter Building Button");
-            gameHandler.CreateTooltip(building, this.transform.position);
+            gameHandler.CreateBuildingTooltip(building, this.transform.position);
         }
         
 

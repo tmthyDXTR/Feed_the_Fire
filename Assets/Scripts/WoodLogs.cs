@@ -6,6 +6,7 @@ public class WoodLogs : MonoBehaviour
 {
     public int woodCapacity = 10;
     public int currentAmount;
+    public bool isBuildingMode = true;
     bool isDead;
     CapsuleCollider capsuleCollider;
 
@@ -16,8 +17,11 @@ public class WoodLogs : MonoBehaviour
 
     void Update()
     {
-        UpdateModel();
         UpdateTag();
+        if (!isBuildingMode)
+        {
+            UpdateModel();
+        }
     }
 
     public void UpdateModel()
@@ -36,15 +40,15 @@ public class WoodLogs : MonoBehaviour
 
     private void UpdateTag()
     {
-        if (currentAmount == woodCapacity)
+        if (currentAmount == woodCapacity && transform.tag != "StorageFull")
         {
             transform.tag = "StorageFull";
         }
-        if (currentAmount == 0)
+        if (currentAmount == 0 && transform.tag != "StorageEmpty")
         {
             transform.tag = "StorageEmpty";
         }
-        if (currentAmount > 0 && currentAmount < woodCapacity)
+        if (currentAmount > 0 && currentAmount < woodCapacity && transform.tag != "Storage")
         {
             transform.tag = "Storage";
         }
@@ -62,10 +66,10 @@ public class WoodLogs : MonoBehaviour
 
         currentAmount -= 1;
 
-        //if (currentAmount <= 0)
-        //{
-        //    Death();
-        //}
+        if (currentAmount <= 0)
+        {
+            Death();
+        }
     }
 
     public void StoreWood()

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShroomGrowingArea : MonoBehaviour
 {
-    [SerializeField] private int sphereRadius = 30;
+    [SerializeField] private int sphereRadius;
     public List<Collider> shroomNodes = new List<Collider>();
 
     [SerializeField] private MinableNodes minableNodes;
@@ -24,7 +24,8 @@ public class ShroomGrowingArea : MonoBehaviour
 
 
     public void SetNodesToMinable(string nodeLayer)
-    {        
+    {
+        sphereRadius = (int)collider.radius;
         sphereLayerMask = LayerMask.GetMask(nodeLayer);
         int nodeCounter = 0;
         Collider[] nodeColliders = Physics.OverlapSphere(transform.position, sphereRadius, sphereLayerMask);
@@ -47,8 +48,12 @@ public class ShroomGrowingArea : MonoBehaviour
         {
             changeColour = other.GetComponent<ChangeColour>();
 
-            minableNodes.selectionNodes.Add(other);
-            changeColour.ChangeToMinableMat();
+            if (!minableNodes.shroomGrowList.Contains(other))
+            {
+                minableNodes.selectionNodes.Add(other);
+                changeColour.ChangeToMinableMat();
+            }
+            
         }
     }
 

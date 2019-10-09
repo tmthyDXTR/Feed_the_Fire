@@ -12,6 +12,8 @@ public class WaveManager : MonoBehaviour
 
     private Transform enemySpawners;
     public List<GameObject> spawnerList = new List<GameObject>();
+    public GameObject prefab;
+    public GameObject prefab2;
     void Awake()
     {
         enemySpawners = GameObject.Find("EnemySpawners").transform;
@@ -35,7 +37,7 @@ public class WaveManager : MonoBehaviour
         {
             if (child.GetComponent<EnemySpawner>() != null)
             {
-                child.GetComponent<EnemySpawner>().SpawnEnemy(waveEnemyAmount);
+                child.GetComponent<EnemySpawner>().SpawnEnemy(waveEnemyAmount, prefab);
             }
         }
     }

@@ -8,6 +8,7 @@ public class SelectionManager : MonoBehaviour
 {
     public bool objectSelected = false;
     public bool isActive = true;
+    private bool tooltipActive = false;
 
     public GameObject hoveredOverObj;
     public List<GameObject> selection = new List<GameObject>();
@@ -15,22 +16,22 @@ public class SelectionManager : MonoBehaviour
     private ObjectPlacement objectPlacement;
     private SelectableObject selectableObject;
     private ProjectorManager projectorManager;
-
+    private GameHandler gameHandler;
     public Transform canvas;
 
     void Awake()
     {        
-        gameHandler.OnNewGameStarted += delegate (object sender, EventArgs e)
+        gameStats.OnNewGameStarted += delegate (object sender, EventArgs e)
         {
             ResetSelection();          
         };
-        gameHandler.OnGameStart += delegate (object sender, EventArgs e)
+        gameStats.OnGameStart += delegate (object sender, EventArgs e)
 
         {
             ResetSelection();
             StartCoroutine(WaitFor());
         };
-
+        gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
         canvas = GameObject.Find("Canvas").transform;
         projectorManager = GetComponent<ProjectorManager>();
         objectPlacement = Camera.main.GetComponent<ObjectPlacement>();
@@ -59,6 +60,11 @@ public class SelectionManager : MonoBehaviour
 
     void Update()
     {
+        if (gameHandler == null)
+        {
+            gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+        }
+
         // Selection Detection
 
 
@@ -66,17 +72,27 @@ public class SelectionManager : MonoBehaviour
         //Check if BuildingSystem active
         if (objectPlacement.currentObject != null)
         {
-            if (objectPlacement.currentObject.tag == "MiningArea")
+            if (objectPlacement.currentObject.gameObject.layer == 12)
             {
                 // Mining Area Selection Info
-            }
-            else
-            {
-                // Building Construction Selection Info
                 Debug.Log("Selected Building to construct");
                 SetActive(false);
                 DeselectAll();
                 Select(objectPlacement.currentObject.gameObject);
+                if (!tooltipActive)
+                {
+                    tooltipActive = true;
+                    gameHandler.CreateMiningTooltip(Input.mousePosition);
+                }
+                
+            }
+            else
+            {
+                // Building Construction Selection Info
+                //Debug.Log("Selected Building to construct");
+                SetActive(true);
+                //DeselectAll();
+                //Select(objectPlacement.currentObject.gameObject);
             }
         }
         //else
@@ -97,8 +113,13 @@ public class SelectionManager : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log("Left Click at: " + GetWorldPoint());    
-                    
+                    Debug.Log("Left Click at: " + GetWorldPoint());
+                    if (tooltipActive)
+                    {
+                        gameHandler.DestroyTooltip();
+                        tooltipActive = false;
+                    }
+
                     RaycastHit rayHit;
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out rayHit))
@@ -126,9 +147,15 @@ public class SelectionManager : MonoBehaviour
                 }
                 else if (Input.GetMouseButtonDown(1))
                 {
+                    if (tooltipActive)
+                    {
+                        gameHandler.DestroyTooltip();
+                        tooltipActive = false;
+                    }
+
                     if (selection.Count != 0 && selection[0].tag == "Hero")
                     {
-                        
+
                     }
                     else
                     {
@@ -145,6 +172,7 @@ public class SelectionManager : MonoBehaviour
         }
         else
         {
+
             return;
         }
         

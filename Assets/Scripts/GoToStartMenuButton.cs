@@ -19,7 +19,7 @@ public class GoToStartMenuButton : MonoBehaviour
     {
         if (!isStarted)
         {
-            gameHandler.ResetGame();
+            gameStats.ResetGame();
             Destroy(GameObject.Find("Level"));
             Debug.Log("Go to Start Menu");
             //SceneManager.LoadScene(0, LoadSceneMode.Single);

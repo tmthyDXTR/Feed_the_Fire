@@ -152,6 +152,24 @@ public class ObjectPlacement : MonoBehaviour
                         DeleteObject();
                     }
                 }
+                else if (currentObject.tag == "StorageEmpty")
+                {
+                    Vector3 firePlace = GameObject.Find("FirePlace").transform.position;
+                    currentObject.position += new Vector3(0, 0.6f, 0);
+                    currentObject.transform.LookAt(new Vector3(firePlace.x, 0, firePlace.z));
+
+                    //buildingInfo = currentObject.GetComponent<BuildingInfo>();
+                    if (Input.GetMouseButtonDown(0) && IsLegalPosition())
+                    {
+                        PlaceObject();
+                        selectionManager.Deselect(currentObject.gameObject);
+                        currentObject = null;
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        DeleteObject();
+                    }
+                }
 
             }
             else
@@ -285,9 +303,21 @@ public class ObjectPlacement : MonoBehaviour
 
     private void PlaceObject()
     {
+        if (selectionManager == null)
+        {
+            selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
+        }
+        if (currentObject.GetComponent<WoodLogs>() != null)
+        {
+            currentObject.transform.SetParent(GameObject.Find("WoodStorage").transform);
+            currentObject.GetComponent<WoodLogs>().isBuildingMode = false;
+        }
         hasPlaced = true;
         Cursor.visible = true;
+        selectionManager.isActive = true;
     }
+
+    
 
     private void PlaceBuilding()
     {

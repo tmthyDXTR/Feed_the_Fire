@@ -55,6 +55,7 @@ public class HeroController : MonoBehaviour
         Slot_4,
     }
     [SerializeField] private GameObject selectedAttackSkill;
+    private GameObject obj_Slot_RClick;
 
     public Collider consumeFire;
 
@@ -71,7 +72,7 @@ public class HeroController : MonoBehaviour
     public float fireConsumeTicker = 1f;
 
     private float pendingCost;
-    void Awake()
+    void Start()
     {
         m_NavAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         m_NavAgent.speed = runSpeed;
@@ -86,16 +87,23 @@ public class HeroController : MonoBehaviour
         selectedAttackSkill = this.transform.Find("Skills").GetChild(0).gameObject;
         state = State.Idling;
         gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
+        obj_Slot_RClick = this.transform.Find("Skills").GetChild(0).gameObject;
 
-
-        BonfireManager.OnBonfireAmountChanged += delegate (object sender, EventArgs e)
+        bonfireManager.OnBonfireAmountChanged += delegate (object sender, EventArgs e)
         {
             UpdateBonfireBuffs();
         };
     }
     private void OnDestroy()
     {
-        BonfireManager.OnBonfireAmountChanged -= delegate (object sender, EventArgs e)
+        bonfireManager.OnBonfireAmountChanged -= delegate (object sender, EventArgs e)
+        {
+            UpdateBonfireBuffs();
+        };
+    }
+    private void OnDisable()
+    {
+        bonfireManager.OnBonfireAmountChanged -= delegate (object sender, EventArgs e)
         {
             UpdateBonfireBuffs();
         };
@@ -333,7 +341,7 @@ public class HeroController : MonoBehaviour
         //{
         //    RClick_powerMultiplicator = 1;
         //}
-        PowerMultiply = (((hero.power * 3f) + (((float)global::gameHandler.fireLife/2f)) * 2f) / 50f ) + 1f;
+        PowerMultiply = (((hero.power * 3f) + (((float)global::gameStats.fireLife/2f)) * 2f) / 50f ) + 1f;
         
         //RClick_powerMultiplicator = (hero.power * 2) + ResourceBank.fireLife;
         return PowerMultiply;
@@ -342,6 +350,10 @@ public class HeroController : MonoBehaviour
     private void UpdateBonfireBuffs()
     {
         runSpeed += 0.5f;
+        if (m_NavAgent == null)
+        {
+            m_NavAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        }
         m_NavAgent.speed = runSpeed;
         hero.health += 5f;
     }
@@ -360,7 +372,7 @@ public class HeroController : MonoBehaviour
         {
             hero.currentHealth += amount;
         }
-        AddPower(amount);
+        //AddPower(amount);
 
 
     }
@@ -372,6 +384,10 @@ public class HeroController : MonoBehaviour
     public void RemovePower(int amount)
     {
         hero.power -= amount;
+        if (hero.power < 1)
+        {
+            SelectAttackSlot(Slot.Slot_RClick, obj_Slot_RClick);
+        }
         PowerMultiplicator();
     }
 

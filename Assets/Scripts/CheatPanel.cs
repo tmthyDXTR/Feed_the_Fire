@@ -21,10 +21,11 @@ public class CheatPanel : MonoBehaviour
     private SelectionManager selectionManager;
 
     [SerializeField] private WoodLogs[] woodStorage;
-
+    public GameObject prefab;
 
     void Awake()
     {
+        //this.gameObject.SetActive(false);
         gameHandler = GameObject.Find("GameHandler").GetComponent<GameHandler>();
         storage = GameObject.Find("FoodStorage").GetComponent<Storage>();
         selectionManager = GameObject.Find("SelectionManager").GetComponent<SelectionManager>();
@@ -77,7 +78,7 @@ public class CheatPanel : MonoBehaviour
 
     private void AddEnemy()
     {
-        enemySpawner.SpawnEnemy(1);
+        enemySpawner.SpawnEnemy(1, prefab);
         Debug.Log("Enemy Spawned");
     }
 

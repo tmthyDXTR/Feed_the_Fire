@@ -129,6 +129,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 5520271683857940618, guid: 6569f6830b8dc6f44bafa1a197977cdb,
     type: 3}
+  unitPrefab2: {fileID: 5520271683857940618, guid: bc7e030e0bc914140b0ef3feda97a021,
+    type: 3}
   amount: 0
   timeSinceLastSpawn: 0
   spawnTime: 180

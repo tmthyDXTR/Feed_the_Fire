@@ -37,6 +37,7 @@ ScriptsOnlyBuild:
     - EnemyRoam
     - EnemySpawner
     - EnemyZombie
+    - ExitGameButton
     - Explosive
     - FireLight
     - FireLightHero
@@ -63,11 +64,13 @@ ScriptsOnlyBuild:
     - MenuVideo
     - MinableNodes
     - MiningArea
+    - MiningTooltip
     - ObjectPlacement
     - PlaceableObject
     - PopUp
     - Projectile
     - ProjectorManager
+    - ResumeGameButton
     - RoamDetection
     - SelectBuildingButton
     - SelectableObject
@@ -80,6 +83,7 @@ ScriptsOnlyBuild:
     - SimpleFogOfWar.Renderers.ProjectorFogRenderer
     - SingleStorage
     - Skill
+    - SkillButton
     - StartNewGameButton
     - StoneNodes
     - Storage
@@ -127,7 +131,6 @@ ScriptsOnlyBuild:
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
-    - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.EventTrigger
@@ -175,13 +178,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11968}
     - Class: 114
-      Script: {instanceID: 12348}
+      Script: {instanceID: 12352}
     - Class: 114
-      Script: {instanceID: 12698}
+      Script: {instanceID: 12702}
     - Class: 114
-      Script: {instanceID: 12822}
+      Script: {instanceID: 12826}
     - Class: 114
-      Script: {instanceID: 13538}
+      Script: {instanceID: 13546}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -400,91 +403,99 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12202}
     - Class: 114
-      Script: {instanceID: 12238}
+      Script: {instanceID: 12236}
     - Class: 114
-      Script: {instanceID: 12338}
+      Script: {instanceID: 12240}
     - Class: 114
-      Script: {instanceID: 12344}
+      Script: {instanceID: 12252}
+    - Class: 114
+      Script: {instanceID: 12342}
     - Class: 114
       Script: {instanceID: 12348}
     - Class: 114
       Script: {instanceID: 12352}
     - Class: 114
-      Script: {instanceID: 12370}
+      Script: {instanceID: 12356}
     - Class: 114
-      Script: {instanceID: 12380}
+      Script: {instanceID: 12374}
     - Class: 114
-      Script: {instanceID: 12448}
+      Script: {instanceID: 12384}
     - Class: 114
-      Script: {instanceID: 12474}
+      Script: {instanceID: 12452}
     - Class: 114
-      Script: {instanceID: 12480}
+      Script: {instanceID: 12478}
     - Class: 114
-      Script: {instanceID: 12566}
+      Script: {instanceID: 12484}
     - Class: 114
       Script: {instanceID: 12570}
     - Class: 114
-      Script: {instanceID: 12580}
+      Script: {instanceID: 12574}
     - Class: 114
-      Script: {instanceID: 12606}
+      Script: {instanceID: 12584}
     - Class: 114
-      Script: {instanceID: 12646}
+      Script: {instanceID: 12610}
     - Class: 114
-      Script: {instanceID: 12698}
+      Script: {instanceID: 12650}
     - Class: 114
-      Script: {instanceID: 12716}
+      Script: {instanceID: 12702}
     - Class: 114
-      Script: {instanceID: 12748}
+      Script: {instanceID: 12720}
     - Class: 114
-      Script: {instanceID: 12774}
+      Script: {instanceID: 12752}
     - Class: 114
-      Script: {instanceID: 12822}
+      Script: {instanceID: 12778}
     - Class: 114
-      Script: {instanceID: 12876}
+      Script: {instanceID: 12826}
     - Class: 114
-      Script: {instanceID: 12936}
+      Script: {instanceID: 12880}
     - Class: 114
-      Script: {instanceID: 12946}
+      Script: {instanceID: 12902}
     - Class: 114
-      Script: {instanceID: 12972}
+      Script: {instanceID: 12942}
     - Class: 114
-      Script: {instanceID: 12974}
+      Script: {instanceID: 12952}
     - Class: 114
-      Script: {instanceID: 12988}
+      Script: {instanceID: 12978}
     - Class: 114
-      Script: {instanceID: 13018}
+      Script: {instanceID: 12980}
     - Class: 114
-      Script: {instanceID: 13032}
+      Script: {instanceID: 12994}
+    - Class: 114
+      Script: {instanceID: 13024}
     - Class: 114
       Script: {instanceID: 13038}
     - Class: 114
-      Script: {instanceID: 13056}
+      Script: {instanceID: 13044}
     - Class: 114
-      Script: {instanceID: 13098}
+      Script: {instanceID: 13062}
     - Class: 114
-      Script: {instanceID: 13140}
+      Script: {instanceID: 13104}
     - Class: 114
-      Script: {instanceID: 13148}
+      Script: {instanceID: 13146}
     - Class: 114
-      Script: {instanceID: 13158}
+      Script: {instanceID: 13154}
     - Class: 114
-      Script: {instanceID: 13194}
+      Script: {instanceID: 13164}
     - Class: 114
-      Script: {instanceID: 13300}
+      Script: {instanceID: 13200}
     - Class: 114
-      Script: {instanceID: 13352}
+      Script: {instanceID: 13306}
     - Class: 114
-      Script: {instanceID: 13378}
+      Script: {instanceID: 13358}
     - Class: 114
-      Script: {instanceID: 13436}
+      Script: {instanceID: 13384}
     - Class: 114
-      Script: {instanceID: 13474}
+      Script: {instanceID: 13442}
     - Class: 114
-      Script: {instanceID: 13526}
+      Script: {instanceID: 13480}
     - Class: 114
-      Script: {instanceID: 13538}
+      Script: {instanceID: 13532}
     - Class: 114
-      Script: {instanceID: 13590}
+      Script: {instanceID: 13544}
+    - Class: 114
+      Script: {instanceID: 13546}
+    - Class: 114
+      Script: {instanceID: 13598}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 119
@@ -787,6 +798,18 @@ ScriptsOnlyBuild:
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: UnityEngine.Advertisements.dll
+    namespaceName: UnityEngine.Advertisements
+    className: CallbackExecutor
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: UnityEngine.Advertisements.dll
+    namespaceName: UnityEngine.Advertisements.Editor
+    className: Placeholder
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: TreeFall
@@ -828,7 +851,7 @@ ScriptsOnlyBuild:
     className: PostProcessProfile
   - hash:
       serializedVersion: 2
-      Hash: 2f30235f5b4186021f60b764d6e67830
+      Hash: 8aa2835dbf6c8c8802f715b73db0b804
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CameraController
@@ -930,13 +953,13 @@ ScriptsOnlyBuild:
     className: CFX_AutoStopLoopedEffect
   - hash:
       serializedVersion: 2
-      Hash: f8835fc961407c456416410a40671b06
+      Hash: f4764de8e1d4c1db00d1361a7bbde746
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ShortCuts
   - hash:
       serializedVersion: 2
-      Hash: adf5811947821e142c8d02dd7c26eeba
+      Hash: 152d5064698dcac7fe5ebcad764be2cd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: WoodLogs
@@ -954,7 +977,7 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 70f36e531f5fd187a069714f35d47da3
+      Hash: bc531a42117fc4286adddc5b12efff7f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CheatPanel
@@ -990,13 +1013,13 @@ ScriptsOnlyBuild:
     className: AttackRangeHandlerEnemy
   - hash:
       serializedVersion: 2
-      Hash: fabe0839b5c54481ce4db893433efa18
+      Hash: 2fa6bc4061463190353ad9b7a1de5133
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Projectile
   - hash:
       serializedVersion: 2
-      Hash: 5cacd463e9379139afaae411332c1abd
+      Hash: 31fee6e0074d921056d75aa942681804
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: WaveManager
@@ -1362,7 +1385,7 @@ ScriptsOnlyBuild:
     className: Button
   - hash:
       serializedVersion: 2
-      Hash: 7cb09d90778b68da7170efcbc3758992
+      Hash: 29c021abd4442ed9ad3e246c4d61d5e5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EnemySpawner
@@ -1446,10 +1469,22 @@ ScriptsOnlyBuild:
     className: RoamDetection
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ResumeGameButton
+  - hash:
+      serializedVersion: 2
       Hash: 97f2578935279a0d341e443693ffe996
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Window_Bonfire
+  - hash:
+      serializedVersion: 2
+      Hash: 2aa862036bd694aa5e4b20fe6218417a
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ExitGameButton
   - hash:
       serializedVersion: 2
       Hash: 783f593b9380cf72d0f7ebfd4a0d4bcd
@@ -1578,7 +1613,7 @@ ScriptsOnlyBuild:
     className: RenderObjects
   - hash:
       serializedVersion: 2
-      Hash: 3d5eda4959b3370741815dfecdb6421c
+      Hash: 52f4c3eb14a2a1cda4d364eda5afa15c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameStats
@@ -1650,10 +1685,16 @@ ScriptsOnlyBuild:
     className: BeforeAfterTestCommandState
   - hash:
       serializedVersion: 2
-      Hash: 5f4c52a58c1e4a4cee602154c87015d9
+      Hash: 9c8a35e8d9c85346cda7ca206413e217
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ActionBarAttack
+  - hash:
+      serializedVersion: 2
+      Hash: a8c66cb44edc880d7b891ce03dd5851f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MiningTooltip
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -1872,6 +1913,12 @@ ScriptsOnlyBuild:
     className: HitBoxBigBoy
   - hash:
       serializedVersion: 2
+      Hash: 7c45950d3887cd08b9a199780c43dd3b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SkillButton
+  - hash:
+      serializedVersion: 2
       Hash: 748dd2a2a28da4e618912da5ac45684b
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.EventSystems
@@ -1916,4 +1963,4 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/Scenes/GameScene.unity
   - Assets/Scenes/DeathScreen.unity
-  playerPath: C:/Users/dxtr/Documents/feed the fire/FtF - build_0.0.91a/resource.exe
+  playerPath: C:/Users/dxtr/Documents/feed the fire/FtF - build_0.3a/resource.exe

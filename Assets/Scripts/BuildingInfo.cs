@@ -151,8 +151,9 @@ public class BuildingInfo : MonoBehaviour
         if (originalTag == "Bonfire")
         {
             this.gameObject.tag = "UnlitBonfire";
-            BonfireManager bonfire = GameObject.Find("BonfireManager").GetComponent<BonfireManager>();
-            bonfire.AddBonfire(this.gameObject);
+            this.gameObject.layer = 23;
+            //BonfireManager bonfire = GameObject.Find("BonfireManager").GetComponent<BonfireManager>();
+            //bonfire.AddBonfire(this.gameObject);
 
 
         }

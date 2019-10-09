@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MiningArea : MonoBehaviour
 {
-    [SerializeField] private int sphereRadius = 30;
+    [SerializeField] public int sphereRadius;
     public List<Collider> miningNodes = new List<Collider>();
 
     [SerializeField] private MinableNodes minableNodes;
@@ -24,7 +24,8 @@ public class MiningArea : MonoBehaviour
 
 
     public void SetNodesToMinable(string nodeLayer)
-    {        
+    {
+        sphereRadius = (int)collider.radius;
         sphereLayerMask = LayerMask.GetMask(nodeLayer);
         int nodeCounter = 0;
         Collider[] nodeColliders = Physics.OverlapSphere(transform.position, sphereRadius, sphereLayerMask);
@@ -46,9 +47,12 @@ public class MiningArea : MonoBehaviour
         if (other.tag == "WorkActive" || other.tag == "WorkInactive")
         {
             changeColour = other.GetComponent<ChangeColour>();
-
-            minableNodes.selectionNodes.Add(other);
-            changeColour.ChangeToMinableMat();
+            if (!minableNodes.minableNodesList.Contains(other))
+            {
+                minableNodes.selectionNodes.Add(other);
+                changeColour.ChangeToMinableMat();
+            }
+            
         }
     }
 

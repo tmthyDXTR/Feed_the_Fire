@@ -15,20 +15,23 @@ public class GameStats : MonoBehaviour
     public int housingCurrent;
     public int housingMax;
     public int workerFoodCost;
+    public int omenSpawned = 0;
+
 
     void Awake()
     {
-        burnTime = gameHandler.burnTime;
-        burnSpeed = gameHandler.burnSpeed;
-        fireLife = gameHandler.fireLife;
-        fireLifeFull = gameHandler.fireLifeFull;
-        woodStock = gameHandler.woodStock;
-        foodStock = gameHandler.foodStock;
-        sporesStock = gameHandler.sporesStock;
-        housingCurrent = gameHandler.housingCurrent;
-        housingMax = gameHandler.housingMax;
-        fireLifeMax = gameHandler.fireLifeMax;
-        workerFoodCost = gameHandler.workerFoodCost;
+        burnTime = gameStats.burnTime;
+        burnSpeed = gameStats.burnSpeed;
+        fireLife = gameStats.fireLife;
+        fireLifeFull = gameStats.fireLifeFull;
+        woodStock = gameStats.woodStock;
+        foodStock = gameStats.foodStock;
+        sporesStock = gameStats.sporesStock;
+        housingCurrent = gameStats.housingCurrent;
+        housingMax = gameStats.housingMax;
+        fireLifeMax = gameStats.fireLifeMax;
+        workerFoodCost = gameStats.workerFoodCost;
+        omenSpawned = gameStats.omenSpawned;
 
         Debug.Log("ResourceBank -> Game Stats Initialized");
     }

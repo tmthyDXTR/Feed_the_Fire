@@ -6,7 +6,7 @@ using System;
 public class BonfireManager : MonoBehaviour
 {
     public List<GameObject> bonfireList = new List<GameObject>();
-    public static EventHandler OnBonfireAmountChanged;
+    public EventHandler OnBonfireAmountChanged;
 
     private HeroInfo hero;
     void Awake()
@@ -17,6 +17,8 @@ public class BonfireManager : MonoBehaviour
     public void AddBonfire(GameObject bonfire)
     {
         bonfireList.Add(bonfire);
-        OnBonfireAmountChanged?.Invoke(null, EventArgs.Empty);
+        if (OnBonfireAmountChanged != null) OnBonfireAmountChanged(null, EventArgs.Empty);
+
+        //OnBonfireAmountChanged?.Invoke(null, EventArgs.Empty);
     }
 }

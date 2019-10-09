@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public static class gameHandler
+public static class gameStats
 {
 
     //public static EventHandler OnFireLifeChanged;
@@ -14,6 +14,9 @@ public static class gameHandler
     //public static EventHandler OnSporesStockChanged;
     //public static EventHandler OnHousingChanged;
     public static EventHandler OnEnemyKilled;
+
+    
+
     public static EventHandler OnWorkerKilled;
 
     public static EventHandler OnNewGameStarted;
@@ -31,7 +34,7 @@ public static class gameHandler
     public static int housingCurrent = 0;
     public static float burnTime = 0.0f;
     public static float burnSpeed = 30f; //-- Seconds to lose 1 Fire Life
-
+    public static int omenSpawned = 0;
     public static int enemiesKilled = 0;
     public static int workerLost = 0;
 

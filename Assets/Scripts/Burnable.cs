@@ -39,6 +39,21 @@ public class Burnable : MonoBehaviour
                     TreeNodes tree = GetComponent<TreeNodes>();
                     selectionManager.selection.Remove(this.gameObject);
                     tree.Death();
+
+                    // The fire power ball moving to the hero from the fireplace
+                    if (UnityEngine.Random.value > 0.5)
+                    {
+                        GameObject projectileObj = Instantiate(Resources.Load("PS_FireConsumeBall")) as GameObject;
+                        projectileObj.transform.position = this.transform.position;
+                        Projectile projectile = projectileObj.GetComponent<Projectile>();
+                        HeroController hero = GameObject.Find("Hero").GetComponent<HeroController>();
+
+                        projectile.target = hero.transform.Find("HitBox").GetComponent<Collider>();
+                        projectile.type = Projectile.Type.FirePower;
+
+                        //hero.AddPower(1);
+                    }                      
+
                     Destroy(gameObject);
                     Destroy(burnEffectObj);
                 }
@@ -56,6 +71,10 @@ public class Burnable : MonoBehaviour
     {
         if (this.gameObject.tag == "UnlitBonfire")
         {
+            this.gameObject.tag = "Bonfire";
+            this.gameObject.layer = 15;
+            BonfireManager bonfire = GameObject.Find("BonfireManager").GetComponent<BonfireManager>();
+            bonfire.AddBonfire(this.gameObject);
             foreach (Transform child in transform)
             {
                 if (child.name == "Point Light" || child.name == "Flame" || child.name == "LightZone")
@@ -68,6 +87,7 @@ public class Burnable : MonoBehaviour
         {
             GameObject burnEffect = Instantiate(Resources.Load("TreeBurnEffect")) as GameObject;
             burnEffectObj = burnEffect;
+            burnEffect.transform.SetParent(GameObject.Find("Level").transform);
             burnEffect.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 
         }
@@ -75,6 +95,8 @@ public class Burnable : MonoBehaviour
         {
             GameObject burnEffect = Instantiate(Resources.Load("BurnEffect")) as GameObject;
             burnEffectObj = burnEffect;
+            burnEffect.transform.SetParent(GameObject.Find("Level").transform);
+
             burnEffect.transform.position = new Vector3(transform.position.x, transform.position.y + 0.78f, transform.position.z);
         }
 

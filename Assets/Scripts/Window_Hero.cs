@@ -10,6 +10,7 @@ public class Window_Hero : MonoBehaviour
     private HeroController heroController;
     public GameObject selectedObject;
     private Button consumeFireButton;
+    private GameStats gameStats;
 
     private SelectionManager selectionManager;
 
@@ -27,7 +28,7 @@ public class Window_Hero : MonoBehaviour
         {
             transform.Find("Info_2").GetComponent<Text>().text = hero.power.ToString();
             transform.Find("Info_3").GetComponent<Text>().text = "Health: " + hero.currentHealth.ToString() + " / " + hero.health.ToString();
-            transform.Find("Info_4").GetComponent<Text>().text = "1 DmgMult: " + heroController.PowerMultiplicator().ToString();
+            transform.Find("Info_4").GetComponent<Text>().text = "1 DmgAdd: " + "*" + heroController.PowerMultiplicator().ToString() + " + " + hero.currentHealth;
 
         }
     }
@@ -36,6 +37,7 @@ public class Window_Hero : MonoBehaviour
 
     void Start()
     {
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
         heroController = GameObject.Find("Hero").GetComponent<HeroController>();
         consumeFireButton = transform.Find("ConsumeButton").GetComponent<Button>();
 

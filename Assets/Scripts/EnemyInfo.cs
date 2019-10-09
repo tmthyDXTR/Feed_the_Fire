@@ -55,14 +55,14 @@ public class EnemyInfo : MonoBehaviour
         }
         if (this.gameObject.name == "DeadWoodDweller(Clone)")
         {
-            gameHandler.AddKillCounter(1);
+            gameStats.AddKillCounter(1);
             GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
             bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
             Destroy(this.gameObject);
         }
         if (this.gameObject.name == "DeadWoodOmen(Clone)")
         {
-            gameHandler.AddKillCounter(1);
+            gameStats.AddKillCounter(1);
             GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
             bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);
             bloodSplatter.transform.localScale *= 2f;
@@ -70,7 +70,7 @@ public class EnemyInfo : MonoBehaviour
         }
         if (this.gameObject.name == "BigBoy")
         {
-            gameHandler.AddKillCounter(1);
+            gameStats.AddKillCounter(1);
 
             GameObject bloodSplatter = Instantiate(Resources.Load("PS_BloodSplatter")) as GameObject;
             bloodSplatter.transform.position = this.transform.position + new Vector3(0, 0.4f, 0);

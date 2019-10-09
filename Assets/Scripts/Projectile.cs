@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public Collider target;
+    public Vector3 targetVector;
     private EnemyInfo enemyInfo;
     private TreeInfo treeInfo;
     private float step;
@@ -80,6 +81,15 @@ public class Projectile : MonoBehaviour
                     }
                 }
             }
+            else if (target.tag == "UnlitBonfire")
+            {
+                Vector3 hitPos;
+                hitPos = target.transform.position + new Vector3(0, 2f, 0);
+                transform.LookAt(hitPos);
+
+                this.transform.position = Vector3.MoveTowards(this.transform.position, hitPos, step);
+            }
+
             else if (target.tag == "Hero")
             {
                 Vector3 hitPos;
@@ -90,6 +100,12 @@ public class Projectile : MonoBehaviour
             }
 
         }
+        //if (targetVector != null)
+        //{
+        //    //Destroy(this.gameObject);
+        //    transform.LookAt(targetVector);
+        //    this.transform.position = Vector3.MoveTowards(this.transform.position, targetVector, step);
+        //}
         else
         {
             Destroy(this.gameObject);
@@ -125,13 +141,35 @@ public class Projectile : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+        if (other.tag == "UnlitBonfire")
+        {
+            if (other.gameObject.GetComponent<Burnable>() != null)
+            {
+                Debug.Log("Unlit Bonfire hit");
+                if (damage >= 20)
+                {
+                    other.gameObject.GetComponent<Burnable>().AddBurnEffect();
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    Destroy(this.gameObject, 4f);
+                }
+                
+            }
+        }
+
         if (type == Type.FirePower)
         {
             if (other.tag == "Hero")
             {
+                HeroController hero = GameObject.Find("Hero").GetComponent<HeroController>();
                 Debug.Log("Hero got snacked some fire");
+                hero.AddPower(1);
                 Destroy(this.gameObject);
             }
         }
+
+
     }
 }

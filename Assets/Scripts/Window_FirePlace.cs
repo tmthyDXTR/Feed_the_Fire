@@ -11,34 +11,44 @@ public class Window_FirePlace : MonoBehaviour
     private int sliderNewMax;
 
     private Text sliderText;
-    
-
+    private GameStats gameStats;
+    private GameHandler gameHandler;
     void Awake()
     {
-        sliderMax = gameHandler.fireLifeFull;
+        gameStats = GameObject.Find("Game").GetComponent<GameStats>();
+
+        sliderMax = gameStats.fireLifeFull;
         sliderNewMax = sliderMax;
 
         slider = transform.Find("Slider").GetComponent<Slider>();
-        slider.maxValue = gameHandler.fireLifeFull;
-        slider.value = gameHandler.fireLifeMax;
+        slider.maxValue = gameStats.fireLifeFull;
+        slider.value = gameStats.fireLifeMax;
 
-        slider.onValueChanged.AddListener(delegate { UpdateSliderText(); });
+        //slider.onValueChanged.AddListener(delegate { UpdateSliderText(); });
 
         sliderText = transform.Find("SliderValue/SliderValueText").GetComponent<Text>();
         sliderText.text = slider.value.ToString();
         //transform.gameObject.SetActive(false);
+        slider.onValueChanged.AddListener(UpdateSliderText);
+    }
+    private void OnDisable()
+    {
+        slider.onValueChanged.RemoveListener(UpdateSliderText);
+
+
     }
 
     void Update()
     {
-        
+        //gameStats.fireLifeMax = (int)slider.value;
+
     }
 
-    private void UpdateSliderText()
+    private void UpdateSliderText(float i)
     {
-        //Debug.Log("SliderValue Changed");
+        Debug.Log("SliderValue Changed");
         sliderText.text = slider.value.ToString();
-        gameHandler.fireLifeMax = (int)slider.value;
+        gameStats.fireLifeMax = (int)slider.value;
     }
 
 

@@ -14,12 +14,14 @@ public class GameHandler : MonoBehaviour
 
 
     public EventHandler OnFireLifeChanged;
+    public EventHandler OnFireLifeMaxChanged;
+
     public EventHandler OnWoodStockChanged;
     public EventHandler OnSporesStockChanged;
     public EventHandler OnFoodStockChanged;
+    public EventHandler OnFoodConsumed;
     public EventHandler OnHousingChanged;
-
-
+    internal bool isPaused;
 
     void Awake()
     {
@@ -109,6 +111,13 @@ public class GameHandler : MonoBehaviour
             if (OnFireLifeChanged != null) OnFireLifeChanged(null, EventArgs.Empty);
         }        
     }
+
+    public void ChangeFireLifeMax(int value)
+    {
+        gameStats.fireLife = value;
+        if (OnFireLifeMaxChanged != null) OnFireLifeMaxChanged(null, EventArgs.Empty);
+
+    }
     #endregion
 
 
@@ -149,6 +158,9 @@ public class GameHandler : MonoBehaviour
         gameStats.woodStock -= amount;
         if (OnWoodStockChanged != null) OnWoodStockChanged(null, EventArgs.Empty);
     }
+
+    
+
     // Food
     public void AddFoodToStock(int amount)
     {
@@ -160,8 +172,15 @@ public class GameHandler : MonoBehaviour
     {
         gameStats.foodStock -= amount;
         if (OnFoodStockChanged != null) OnFoodStockChanged(null, EventArgs.Empty);
-    }
+        //if (OnFoodConsumed != null) OnFoodConsumed(null, EventArgs.Empty);
 
+        for (int i = 0; i < amount; i++)
+        {
+            Debug.Log("Shrooms consumed");
+            Storage storage = GameObject.Find("FoodStorage").GetComponent<Storage>(); ;
+            storage.Collect(StoredItem.Shrooms);
+        }
+    }
 
     public void AddSporesToStock(int amount)
     {
@@ -191,7 +210,11 @@ public class GameHandler : MonoBehaviour
     }
     public void RemoveResident(int amount)
     {
-        gameStats.housingCurrent -= amount;
+        if (gameStats.housingCurrent > 0)
+        {
+            gameStats.housingCurrent -= amount;
+        }
+
         if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
     }
 
@@ -200,11 +223,13 @@ public class GameHandler : MonoBehaviour
         gameStats.housingMax -= amount;
         if (OnHousingChanged != null) OnHousingChanged(null, EventArgs.Empty);
     }
+
+
     #endregion
 
     #region UI
 
-    internal void CreateTooltip(Building building, Vector3 position)
+    internal void CreateBuildingTooltip(Building building, Vector3 position)
     {
         GameObject tooltipObj = Instantiate(Resources.Load("Tooltip")) as GameObject;
         tooltipObj.name = "Tooltip";
@@ -224,10 +249,88 @@ public class GameHandler : MonoBehaviour
             tooltip.info = building.description;
         }
     }
+
+    internal void CreateSkillTooltip(Skill skill, Vector3 position)
+    {
+        GameObject tooltipObj = Instantiate(Resources.Load("TooltipSkill")) as GameObject;
+        tooltipObj.name = "Tooltip";
+        tooltipObj.transform.SetParent(GameObject.Find("Canvas").transform);
+
+        tooltipObj.transform.position = position + new Vector3(0, 200f, 0);
+        Tooltip tooltip = tooltipObj.GetComponent<Tooltip>();
+        tooltip.text = skill.name;        
+        tooltip.info = "Power req: " + skill.cost.ToString() + "\n" +
+                       "Type: " + skill.type.ToString() + "\n" + 
+                       "Range: " + skill.range.ToString() + "\n" +
+                       "BaseDamage: " + skill.baseDamage.ToString();
+
+    }
+
+    internal void CreateMiningTooltip(Vector3 position)
+    {
+        GameObject tooltipObj = Instantiate(Resources.Load("TooltipMining")) as GameObject;
+        tooltipObj.name = "Tooltip";
+        tooltipObj.transform.SetParent(GameObject.Find("Canvas").transform);
+
+        tooltipObj.transform.position = position;
+        MiningTooltip tooltip = tooltipObj.GetComponent<MiningTooltip>();
+        tooltip.text = "Area selection";
+    }
     internal void DestroyTooltip()
     {
         Destroy(GameObject.Find("Tooltip"));
     }
 
+    #endregion
+
+    #region MISC
+    public void ExitGame()
+    {
+        Debug.Log("Exit Game");
+        Application.Quit();
+    }
+
+    public void PauseGame()
+    {
+        Debug.Log("Pause Game");
+
+        isPaused = true;
+        Time.timeScale = 0.0f;
+        //GameObject pauseMenu = Instantiate(Resources.Load("PauseMenu")) as GameObject;
+    }
+
+    public void ResumeGame()
+    {
+        Debug.Log("UnPause Game");
+
+        isPaused = false;
+        Time.timeScale = 1f;
+        GameObject.Find("Main Camera").GetComponent<GameTimeManager>().gameSpeed = Time.timeScale * 1f;
+    }
+
+    internal void MaximizeRadius()
+    {        
+        if (selection.selection[0].tag == "MiningArea" || selection.selection[0].tag == "ShroomArea")
+        {
+            SphereCollider col = selection.selection[0].GetComponent<SphereCollider>();
+            if (col.radius < 25)
+            {
+                col.radius += 1;
+            }
+        }
+    }
+
+    internal void MinimizeRadius()
+    {
+        if (selection.selection[0].tag == "MiningArea" || selection.selection[0].tag == "ShroomArea")
+        {
+            SphereCollider col = selection.selection[0].GetComponent<SphereCollider>();
+            if (col.radius > 6)
+            {
+                col.radius -= 1;
+            }
+
+        }
+    }
     #endregion
 }

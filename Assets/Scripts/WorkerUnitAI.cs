@@ -66,23 +66,23 @@ public class WorkerUnitAI : MonoBehaviour
     {
         #region info update
 
-        if (job == Job.Unemployed)
+        if (job == Job.Unemployed && info.job != "Unemployed")
         {
             info.job = "Unemployed";
         }
-        else if (job == Job.Woodcutter)
+        else if (job == Job.Woodcutter && info.job != "Woodcutter")
         {
             info.job = "Woodcutter";
         }
-        else if (job == Job.LightWarden)
+        else if (job == Job.LightWarden && info.job != "LightWarden")
         {
             info.job = "LightWarden";
         }
-        else if (job == Job.Builder)
+        else if (job == Job.Builder && info.job != "Builder")
         {
             info.job = "Builder";
         }
-        else if (job == Job.Shroomer)
+        else if (job == Job.Shroomer && info.job != "Shroomer")
         {
             info.job = "Shroomer";
         }
@@ -178,7 +178,7 @@ public class WorkerUnitAI : MonoBehaviour
                         //If Inventory full Search for Fire
                         if (info.invWood != 0)
                         {
-                            if (gameHandler.fireLife < gameHandler.fireLifeMax)
+                            if (global::gameStats.fireLife < global::gameStats.fireLifeMax)
                             {
                                 state = State.GrowingFire;
                             }
@@ -241,12 +241,20 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: MovingToTree");
                 if (job == Job.Woodcutter)
                 {
-                    util.SetTargetActive();
-                    util.MoveToTarget();
-                    if (util.TargetReached() == true)
+                    if (util.target != null)
                     {
-                        state = State.ChoppingTree;
+                        util.SetTargetActive();
+                        util.MoveToTarget();
+                        if (util.TargetReached() == true)
+                        {
+                            state = State.ChoppingTree;
+                        }
                     }
+                    else
+                    {
+                        state = State.SearchingTree;
+                    }
+                    
                 }
                 else
                 {
@@ -363,7 +371,10 @@ public class WorkerUnitAI : MonoBehaviour
                         }     
                         else
                         {
-                            state = State.MovingToSafety;
+                            util.CreateStorage("Wood", this.transform.position);
+
+
+                            //state = State.MovingToSafety;
                         }
                     }
                     else
@@ -429,36 +440,43 @@ public class WorkerUnitAI : MonoBehaviour
 
             case State.MovingToStorage:
                 //Debug.Log("Worker Unit State: MovingToStorage");
-                util.MoveToTarget();
-                if (util.TargetReached() == true)
+                if (util.target != null)
                 {
-                    if (job == Job.Woodcutter)
+                    util.MoveToTarget();
+                    if (util.TargetReached() == true)
                     {
-                        state = State.StoringResources;
-                    }
-                    else if (job == Job.Unemployed)
-                    {
-                        state = State.StoringResources;
-                    }
-                    else if (job == Job.LightWarden)
-                    {
-                        state = State.TakingResources;
-                    }
-                    else if (job == Job.Builder)
-                    {
-                        state = State.TakingResources;
-                    }
-                    else if (job == Job.Shroomer)
-                    {
-                        if (info.invShroom > 0 || info.invSpores > 0)
+                        if (job == Job.Woodcutter)
                         {
                             state = State.StoringResources;
                         }
-                        else
+                        else if (job == Job.Unemployed)
+                        {
+                            state = State.StoringResources;
+                        }
+                        else if (job == Job.LightWarden)
                         {
                             state = State.TakingResources;
                         }
+                        else if (job == Job.Builder)
+                        {
+                            state = State.TakingResources;
+                        }
+                        else if (job == Job.Shroomer)
+                        {
+                            if (info.invShroom > 0 || info.invSpores > 0 || info.invWood > 0)
+                            {
+                                state = State.StoringResources;
+                            }
+                            else
+                            {
+                                state = State.TakingResources;
+                            }
+                        }
                     }
+                }
+                else
+                {
+                    state = State.SearchingStorage;
                 }
                 break;
             #endregion
@@ -723,12 +741,12 @@ public class WorkerUnitAI : MonoBehaviour
                 {
                     if (util.target.GetComponent<Storage>() != null)
                     {
-                        if (util.target.GetComponent<Storage>().isFull != true)
+                        if (!util.target.GetComponent<Storage>().isFull)
                         {
                             if (info.invShroom > 0)
                             {
                                 util.StoreShrooms();
-                            }
+                            }                            
                             else if (info.invSpores > 0)
                             {
                                 util.StoreSpores();
@@ -743,6 +761,13 @@ public class WorkerUnitAI : MonoBehaviour
                             state = State.SearchingStorage;
                         }
                     }
+                    else if (info.invWood > 0)
+                        {
+                            if (util.CheckStorage("Store") == true)
+                            {
+                                util.StoreWood();
+                            }
+                        }
                     else
                     {
                         state = State.MovingToSafety;
@@ -774,19 +799,28 @@ public class WorkerUnitAI : MonoBehaviour
 
             case State.TakingResources:
                 //Debug.Log("Worker Unit State: TakingResources");
+
                 if (job == Job.LightWarden)
                 {
                     if (info.invWood < info.invMax)
                     {
-                        // Check if Storage not empty
-                        if (util.CheckStorage("Collect") == true)
+                        if (util.target != null)
                         {
-                            util.CollectWood();
+                            // Check if Storage not empty
+                            if (util.CheckStorage("Collect") == true)
+                            {
+                                util.CollectWood();
+                            }
+                            else
+                            {
+                                state = State.SearchingStorage;
+                            }
                         }
                         else
                         {
                             state = State.SearchingStorage;
                         }
+                        
                     }
                     else
                     {
@@ -796,17 +830,28 @@ public class WorkerUnitAI : MonoBehaviour
                 else if (job == Job.Builder)
                 {
                     // Check if Construction needs more Ressources
+                    if (util.constructionTarget == null)
+                    {
+                        state = State.SearchingConstruction;
+                    }
                     if (util.CheckConstruction("Collect") == true)
                     {
                         // Check if Inventory Full
                         if (info.invWood != info.invMax)
                         {
-                            // Check if Storage not empty
-                            if (util.CheckStorage("Collect") == true && info.invWood < info.invMax)
+                            if (util.target != null)
                             {
-                                util.CollectWoodForConstruction();
+                                // Check if Storage not empty
+                                if (util.CheckStorage("Collect") == true && info.invWood < info.invMax)
+                                {
+                                    util.CollectWoodForConstruction();
+                                }
+                                else
+                                {
+                                    state = State.SearchingStorage;
+                                }
                             }
-                            else
+                                else
                             {
                                 state = State.SearchingStorage;
                             }
@@ -827,15 +872,18 @@ public class WorkerUnitAI : MonoBehaviour
                     {
                         if (info.invSpores != info.invMax)
                         {
-                            if (util.target.gameObject.GetComponent<Storage>().stockSpores > 0)
+                            if (util.target != null)
                             {
-                                util.CollectSpores();
+                                if (util.target.gameObject.GetComponent<Storage>().stockSpores > 0)
+                                {
+                                    util.CollectSpores();
 
-                            }
-                            else
-                            {
-                                state = State.SearchingStorage;
-                            }
+                                }
+                                else
+                                {
+                                    state = State.SearchingStorage;
+                                }
+                            }                            
                         }
                         else
                         {
@@ -887,11 +935,11 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: GrowingFire");
                 if (job == Job.Woodcutter)
                 {
-                    if (info.invWood > 0 && gameHandler.fireLife < gameHandler.fireLifeMax)
-                    {                        
+                    if (info.invWood > 0 && global::gameStats.fireLife < global::gameStats.fireLifeMax)
+                    {
                         util.GrowFire();                      
                     }
-                    else if (info.invWood > 0 && gameHandler.fireLife == gameHandler.fireLifeMax)
+                    else if (info.invWood > 0 && global::gameStats.fireLife == global::gameStats.fireLifeMax)
                     {
                         state = State.Idling;
                     }
@@ -902,22 +950,22 @@ public class WorkerUnitAI : MonoBehaviour
                 }
                 else if (job == Job.Unemployed)
                 {
-                    if (info.invWood > 0 && gameHandler.fireLife < gameHandler.fireLifeMax)
+                    if (info.invWood > 0 && global::gameStats.fireLife < global::gameStats.fireLifeMax)
                     {
                         util.GrowFire();
                     }
-                    else if (info.invWood > 0 && gameHandler.fireLife == gameHandler.fireLifeMax)
+                    else if (info.invWood > 0 && global::gameStats.fireLife == global::gameStats.fireLifeMax)
                     {
                         state = State.Idling;
                     }
                 }
                 else if (job == Job.LightWarden)
                 {
-                    if (info.invWood > 0 && gameHandler.fireLife < gameHandler.fireLifeMax)
+                    if (info.invWood > 0 && global::gameStats.fireLife < global::gameStats.fireLifeMax)
                     {
                         util.GrowFire();
                     }
-                    else if (info.invWood > 0 && gameHandler.fireLife >= gameHandler.fireLifeMax)
+                    else if (info.invWood > 0 && global::gameStats.fireLife >= global::gameStats.fireLifeMax)
                     {
                         state = State.Idling;
                     }
@@ -941,11 +989,11 @@ public class WorkerUnitAI : MonoBehaviour
                 //Debug.Log("Worker Unit State: TakingFire");
                 if (job == Job.LightWarden)
                 {
-                    if (util.burnTarget.gameObject.tag == "UnlitBonfire" && gameHandler.fireLife > 2 && info.invFire < 1)
+                    if (util.burnTarget.gameObject.tag == "UnlitBonfire" && gameStats.fireLife > 2 && info.invFire < 1)
                     {
                         util.TakeFire(1);                        
                     }
-                    else if (util.burnTarget.gameObject.tag == "Stump" && gameHandler.fireLife > 2 && info.invFire < 1)
+                    else if (util.burnTarget.gameObject.tag == "Stump" && gameStats.fireLife > 2 && info.invFire < 1)
                     {
                         util.TakeFire(1);
                     }

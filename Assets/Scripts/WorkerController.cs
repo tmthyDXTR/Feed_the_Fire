@@ -34,6 +34,13 @@ public class WorkerController : MonoBehaviour
     GameHandler gameHandler;
     GameStats gameStats;
 
+    public enum Item
+    {
+        Empty,
+        Wood,
+        Shrooms,
+        Spores,
+    }
 
     #endregion
 
@@ -507,6 +514,7 @@ public class WorkerController : MonoBehaviour
                 {
                     storage.StoreWood();
                     unit.invWood -= 1;
+                    DropItem();
                     gameHandler.AddWoodToStock(1);
                     workTime -= (int)workTime;
                 }
@@ -527,6 +535,7 @@ public class WorkerController : MonoBehaviour
                 {
                     storage.CollectWood();
                     unit.invWood += 1;
+                    CarryItem(Item.Wood);
                     gameHandler.RemoveWoodFromStock(1);
                     workTime -= (int)workTime;
                 }
@@ -548,6 +557,7 @@ public class WorkerController : MonoBehaviour
                     unit.invWood -= 1;
                     building.wood += 1;
                     workTime -= (int)workTime;
+                    DropItem();
                 }
             }
         }
@@ -602,11 +612,38 @@ public class WorkerController : MonoBehaviour
                     // ... the Node should lose resources.
                     tree.TakeDamage();
                     info.invWood += 1;
+                    // Instantiate log at worker model
+                    CarryItem(Item.Wood);
                     Debug.Log("Wood chopped");
                     workTime -= (int)workTime;
                 }
             }
         }
+    }
+
+    private void CarryItem(Item type)
+    {        
+        if (type == Item.Wood)
+        {
+            GameObject item = Instantiate(Resources.Load("ItemWood"), this.transform) as GameObject;
+            item.name = "CarriedItem";
+        }
+        if (type == Item.Shrooms)
+        {
+            GameObject item = Instantiate(Resources.Load("ItemShrooms"), this.transform) as GameObject;
+            item.name = "CarriedItem";
+        }
+        if (type == Item.Spores)
+        {
+            GameObject item = Instantiate(Resources.Load("ItemSpores"), this.transform) as GameObject;
+            item.name = "CarriedItem";
+        }
+    }
+    private void DropItem()
+    {
+        
+        Destroy(this.transform.Find("CarriedItem").gameObject);
+        
     }
 
     public void ConstructBuilding()
@@ -663,6 +700,7 @@ public class WorkerController : MonoBehaviour
             if (workTime >= 1)
             {
                 info.invWood -= 1;
+                DropItem();
                 gameHandler.AddFireLife(1);
                 workTime -= (int)workTime;
             }
@@ -713,6 +751,7 @@ public class WorkerController : MonoBehaviour
             Debug.Log("Shroom Spore planted");
             UnitInfo info = GetComponent<UnitInfo>();
             info.invSpores -= 1;
+            DropItem();
             //selectionManager.selection.Remove(this.gameObject);
             GameObject shrooms = Instantiate(Resources.Load("Shrooms")) as GameObject;
             shrooms.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 0.5f, target.transform.position.z);
@@ -740,11 +779,15 @@ public class WorkerController : MonoBehaviour
                 // If the Node Resource script component exists...
                 if (shroom != null)
                 {
-                    // ... the Node should lose resources.
                     shroom.Remove("Shrooms");
+                    if (shroom.shroomAmount == 0)
+                    {
+                        growManager.shroomGrowList.Remove(target);
+                    }
+                    // ... the Node should lose resources.
                     info.invShroom += 1;
+                    CarryItem(Item.Shrooms);
                     Debug.Log("Shrooms collected");
-                    growManager.shroomGrowList.Remove(target); 
                     workTime -= (int)workTime;
                     m_Animator.SetBool("IsLumbering", false);
                 }
@@ -765,6 +808,7 @@ public class WorkerController : MonoBehaviour
                 {
                     storage.Store(StoredItem.Shrooms);
                     unit.invShroom -= 1;
+                    DropItem();
                     workTime -= (int)workTime;
                 }
             }
@@ -791,6 +835,7 @@ public class WorkerController : MonoBehaviour
                     // ... the Node should lose resources.
                     shroom.Remove("Spores");
                     info.invSpores += 1;
+                    CarryItem(Item.Spores);
                     Debug.Log("Spores collected");
                     workTime -= (int)workTime;
                     m_Animator.SetBool("IsLumbering", false);
@@ -809,6 +854,7 @@ public class WorkerController : MonoBehaviour
                     // ... the Node should lose resources.
                     storage.Collect(StoredItem.Spores);
                     info.invSpores += 1;
+                    CarryItem(Item.Spores);
                     Debug.Log("Spores collected");
                     workTime -= (int)workTime;
                     //m_Animator.SetBool("IsLumbering", false);
@@ -830,6 +876,7 @@ public class WorkerController : MonoBehaviour
                 {
                     storage.Store(StoredItem.Spores);
                     unit.invSpores -= 1;
+                    DropItem();
                     workTime -= (int)workTime;
                 }
             }
@@ -841,6 +888,24 @@ public class WorkerController : MonoBehaviour
 
     #region Misc Methods
 
+    public void CreateStorage(string type, Vector3 position) // type = "Wood" 
+    {
+        if (type == "Wood")
+        {
+            Debug.Log("Create Storage");
+            Transform firePlace = GameObject.Find("FirePlace").transform;
+            Vector3 v = firePlace.transform.position - this.transform.position;
+            Vector3 target_position = this.transform.position + 0.5f * v;
+            target_position += new Vector3(UnityEngine.Random.Range(-4, 4), 0.6f, UnityEngine.Random.Range(-4, 4));           
+
+            GameObject storageObj = Instantiate(Resources.Load("WoodLogs")) as GameObject;
+            storageObj.GetComponent<WoodLogs>().isBuildingMode = false;
+            storageObj.transform.SetParent(GameObject.Find("WoodStorage").transform);
+            storageObj.transform.position = target_position;
+            storageObj.transform.LookAt(new Vector3(firePlace.transform.position.x, 0, firePlace.transform.position.z));
+            
+        }
+    }
     public bool CheckStorage(string reason) // Check reason "Collect" or "Store"
     {
         WoodLogs storage = target.GetComponent<WoodLogs>();

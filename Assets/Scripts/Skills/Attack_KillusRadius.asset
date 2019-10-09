@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52dec929deb2e4a4c8666f66be923db7, type: 3}
   m_Name: Attack_KillusRadius
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: a77097f8fa7173946a0604d92f93b825, type: 3}
   name: Killus Radius
   description: Don't play with fire
   type: 1
@@ -24,7 +24,7 @@ MonoBehaviour:
   baseDamage: 20
   range: 0
   speed: 0
-  effectRadius: 15
+  effectRadius: 10
   castTime: 0
   cooldown: 4
   duration: 0
